@@ -7,7 +7,7 @@ module.exports = {
   plugins: [
     '@snowpack/plugin-react-refresh',
     '@snowpack/plugin-dotenv',
-    '@snowpack/plugin-typescript',
+    ['@snowpack/plugin-typescript', {args: "--project ./tsconfig-webview.json"}]
   ],
   routes: [
     /* Enable an SPA Fallback in development: */
@@ -24,6 +24,6 @@ module.exports = {
     /* ... */
   },
   buildOptions: {
-    /* ... */
+    out: 'out/webviews'
   },
 };

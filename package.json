@@ -28,7 +28,9 @@
 		"compile": "tsc -p ./",
 		"lint": "eslint . --ext .ts,.tsx",
 		"watch": "tsc -watch -p ./",
-		"format": "prettier --write **/*.ts"
+		"format": "prettier --write **/*.ts",
+		"dev": "snowpack dev",
+		"build": "snowpack build"
 	},
 	"devDependencies": {
 		"@snowpack/plugin-dotenv": "^2.0.5",

@@ -4,6 +4,16 @@
 	"version": "2.0.0",
 	"tasks": [
 		{
+			"script": "build",
+			"label": "snowpack-build",
+			"type": "npm"
+		},
+		{
+			"script": "dev",
+			"label": "snowpack-build-dev",
+			"type": "npm"
+		},
+		{
 			"type": "npm",
 			"script": "watch",
 			"problemMatcher": "$tsc-watch",
@@ -14,7 +24,10 @@
 			"group": {
 				"kind": "build",
 				"isDefault": true
-			}
+			},
+			"dependsOn": [
+				"snowpack-build"
+			]
 		}
 	]
 }
