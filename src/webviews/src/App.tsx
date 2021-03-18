@@ -1,15 +1,16 @@
-import React from 'react';
+import React from 'react'
+import Job from './Job'
 
 interface AppProps {}
 
 function App({}: AppProps) {
   return (
-    <div className="App">
-      <header className="App-header">
-        <p>It works!</p>
-      </header>
+    <div className="p-6">
+      <Job name="foo" />
+      <Job name="bar" />
+      <Job name="baz" />
     </div>
-  );
+  )
 }
 
-export default App;
+export default App

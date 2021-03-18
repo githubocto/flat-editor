@@ -2,11 +2,11 @@
 module.exports = {
   mount: {
     "src/webviews/public": { url: '/', static: true },
-    "src/webviews/src": { url: '/dist' },
+    "src/webviews/src": { url: '/' },
   },
   plugins: [
-    '@snowpack/plugin-react-refresh',
     '@snowpack/plugin-dotenv',
+    '@snowpack/plugin-postcss',
     ['@snowpack/plugin-typescript', {args: "--project ./tsconfig-webview.json"}]
   ],
   routes: [
@@ -15,13 +15,17 @@ module.exports = {
   ],
   optimize: {
     /* Example: Bundle your final build: */
-    // "bundle": true,
+    bundle: true,
+    minify: true,
+    target: "es2020",
+    entrypoints: ['index.js']
   },
   packageOptions: {
     /* ... */
   },
   devOptions: {
     /* ... */
+    output: "stream"
   },
   buildOptions: {
     out: 'out/webviews'
