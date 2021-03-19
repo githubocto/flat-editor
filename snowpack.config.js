@@ -1,13 +1,16 @@
 /** @type {import("snowpack").SnowpackUserConfig } */
 module.exports = {
   mount: {
-    "src/webviews/public": { url: '/', static: true },
-    "src/webviews/src": { url: '/' },
+    'src/webviews/public': { url: '/', static: true },
+    'src/webviews/src': { url: '/' },
   },
   plugins: [
     '@snowpack/plugin-dotenv',
     '@snowpack/plugin-postcss',
-    ['@snowpack/plugin-typescript', {args: "--project ./tsconfig-webview.json"}]
+    [
+      '@snowpack/plugin-typescript',
+      { args: '--project ./tsconfig-webview.json' },
+    ],
   ],
   routes: [
     /* Enable an SPA Fallback in development: */
@@ -17,17 +20,17 @@ module.exports = {
     /* Example: Bundle your final build: */
     bundle: true,
     minify: true,
-    target: "es2020",
-    entrypoints: ['index.js']
+    target: 'es2020',
+    entrypoints: ['index.js', 'view2.js'],
   },
   packageOptions: {
     /* ... */
   },
   devOptions: {
     /* ... */
-    output: "stream"
+    output: 'stream',
   },
   buildOptions: {
-    out: 'out/webviews'
+    out: 'out/webviews',
   },
-};
+}
