@@ -17,17 +17,13 @@ module.exports = {
     // {"match": "routes", "src": ".*", "dest": "/index.html"},
   ],
   optimize: {
-    /* Example: Bundle your final build: */
     bundle: true,
     minify: true,
     target: 'es2020',
-    entrypoints: ['index.js', 'view2.js'],
+    entrypoints: ['index.js'], // one per webview
   },
-  packageOptions: {
-    /* ... */
-  },
+  packageOptions: {},
   devOptions: {
-    /* ... */
     output: 'stream',
   },
   buildOptions: {
