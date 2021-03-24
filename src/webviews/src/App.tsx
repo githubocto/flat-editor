@@ -5,12 +5,19 @@ import { VSCodeAPI } from './VSCodeAPI'
 interface AppProps {}
 
 function App({}: AppProps) {
-  const { state, setTriggerSchedule } = useFlatConfigStore()
+  const update = useFlatConfigStore(state => state.update)
+  const state = useFlatConfigStore(state => state.state)
 
   // useEffect(() => {
   //   // communicate to extension that state has changed
   //   VSCodeAPI.onMessage(message => console.log('app', message))
   // }, [])
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    update(store => {
+      store.state.triggerSchedule = e.target.value
+    })
+  }
 
   useEffect(() => {
     console.log(state)
@@ -20,8 +27,9 @@ function App({}: AppProps) {
   return (
     <div className="p-6">
       <div>
-        Something:{' '}
-        <input type="text" onChange={e => setTriggerSchedule(e.target.value)} />
+        <form>
+          Something: <input type="text" onChange={handleChange} />
+        </form>
       </div>
     </div>
   )
