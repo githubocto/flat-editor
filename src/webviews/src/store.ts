@@ -22,7 +22,6 @@ export const useFlatConfigStore = create<FlatStoreState>(
       jobs: {},
     },
     update: fn => {
-      console.log('In update func')
       set(fn)
     },
   }))
