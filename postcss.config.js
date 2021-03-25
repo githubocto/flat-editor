@@ -1,11 +1,11 @@
 // postcss.config.js
 // Taken from: https://tailwindcss.com/docs/installation#using-tailwind-with-postcss
 module.exports = {
-  plugins: [
+  plugins: {
     // ...
-    require('tailwindcss'),
-    require('postcss-nested'),
-    require('autoprefixer'),
+    '@tailwindcss/jit': {},
+    'postcss-nested': {},
+    autoprefixer: {},
     // ...
-  ],
-};
+  },
+}
