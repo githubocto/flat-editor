@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react'
 import useFlatConfigStore from './store'
+import Triggers from './Triggers'
 import { VSCodeAPI } from './VSCodeAPI'
 
 interface AppProps {}
@@ -20,17 +21,13 @@ function App({}: AppProps) {
   }
 
   useEffect(() => {
-    console.log(state)
+    console.log('State updated: ', state)
     VSCodeAPI.postMessage(state)
   }, [state])
 
   return (
     <div className="p-6">
-      <div>
-        <form>
-          Something: <input type="text" onChange={handleChange} />
-        </form>
-      </div>
+      <Triggers />
     </div>
   )
 }

@@ -49,30 +49,51 @@ body {
   }
 }
 
-form input[type='radio'] {
+select {
+  @apply bg-vscode-settings-dropdownBackground;
+  @apply text-vscode-settings-dropdownForeground;
+  @apply border-vscode-settings-dropdownBorder;
+  @apply text-xs;
+
+  &:focus {
+    box-shadow: 0 0 0 1px var(--vscode-settings-dropdownListBorder);
+    @apply border-vscode-settings-dropdownListBorder;
+  }
+
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 20 20' stroke='white' aria-hidden='true' focusable='false' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3E%3C/svg%3E");
+}
+
+input[type='radio'],
+input[type='checkbox'] {
   &:hover,
   &:focus,
   &:active {
-    box-shadow: 0 0 0 1px var(--vscode-badge-background);
+    box-shadow: 0 0 0 1px var(--vscode-settings-dropdownListBorder);
   }
 
+  @apply bg-vscode-settings-checkboxBackground;
+  @apply text-vscode-settings-checkboxForeground;
+  @apply border-vscode-settings-checkboxBorder;
+
   &:checked {
-    background-color: var(--vscode-badge-background);
+    @apply bg-vscode-settings-checkboxBackground;
+    @apply text-vscode-settings-headerForeground;
   }
 
   &:checked,
   &:checked:focus {
-    background-color: var(--vscode-badge-background) !important;
+    @apply bg-vscode-settings-checkboxBackground;
   }
 }
 
-form input[type='text'] {
-  @apply h-8 text-sm;
-  background: var(--vscode-input-background) !important;
-  border-color: var(--vscode-input-border) !important;
+input[type='text'] {
+  @apply h-8 text-sm bg-vscode-input-background border-vscode-input-border;
+  /* background: var(--vscode-input-background) !important;
+  border-color: var(--vscode-input-border) !important; */
 
   &::placeholder {
-    color: var(--vscode-input-placeholderForeground);
+    @apply text-vscode-input-placeholderForeground
+    /* color: var(--vscode-input-placeholderForeground); */;
   }
 
   &:focus {
