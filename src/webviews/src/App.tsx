@@ -28,7 +28,7 @@ function App({}: AppProps) {
       .validate(state, { abortEarly: false })
       .then(function () {
         console.log('valid!')
-        setErrors({})
+        setErrors([])
       })
       .catch(function (err) {
         setErrors(err.inner)

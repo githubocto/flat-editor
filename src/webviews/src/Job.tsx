@@ -9,7 +9,7 @@ type JobProps = {
 }
 
 const Job: FunctionComponent<JobProps> = props => {
-  const { state, update } = useFlatConfigStore()
+  const { state, update, errors } = useFlatConfigStore()
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newName = e.target.value
@@ -17,6 +17,10 @@ const Job: FunctionComponent<JobProps> = props => {
       store.state.jobs[props.index].name = newName
     })
   }
+
+  const nameError = errors.find(
+    error => error.path === `jobs[${props.index}].name`
+  )?.message
 
   return (
     <div>
@@ -26,7 +30,7 @@ const Job: FunctionComponent<JobProps> = props => {
         value={props.name}
         label="A descriptive name for this job."
         handleChange={handleChange}
-        error={''}
+        error={nameError}
       />
     </div>
   )
