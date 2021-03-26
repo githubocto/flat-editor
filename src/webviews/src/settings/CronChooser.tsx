@@ -102,7 +102,7 @@ const CronChooser: FunctionComponent<CronChooserProps> = props => {
               <input
                 value={customCron}
                 onChange={handleCustomCronChange}
-                className="shadow-sm block w-full"
+                className="shadow-sm block w-64"
                 placeholder="Enter custom schedule"
                 type="text"
               />
@@ -110,17 +110,21 @@ const CronChooser: FunctionComponent<CronChooserProps> = props => {
             {cronFeedback && (
               <div>
                 {cronFeedback instanceof Error ? (
-                  <div className="text-vscode-inputValidation-errorForeground">
-                    {cronFeedback.message}
+                  <div className="text-vscode-inputValidation-errorForeground flex flex-row items-start">
+                    <div className="codicon codicon-error pr-1 text-sm pt-px" />
+                    <div>{cronFeedback.message}</div>
                   </div>
                 ) : (
                   <div>
-                    <span className="text-vscode-inputValidation-infoForeground">
-                      Will run:{' '}
-                    </span>{' '}
-                    {cronFeedback === 'Every minute'
-                      ? 'Every five minutes'
-                      : cronFeedback}
+                    <div className="text-vscode-inputValidation-infoForeground flex flex-row items-start">
+                      <div className="codicon codicon-pass pr-1 text-sm pt-px" />
+                      <div>
+                        Will run:{' '}
+                        {cronFeedback === 'Every minute'
+                          ? 'Every five minutes'
+                          : cronFeedback}
+                      </div>
+                    </div>{' '}
                   </div>
                 )}
               </div>

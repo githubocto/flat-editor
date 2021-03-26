@@ -1,4 +1,5 @@
 import React, { FunctionComponent } from 'react'
+import Header from './Header'
 import CronChooser from './settings/CronChooser'
 import Toggle from './settings/Toggle'
 import useFlatConfigStore from './store'
@@ -8,15 +9,11 @@ const Triggers: FunctionComponent<TriggersProps> = props => {
   const { state, update } = useFlatConfigStore()
 
   return (
-    <div className="text-vscode-foreground">
-      <header className="p-2 hover:bg-vscode-notebook-rowHoverBackground">
-        <div className="text-2xl font-bold text-vscode-settings-headerForeground py-2">
-          Triggers
-        </div>
-        <div className="text-vscode-foreground">
-          These settings determine when your workflow is executed.
-        </div>
-      </header>
+    <div className="text-vscode-foreground pb-4">
+      <Header
+        title="Triggers"
+        description="These settings determine when your workflow is executed."
+      />
 
       <Toggle
         handleChange={e =>
