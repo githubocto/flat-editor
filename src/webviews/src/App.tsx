@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react'
+import Jobs from './Jobs'
 import useFlatConfigStore from './store'
 import Triggers from './Triggers'
 import { VSCodeAPI } from './VSCodeAPI'
@@ -6,8 +7,7 @@ import { VSCodeAPI } from './VSCodeAPI'
 interface AppProps {}
 
 function App({}: AppProps) {
-  const update = useFlatConfigStore(state => state.update)
-  const state = useFlatConfigStore(state => state.state)
+  const { state, update } = useFlatConfigStore()
 
   // useEffect(() => {
   //   // communicate to extension that state has changed
@@ -28,6 +28,7 @@ function App({}: AppProps) {
   return (
     <div className="p-6">
       <Triggers />
+      <Jobs />
     </div>
   )
 }

@@ -37,8 +37,9 @@ export type FlatState = {
   triggerPush?: boolean
   triggerSchedule: string
   jobs: {
-    [name: string]: FlatJob
-  }
+    name: string
+    job: FlatJob
+  }[]
 }
 
 export type FlatYamlStep = {

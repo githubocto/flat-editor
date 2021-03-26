@@ -170,18 +170,18 @@ export class FlatConfigEditor implements vscode.CustomTextEditorProvider {
       ]
     }
 
-    for (const name in data.jobs) {
-      doc.jobs[name] = {
+    data.jobs.forEach(j => {
+      doc.jobs[j.name] = {
         'runs-on': 'ubuntu-latest',
         steps: [
           {
             name: 'Checkout repo',
             uses: 'actions/checkout@v2',
           },
-          ...data.jobs[name].steps,
+          ...j.job.steps,
         ],
       }
-    }
+    })
 
     return stringify(doc)
   }

@@ -19,7 +19,7 @@ export const useFlatConfigStore = create<FlatStoreState>(
       triggerDispatch: false,
       triggerPush: false,
       triggerSchedule: '0 * * * *',
-      jobs: {},
+      jobs: [],
     },
     update: fn => {
       set(fn)
