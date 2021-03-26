@@ -21,7 +21,7 @@ const Jobs: FunctionComponent<JobsProps> = props => {
 
   // TODO: figure out which kind each job, maybe at deserialization time instead thought?
   const jobs = state.jobs.map((j, i) => (
-    <Job name={j.name} type="pull" key={i} />
+    <Job index={i} name={j.name} type="pull" key={i} />
   ))
 
   return (

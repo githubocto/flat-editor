@@ -9,12 +9,15 @@ const immer = <T extends State>(
 
 type FlatStoreState = {
   state: FlatState
+  errors: object
   update: (fn: (draft: Draft<FlatStoreState>) => void) => void
+  setErrors: (errors: object) => void
   // setTriggerSchedule: (schedule: string) => void
 }
 
 export const useFlatConfigStore = create<FlatStoreState>(
   immer(set => ({
+    errors: {},
     state: {
       triggerDispatch: false,
       triggerPush: false,
@@ -23,6 +26,11 @@ export const useFlatConfigStore = create<FlatStoreState>(
     },
     update: fn => {
       set(fn)
+    },
+    setErrors: errors => {
+      set(draft => {
+        draft.errors = errors
+      })
     },
   }))
 )

@@ -79,6 +79,7 @@
 		"tweetsodium": "^0.0.5",
 		"vscode-codicons": "^0.0.15",
 		"yaml": "^2.0.0-4",
+		"yup": "^0.32.9",
 		"zod": "^3.0.0-alpha.33",
 		"zustand": "^3.3.3"
 	}
