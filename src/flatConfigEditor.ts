@@ -78,6 +78,26 @@ export class FlatConfigEditor implements vscode.CustomTextEditorProvider {
     const styleVSCodeUri = webview.asWebviewUri(
       vscode.Uri.joinPath(this.context.extensionUri, 'out/webviews/index.css')
     )
+
+    const codiconsUri = webview.asWebviewUri(
+      vscode.Uri.joinPath(
+        this.context.extensionUri,
+        'node_modules',
+        'vscode-codicons',
+        'dist',
+        'codicon.css'
+      )
+    )
+    const codiconsFontUri = webview.asWebviewUri(
+      vscode.Uri.joinPath(
+        this.context.extensionUri,
+        'node_modules',
+        'vscode-codicons',
+        'dist',
+        'codicon.ttf'
+      )
+    )
+
     // Use a nonce to whitelist which scripts can be run
     const nonce = getNonce()
 
@@ -91,11 +111,13 @@ export class FlatConfigEditor implements vscode.CustomTextEditorProvider {
 				Use a content security policy to only allow loading images from https or from our extension directory,
 				and only allow scripts that have a specific nonce.
 				-->
-				<meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src ${webview.cspSource} 'self' data:; style-src ${webview.cspSource}; script-src 'nonce-${nonce}';">
+				<meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src ${webview.cspSource} 'self' data:; style-src ${webview.cspSource} ${codiconsUri}; script-src 'nonce-${nonce}'; font-src ${codiconsFontUri};">
 
 				<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+        
 				<link href="${styleVSCodeUri}" rel="stylesheet" />
+        <link href="${codiconsUri}" rel="stylesheet" />
         <script nonce="${nonce}">
           window.acquireVsCodeApi = acquireVsCodeApi;
         </script>
