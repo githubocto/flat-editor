@@ -15,7 +15,7 @@ const Chooser: FunctionComponent<ChooserProps> = props => {
   const id = useMemo(() => nanoid(), [])
   return (
     <FieldWithDescription title={props.title}>
-      <div className="flex flex-row items-center space-x-2">
+      <div className="flex items-center space-x-2">
         <select>
           {props.options.map((o, i) => (
             <option key={i} value={props.values?.[i] ?? o}>

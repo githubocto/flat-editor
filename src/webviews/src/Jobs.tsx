@@ -1,4 +1,3 @@
-import { nanoid } from 'nanoid'
 import React, { FunctionComponent } from 'react'
 import Header from './Header'
 import Job from './Job'
@@ -11,15 +10,8 @@ const Jobs: FunctionComponent<JobsProps> = props => {
 
   const handleJobAdded = () => {
     update(store => {
-      // Generate default job names
-      // Make sure they don't collide with existing jobs
-      let k = nanoid(6)
-      const jobNames = store.state.jobs.map(j => j.name)
-      while (jobNames.includes(k)) {
-        k = nanoid(6)
-      }
       store.state.jobs.push({
-        name: k,
+        name: '',
         job: {
           steps: [],
         },
@@ -27,7 +19,11 @@ const Jobs: FunctionComponent<JobsProps> = props => {
     })
   }
 
-  const jobs = state.jobs.map((j, i) => <Job name={j.name} key={i} />)
+  // TODO: figure out which kind each job, maybe at deserialization time instead thought?
+  const jobs = state.jobs.map((j, i) => (
+    <Job name={j.name} type="pull" key={i} />
+  ))
+
   return (
     <div className="text-vscode-foreground">
       <Header
@@ -38,7 +34,7 @@ const Jobs: FunctionComponent<JobsProps> = props => {
           <span className="codicon codicon-add pr-2" /> Add a job
         </button>
       </Header>
-      <div>{jobs}</div>
+      <div className="p-4 border border-vscode-contrastBorder">{jobs}</div>
     </div>
   )
 }

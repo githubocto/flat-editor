@@ -182,7 +182,8 @@ export class FlatConfigEditor implements vscode.CustomTextEditorProvider {
         ],
       }
     })
-
-    return stringify(doc)
+    const serialized = stringify(doc)
+    console.log('Doc is: ', serialized)
+    return serialized
   }
 }

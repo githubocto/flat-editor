@@ -4,30 +4,56 @@ import useFlatConfigStore from './store'
 
 type JobProps = {
   name: string
+  type: 'pull' | 'push' | 'transform'
 }
 
 const Job: FunctionComponent<JobProps> = props => {
   const { state, update } = useFlatConfigStore()
   const [name, setName] = useState(props.name)
-  const [error, setError] = useState<string | undefined>()
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const newName = e.target.value
-    setName(newName)
+
+  const validate = (newName: string) => {
     const jobNames = state.jobs.map(j => j.name)
     if (jobNames.includes(newName)) {
       // can't use this name
-      setError('Jobs must have a unique name.')
+      return 'Jobs must have a unique name.'
     } else if (newName === '') {
-      setError('Jobs must have a name.')
+      return 'Jobs must have a name.'
     } else {
-      setError(undefined)
+      return undefined
+    }
+  }
+  const [error, setError] = useState<string | undefined>(validate(props.name))
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newName = e.target.value
+    setName(newName)
+    const error = validate(newName)
+    if (error) {
+      setError(error)
+    } else {
       update(store => {
         const job = store.state.jobs.find(j => j.name === props.name)
         if (job) {
           job.name = newName
         }
       })
+      setError(undefined)
     }
+    // const jobNames = state.jobs.map(j => j.name)
+    // if (jobNames.includes(newName)) {
+    //   // can't use this name
+    //   setError('Jobs must have a unique name.')
+    // } else if (newName === '') {
+    //   setError('Jobs must have a name.')
+    // } else {
+    //   setError(undefined)
+    //   update(store => {
+    //     const job = store.state.jobs.find(j => j.name === props.name)
+    //     if (job) {
+    //       job.name = newName
+    //     }
+    //   })
+    // }
   }
   return (
     <div>
@@ -39,6 +65,7 @@ const Job: FunctionComponent<JobProps> = props => {
         handleChange={handleChange}
         error={error}
       />
+      {/* TODO: job deltion */}
     </div>
   )
 }
