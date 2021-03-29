@@ -8,7 +8,7 @@ import { VSCodeAPI } from './VSCodeAPI'
 interface AppProps {}
 
 function App({}: AppProps) {
-  const { state, update, setErrors, errors } = useFlatConfigStore()
+  const { state, update, setErrors } = useFlatConfigStore()
 
   // useEffect(() => {
   //   // communicate to extension that state has changed
@@ -27,7 +27,6 @@ function App({}: AppProps) {
     flatStateValidationSchema
       .validate(state, { abortEarly: false })
       .then(function () {
-        console.log('valid!')
         setErrors([])
       })
       .catch(function (err) {
@@ -40,10 +39,6 @@ function App({}: AppProps) {
   return (
     <div className="p-6">
       <Triggers />
-      <pre className="h-48 p-2 text-xs overflow-scroll">
-        {/* @ts-ignore */}
-        {JSON.stringify(errors, null, 2)}
-      </pre>
       <Jobs />
     </div>
   )
