@@ -118,7 +118,7 @@ export class FlatConfigEditor implements vscode.CustomTextEditorProvider {
 
 				<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-        
+
 				<link href="${styleVSCodeUri}" rel="stylesheet" />
         <link href="${codiconsUri}" rel="stylesheet" />
         <script nonce="${nonce}">
@@ -128,7 +128,7 @@ export class FlatConfigEditor implements vscode.CustomTextEditorProvider {
 				<title>Flat Editor</title>
 			</head>
 			<body>
-				<div data-config="${stringifiedConfig}" id="root"></div>			
+				<div data-config="${stringifiedConfig}" id="root"></div>
 				<script nonce="${nonce}" src="${scriptUri}"></script>
 			</body>
 			</html>`
@@ -140,6 +140,9 @@ export class FlatConfigEditor implements vscode.CustomTextEditorProvider {
   private updateTextDocument(document: vscode.TextDocument, data: any) {
     // todo
     const edit = new vscode.WorkspaceEdit()
+    const currentText = document.getText()
+    const newText = this.serializeWorkflow(data)
+    if (currentText === newText) return
 
     console.log('update', data)
 
@@ -148,7 +151,7 @@ export class FlatConfigEditor implements vscode.CustomTextEditorProvider {
     edit.replace(
       document.uri,
       new vscode.Range(0, 0, document.lineCount, 0),
-      this.serializeWorkflow(data)
+      newText
     )
 
     return vscode.workspace.applyEdit(edit)
