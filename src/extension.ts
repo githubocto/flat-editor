@@ -15,22 +15,44 @@ export function activate(context: vscode.ExtensionContext) {
 
   context.subscriptions.push(disposable)
 
-  context.subscriptions.push(FlatConfigEditor.register(context))
+  const editor = FlatConfigEditor.register(context)
+  context.subscriptions.push(editor)
 
-  const showPreviewDisposable = vscode.commands.registerCommand(
-    'extension.showPreview',
-    async () => {
-      const workspaceRootUri = vscode.workspace.workspaceFolders?.[0].uri
-      if (!workspaceRootUri) return
-      const flatFileUri = vscode.Uri.joinPath(workspaceRootUri, 'flat.yml')
+  const showEditor = ({ isPreview = false, onSide = false }) => () => {
+    const workspaceRootUri = vscode.workspace.workspaceFolders?.[0].uri
+    if (!workspaceRootUri) return
+    const flatFileUri = vscode.Uri.joinPath(workspaceRootUri, 'flat.yml')
 
-      const document = await vscode.workspace.openTextDocument(flatFileUri)
-      await vscode.window.showTextDocument(document, {
-        preview: false,
-        viewColumn: 2,
-      })
-    }
+    vscode.commands.executeCommand(
+      'vscode.openWith',
+      flatFileUri,
+      isPreview ? 'flat.config' : 'default',
+      onSide ? { viewColumn: vscode.ViewColumn.Beside, preview: false } : {}
+    )
+  }
+
+  context.subscriptions.push(
+    vscode.commands.registerCommand(
+      'extension.showPreview',
+      showEditor({ isPreview: true, onSide: false })
+    )
   )
-
-  context.subscriptions.push(showPreviewDisposable)
+  context.subscriptions.push(
+    vscode.commands.registerCommand(
+      'extension.showRaw',
+      showEditor({ isPreview: false, onSide: false })
+    )
+  )
+  context.subscriptions.push(
+    vscode.commands.registerCommand(
+      'extension.showPreviewToSide',
+      showEditor({ isPreview: true, onSide: true })
+    )
+  )
+  context.subscriptions.push(
+    vscode.commands.registerCommand(
+      'extension.showRawToSide',
+      showEditor({ isPreview: false, onSide: true })
+    )
+  )
 }

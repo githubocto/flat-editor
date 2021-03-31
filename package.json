@@ -34,20 +34,48 @@
       {
         "command": "extension.showPreview",
         "title": "Show Preview, Please!!!",
-        "category": "Flat Editor"
+        "category": "Flat Editor",
+        "icon": "$(go-to-file)"
+      },
+      {
+        "command": "extension.showRaw",
+        "title": "Show Raw, Please!!!",
+        "category": "Flat Editor",
+        "icon": "$(go-to-file)"
+      },
+      {
+        "command": "extension.showPreviewToSide",
+        "title": "Show preview to the side",
+        "category": "Flat Editor",
+        "icon": "$(go-to-file)"
+      },
+      {
+        "command": "extension.showRawToSide",
+        "title": "Show raw to the side",
+        "category": "Flat Editor",
+        "icon": "$(go-to-file)"
       },
       {
         "command": "extension.helloWorld",
         "title": "Hello World"
       }
     ],
-    "explorer/context": [
-      {
-        "command": "extension.showPreview",
-        "alt": "extension.showPreview",
-        "group": "navigation"
-      }
-    ]
+    "menus": {
+      "editor/title": [
+        {
+          "command": "extension.showPreview",
+          "alt": "extension.showPreviewToSide",
+          "group": "navigation",
+          "when": "resourceFilename == 'flat.yml' && editorLangId == yaml && activeEditor == workbench.editors.files.textFileEditor"
+        },
+        {
+          "command": "extension.showRaw",
+          "alt": "extension.showRawToSide",
+          "group": "navigation",
+          "when": "activeEditor == WebviewEditor"
+        }
+      ]
+    }
   },
   "scripts": {
     "vscode:prepublish": "npm run compile",
