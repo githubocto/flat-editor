@@ -4,7 +4,7 @@ import FieldWithDescription from './FieldWithDescription'
 
 type CronChooserProps = {
   value: string
-  handleScheduleChange: (schedule: string) => void
+  onChange: (schedule: string) => void
 }
 
 const defaultSchedules = {
@@ -23,7 +23,7 @@ const CronChooser: FunctionComponent<CronChooserProps> = props => {
       setCronFeedback(
         cronstrue.toString(val, { throwExceptionOnParseError: true })
       )
-      props.handleScheduleChange(val)
+      props.onChange(val)
     } catch (error) {
       setCronFeedback(new Error(error as string))
     }
@@ -40,7 +40,7 @@ const CronChooser: FunctionComponent<CronChooserProps> = props => {
       validateCron(customCron)
     }
     setShowCustom(custom)
-    props.handleScheduleChange(custom ? customCron : e.target.value)
+    props.onChange(custom ? customCron : e.target.value)
   }
 
   return (

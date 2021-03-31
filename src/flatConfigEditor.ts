@@ -1,7 +1,7 @@
 import * as vscode from 'vscode'
-import { stringify } from 'yaml'
+import { parse, stringify } from 'yaml'
 import { getNonce } from './lib'
-import type { FlatState, FlatYamlDoc } from './types'
+import type { FlatState } from './types'
 
 export class FlatConfigEditor implements vscode.CustomTextEditorProvider {
   public static register(context: vscode.ExtensionContext): vscode.Disposable {
@@ -23,53 +23,44 @@ export class FlatConfigEditor implements vscode.CustomTextEditorProvider {
     webviewPanel: vscode.WebviewPanel,
     _token: vscode.CancellationToken
   ): Promise<void> {
+    const updateWebview = async () => {
+      webviewPanel.webview.html = await this.getHtmlForWebview(
+        webviewPanel.webview
+      )
+    }
+
+    const changeDocumentSubscription = vscode.workspace.onDidSaveTextDocument(
+      e => {
+        if (e.uri.toString() === document.uri.toString()) {
+          updateWebview()
+        }
+      }
+    )
+
     // Setup initial content for the webview
     webviewPanel.webview.options = {
       enableScripts: true,
     }
-    webviewPanel.webview.html = this.getHtmlForWebview(webviewPanel.webview)
-
-    // function updateWebview() {
-    //   const data = parse(document.getText())
-    //   webviewPanel.webview.postMessage({
-    //     type: 'update',
-    //     text: JSON.stringify(data, null, 2),
-    //   })
-    // }
-
-    // Hook up event handlers so that we can synchronize the webview with the text document.
-    //
-    // The text document acts as our model, so we have to sync change in the document to our
-    // editor and sync changes in the editor back to the document.
-    //
-    // Remember that a single text document can also be shared between multiple custom
-    // editors (this happens for example when you split a custom editor)
-
-    // const changeDocumentSubscription = vscode.workspace.onDidChangeTextDocument(
-    //   e => {
-    //     if (e.document.uri.toString() === document.uri.toString()) {
-    //       updateWebview()
-    //     }
-    //   }
-    // )
-
-    // // Make sure we get rid of the listener when our editor is closed.
-    // webviewPanel.onDidDispose(() => {
-    //   changeDocumentSubscription.dispose()
-    // })
+    webviewPanel.webview.html = await this.getHtmlForWebview(
+      webviewPanel.webview
+    )
 
     // Receive message from the webview.
-    webviewPanel.webview.onDidReceiveMessage(e => {
-      this.updateTextDocument(document, e)
+    webviewPanel.webview.onDidReceiveMessage(async e => {
+      switch (e.type) {
+        case 'updateText':
+          this.updateTextDocument(document, e.data)
+          break
+        default:
+          break
+      }
     })
-
-    // updateWebview()
   }
 
   /**
    * Get the static html used for the editor webviews.
    */
-  private getHtmlForWebview(webview: vscode.Webview): string {
+  private async getHtmlForWebview(webview: vscode.Webview): Promise<string> {
     // Local path to script and css for the webview
     const scriptUri = webview.asWebviewUri(
       vscode.Uri.joinPath(this.context.extensionUri, 'out/webviews/index.js')
@@ -101,6 +92,18 @@ export class FlatConfigEditor implements vscode.CustomTextEditorProvider {
     // Use a nonce to whitelist which scripts can be run
     const nonce = getNonce()
 
+    const workspaceRootUri = vscode.workspace.workspaceFolders?.[0].uri
+    if (!workspaceRootUri) {
+      throw new Error('No workspace open')
+    }
+
+    const flatFileUri = vscode.Uri.joinPath(workspaceRootUri, 'flat.yml')
+    const document = await vscode.workspace.openTextDocument(flatFileUri)
+    const rawFlatYaml = document.getText()
+    const parsedConfig = parse(rawFlatYaml)
+    const stringifiedConfig = encodeURIComponent(JSON.stringify(parsedConfig))
+    console.log('parsed config', parsedConfig)
+
     return /* html */ `
 			<!DOCTYPE html>
 			<html lang="en">
@@ -122,10 +125,10 @@ export class FlatConfigEditor implements vscode.CustomTextEditorProvider {
           window.acquireVsCodeApi = acquireVsCodeApi;
         </script>
 
-				<title>Cat Scratch</title>
+				<title>Flat Editor</title>
 			</head>
 			<body>
-				<div id="root"></div>			
+				<div data-config="${stringifiedConfig}" id="root"></div>			
 				<script nonce="${nonce}" src="${scriptUri}"></script>
 			</body>
 			</html>`
@@ -138,7 +141,7 @@ export class FlatConfigEditor implements vscode.CustomTextEditorProvider {
     // todo
     const edit = new vscode.WorkspaceEdit()
 
-    console.log(data)
+    console.log('update', data)
 
     // Replaces the entire document every time
     // TODO, maybe: more specific edits
@@ -152,38 +155,37 @@ export class FlatConfigEditor implements vscode.CustomTextEditorProvider {
   }
 
   private serializeWorkflow(data: FlatState): string {
-    const doc: FlatYamlDoc = {
-      name: 'Flat',
-      on: {
-        workflow_dispatch: null,
-      },
-      jobs: {},
-    }
-    if (data.triggerPush) {
-      doc.on.push = null
-    }
-    if (data.triggerSchedule) {
-      doc.on.schedule = [
-        {
-          cron: data.triggerSchedule,
-        },
-      ]
-    }
+    // const doc: FlatYamlDoc = {
+    //   name: 'Flat',
+    //   on: {
+    //     workflow_dispatch: null,
+    //   },
+    //   jobs: {},
+    // }
+    // if (data.triggerPush) {
+    //   doc.on.push = null
+    // }
+    // if (data.triggerSchedule) {
+    //   doc.on.schedule = [
+    //     {
+    //       cron: data.triggerSchedule,
+    //     },
+    //   ]
+    // }
 
-    data.jobs.forEach(j => {
-      doc.jobs[j.name] = {
-        'runs-on': 'ubuntu-latest',
-        steps: [
-          {
-            name: 'Checkout repo',
-            uses: 'actions/checkout@v2',
-          },
-          ...j.job.steps,
-        ],
-      }
-    })
-    const serialized = stringify(doc)
-    console.log('Doc is: ', serialized)
+    // data.jobs.forEach(j => {
+    //   doc.jobs[j.name] = {
+    //     'runs-on': 'ubuntu-latest',
+    //     steps: [
+    //       {
+    //         name: 'Checkout repo',
+    //         uses: 'actions/checkout@v2',
+    //       },
+    //       ...j.job.steps,
+    //     ],
+    //   }
+    // })
+    const serialized = stringify(data)
     return serialized
   }
 }

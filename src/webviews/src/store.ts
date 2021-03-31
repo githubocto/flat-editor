@@ -26,10 +26,19 @@ export const useFlatConfigStore = create<FlatStoreState>(
   immer(set => ({
     errors: [],
     state: {
-      triggerDispatch: false,
-      triggerPush: false,
-      triggerSchedule: '0 * * * *',
-      jobs: [],
+      name: 'Flat',
+      on: {
+        workflow_dispatch: undefined,
+        push: undefined,
+        schedule: {
+          cron: '0 * * * *',
+        },
+      },
+      jobs: {},
+      // triggerDispatch: false,
+      // triggerPush: false,
+      // triggerSchedule: '0 * * * *',
+      // jobs: [],
     },
     update: fn => {
       set(fn)
@@ -43,3 +52,11 @@ export const useFlatConfigStore = create<FlatStoreState>(
 )
 
 export default useFlatConfigStore
+
+// export const sanitizeFlatState = (state: FlatState) => {
+//   let sanitizedState = { ...state }
+//   sanitizedState.name = sanitizedState.name || ''
+//   sanitizedState.on = sanitizedState.on || {}
+//   sanitizedState.jobs = sanitizedState.jobs || {}
+//   return sanitizedState
+// }

@@ -30,16 +30,23 @@ export type PushStep = {
 export type FlatStep = PullStep | PushStep
 
 export type FlatJob = {
+  runs_on: string
   steps: FlatStep[]
 }
 
+interface OnFlatState {
+  workflow_dispatch?: any
+  push?: {
+    branches: string[]
+  }
+  schedule?: {
+    cron: string
+  }
+}
 export type FlatState = {
-  triggerPush?: boolean
-  triggerSchedule: string
-  jobs: {
-    name: string
-    job: FlatJob
-  }[]
+  name: string
+  on: OnFlatState
+  jobs: Record<string, FlatJob>
 }
 
 export type FlatYamlStep = {

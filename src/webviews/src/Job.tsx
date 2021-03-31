@@ -15,13 +15,13 @@ const Job: FunctionComponent<JobProps> = props => {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newName = e.target.value
     update(store => {
-      store.state.jobs[props.index].name = newName
+      // store.state.jobs[props.index].name = newName
     })
   }
 
   const handleRemoveJob = () => {
     update(store => {
-      store.state.jobs.splice(props.index, 1)
+      // store.state.jobs.splice(props.index, 1)
     })
   }
 

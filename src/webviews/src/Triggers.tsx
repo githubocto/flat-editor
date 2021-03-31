@@ -1,12 +1,37 @@
 import React, { FunctionComponent } from 'react'
 import Header from './Header'
 import CronChooser from './settings/CronChooser'
-import Toggle from './settings/Toggle'
+import TextInput from './settings/TextInput'
 import useFlatConfigStore from './store'
 
 type TriggersProps = {}
 const Triggers: FunctionComponent<TriggersProps> = props => {
   const { state, update } = useFlatConfigStore()
+
+  const branches = (state.on.push?.branches || []).join(',')
+  const cron = state.on?.schedule?.cron || ''
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    update(store => {
+      if (!store.state.on.push) {
+        store.state.on.push = { branches: [] }
+      }
+      if (!store.state.on.push.branches) {
+        store.state.on.push.branches = []
+      }
+      store.state.on.push.branches = e.target.value.split(',')
+    })
+  }
+
+  const handleScheduleChange = (schedule: string) => {
+    update(store => {
+      if (!store.state.on.schedule) {
+        store.state.on.schedule = { cron: '' }
+      }
+
+      store.state.on.schedule.cron = schedule
+    })
+  }
 
   return (
     <div className="text-vscode-foreground pb-4">
@@ -15,24 +40,14 @@ const Triggers: FunctionComponent<TriggersProps> = props => {
         description="These settings determine when your workflow is executed."
       />
 
-      <Toggle
-        handleChange={e =>
-          update(store => {
-            store.state.triggerPush = e.target.checked
-          })
-        }
-        title="Upon Push"
-        label="The workflow will be executed when commits are pushed to any branch."
-        checked={state.triggerPush}
+      <TextInput
+        title="Branches that push"
+        value={branches}
+        label="A comma-separated list of git branch names that trigger the data to update on push."
+        handleChange={handleChange}
       />
-      <CronChooser
-        value={state.triggerSchedule}
-        handleScheduleChange={s => {
-          update(store => {
-            store.state.triggerSchedule = s
-          })
-        }}
-      />
+
+      <CronChooser value={cron} onChange={handleScheduleChange} />
     </div>
   )
 }

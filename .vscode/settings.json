@@ -1,7 +1,4 @@
 {
   "editor.formatOnSave": true,
-  "editor.codeActionsOnSave": {
-    "source.organizeImports": true
-  },
   "css.customData": [".vscode/css_custom_data.json"]
 }

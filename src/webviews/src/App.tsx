@@ -10,20 +10,7 @@ interface AppProps {}
 function App({}: AppProps) {
   const { state, update, setErrors } = useFlatConfigStore()
 
-  // useEffect(() => {
-  //   // communicate to extension that state has changed
-  //   VSCodeAPI.onMessage(message => console.log('app', message))
-  // }, [])
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    update(store => {
-      store.state.triggerSchedule = e.target.value
-    })
-  }
-
   useEffect(() => {
-    console.log('state changed to', state)
-
     flatStateValidationSchema
       .validate(state, { abortEarly: false })
       .then(function () {
@@ -33,7 +20,10 @@ function App({}: AppProps) {
         setErrors(err.inner)
       })
 
-    VSCodeAPI.postMessage(state)
+    VSCodeAPI.postMessage({
+      type: 'updateText',
+      data: state,
+    })
   }, [state])
 
   return (
