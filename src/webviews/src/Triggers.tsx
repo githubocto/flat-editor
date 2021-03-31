@@ -19,7 +19,9 @@ const Triggers: FunctionComponent<TriggersProps> = props => {
       if (!store.state.on.push.branches) {
         store.state.on.push.branches = []
       }
-      store.state.on.push.branches = e.target.value.split(',')
+      store.state.on.push.branches = e.target.value
+        .split(',')
+        .map(d => d.trim())
     })
   }
 
