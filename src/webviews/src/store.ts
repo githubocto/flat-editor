@@ -7,14 +7,24 @@ const immer = <T extends State>(
 ): StateCreator<T> => (set, get, api) =>
   config(fn => set(produce<T>(fn)), get, api)
 
+interface ValidationError {
+  path: string
+  errors: string[]
+  message: string
+  type: string
+}
+
 type FlatStoreState = {
   state: FlatState
+  errors: ValidationError[]
   update: (fn: (draft: Draft<FlatStoreState>) => void) => void
+  setErrors: (errors: ValidationError[]) => void
   // setTriggerSchedule: (schedule: string) => void
 }
 
 export const useFlatConfigStore = create<FlatStoreState>(
   immer(set => ({
+    errors: [],
     state: {
       triggerDispatch: false,
       triggerPush: false,
@@ -23,6 +33,11 @@ export const useFlatConfigStore = create<FlatStoreState>(
     },
     update: fn => {
       set(fn)
+    },
+    setErrors: errors => {
+      set(draft => {
+        draft.errors = errors
+      })
     },
   }))
 )

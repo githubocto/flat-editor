@@ -1,71 +1,59 @@
-import React, { FunctionComponent, useState } from 'react'
+import React, { FunctionComponent } from 'react'
+import { Clickable } from 'reakit/Clickable'
 import TextInput from './settings/TextInput'
 import useFlatConfigStore from './store'
 
 type JobProps = {
   name: string
+  index: number
   type: 'pull' | 'push' | 'transform'
 }
 
 const Job: FunctionComponent<JobProps> = props => {
-  const { state, update } = useFlatConfigStore()
-  const [name, setName] = useState(props.name)
-
-  const validate = (newName: string) => {
-    const jobNames = state.jobs.map(j => j.name)
-    if (jobNames.includes(newName)) {
-      // can't use this name
-      return 'Jobs must have a unique name.'
-    } else if (newName === '') {
-      return 'Jobs must have a name.'
-    } else {
-      return undefined
-    }
-  }
-  const [error, setError] = useState<string | undefined>(validate(props.name))
+  const { state, update, errors } = useFlatConfigStore()
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newName = e.target.value
-    setName(newName)
-    const error = validate(newName)
-    if (error) {
-      setError(error)
-    } else {
-      update(store => {
-        const job = store.state.jobs.find(j => j.name === props.name)
-        if (job) {
-          job.name = newName
-        }
-      })
-      setError(undefined)
-    }
-    // const jobNames = state.jobs.map(j => j.name)
-    // if (jobNames.includes(newName)) {
-    //   // can't use this name
-    //   setError('Jobs must have a unique name.')
-    // } else if (newName === '') {
-    //   setError('Jobs must have a name.')
-    // } else {
-    //   setError(undefined)
-    //   update(store => {
-    //     const job = store.state.jobs.find(j => j.name === props.name)
-    //     if (job) {
-    //       job.name = newName
-    //     }
-    //   })
-    // }
+    update(store => {
+      store.state.jobs[props.index].name = newName
+    })
   }
+
+  const handleRemoveJob = () => {
+    update(store => {
+      store.state.jobs.splice(props.index, 1)
+    })
+  }
+
+  const nameError = errors.find(
+    error => error.path === `jobs[${props.index}].name`
+  )?.message
+
   return (
     <div>
-      <div className="p-2 text-lg font-normal">{props.name}</div>
+      <div className="p-2 flex items-center justify-between">
+        <p className="text-lg">
+          {props.name ? (
+            props.name
+          ) : (
+            <span className="opacity-50 italic">Job Name</span>
+          )}
+        </p>
+        <Clickable
+          onClick={handleRemoveJob}
+          as="div"
+          className="font-medium underline cursor-pointer"
+        >
+          Remove Job
+        </Clickable>
+      </div>
       <TextInput
         title="Job name"
-        value={name}
+        value={props.name}
         label="A descriptive name for this job."
         handleChange={handleChange}
-        error={error}
+        error={nameError}
       />
-      {/* TODO: job deltion */}
     </div>
   )
 }
