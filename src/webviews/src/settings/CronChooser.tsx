@@ -8,6 +8,7 @@ type CronChooserProps = {
 }
 
 const defaultSchedules = {
+  never: '',
   fiveMinutes: '* * * * *',
   hour: '0 * * * *',
   day: '0 0 * * * ',
@@ -44,9 +45,19 @@ const CronChooser: FunctionComponent<CronChooserProps> = props => {
   }
 
   return (
-    <FieldWithDescription title="Execution frequency">
+    <FieldWithDescription title="When to update data">
       <div className="space-y-4 mt-2">
         <div className="flex items-center space-x-4" role="group">
+          <label className="flex items-center space-x-1">
+            <input
+              type="radio"
+              name="cron"
+              checked={!showCustom && props.value === defaultSchedules.never}
+              onChange={handleRadioChange}
+              value={defaultSchedules.never}
+            />
+            <span>Only on push</span>
+          </label>
           <label className="flex items-center space-x-1">
             <input
               type="radio"
@@ -57,7 +68,7 @@ const CronChooser: FunctionComponent<CronChooserProps> = props => {
               onChange={handleRadioChange}
               value={defaultSchedules.fiveMinutes}
             />
-            <span>Five Minutes</span>
+            <span>Every five minutes</span>
           </label>
           <label className="flex items-center space-x-1">
             <input
@@ -67,7 +78,7 @@ const CronChooser: FunctionComponent<CronChooserProps> = props => {
               onChange={handleRadioChange}
               value={defaultSchedules.hour}
             />
-            <span>Hour</span>
+            <span>Every hour</span>
           </label>
           <label className="flex items-center space-x-1">
             <input
@@ -77,7 +88,7 @@ const CronChooser: FunctionComponent<CronChooserProps> = props => {
               onChange={handleRadioChange}
               value={defaultSchedules.day}
             />
-            <span>Day</span>
+            <span>Every day</span>
           </label>
           <label className="flex items-center space-x-1">
             <input
@@ -86,7 +97,7 @@ const CronChooser: FunctionComponent<CronChooserProps> = props => {
               name="cron"
               value="custom"
             />
-            <span>Custom</span>
+            <span>On a custom schedule</span>
           </label>
         </div>
         {showCustom && (
