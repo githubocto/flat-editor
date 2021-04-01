@@ -1,6 +1,9 @@
 import React, { FunctionComponent } from 'react'
 import { Clickable } from 'reakit/Clickable'
+import { FlatStep, Step } from '../../types'
+
 import TextInput from './settings/TextInput'
+import { StepConfig } from './StepConfig'
 import useFlatConfigStore from './store'
 
 type JobProps = {
@@ -11,6 +14,10 @@ type JobProps = {
 
 export const Job: FunctionComponent<JobProps> = props => {
   const { state, update, errors } = useFlatConfigStore()
+  const job = state.jobs[props.index]
+
+  // Return early if no job, or if we've lost the secondary step
+  if (!job || (job && job.steps.length < 2)) return null
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newName = e.target.value
@@ -54,6 +61,7 @@ export const Job: FunctionComponent<JobProps> = props => {
         handleChange={handleChange}
         error={nameError}
       />
+      <StepConfig jobIndex={props.index} step={job.steps[1]} />
     </div>
   )
 }

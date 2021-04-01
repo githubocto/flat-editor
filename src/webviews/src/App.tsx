@@ -30,6 +30,8 @@ function App({}: AppProps) {
       return acc
     }, {})
 
+    console.log(transformedJobs)
+
     const transformedState = {
       ...state,
       jobs: transformedJobs,
