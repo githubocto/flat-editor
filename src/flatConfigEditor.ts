@@ -37,10 +37,16 @@ export class FlatConfigEditor implements vscode.CustomTextEditorProvider {
       }
     )
 
+    // Make sure we get rid of the listener when our editor is closed.
+    webviewPanel.onDidDispose(() => {
+      changeDocumentSubscription.dispose()
+    })
+
     // Setup initial content for the webview
     webviewPanel.webview.options = {
       enableScripts: true,
     }
+
     webviewPanel.webview.html = await this.getHtmlForWebview(
       webviewPanel.webview
     )
@@ -102,7 +108,6 @@ export class FlatConfigEditor implements vscode.CustomTextEditorProvider {
     const rawFlatYaml = document.getText()
     const parsedConfig = parse(rawFlatYaml)
     const stringifiedConfig = encodeURIComponent(JSON.stringify(parsedConfig))
-    console.log('parsed config', parsedConfig)
 
     return /* html */ `
 			<!DOCTYPE html>
@@ -143,8 +148,6 @@ export class FlatConfigEditor implements vscode.CustomTextEditorProvider {
     const currentText = document.getText()
     const newText = this.serializeWorkflow(data)
     if (currentText === newText) return
-
-    console.log('update', data)
 
     // Replaces the entire document every time
     // TODO, maybe: more specific edits

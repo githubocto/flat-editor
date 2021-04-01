@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react'
+import omit from 'lodash-es/omit'
 import Jobs from './Jobs'
 import useFlatConfigStore from './store'
 import Triggers from './Triggers'
@@ -20,9 +21,23 @@ function App({}: AppProps) {
         setErrors(err.inner)
       })
 
+    // Convert jobs ARRAY to jobs OBJECT
+    const transformedJobs = state.jobs.reduce((acc, next) => {
+      // @ts-ignore
+      acc[next.name] = {
+        ...omit(next, 'name'),
+      }
+      return acc
+    }, {})
+
+    const transformedState = {
+      ...state,
+      jobs: transformedJobs,
+    }
+
     VSCodeAPI.postMessage({
       type: 'updateText',
-      data: state,
+      data: transformedState,
     })
   }, [state])
 

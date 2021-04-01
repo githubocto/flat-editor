@@ -19,7 +19,6 @@ type FlatStoreState = {
   errors: ValidationError[]
   update: (fn: (draft: Draft<FlatStoreState>) => void) => void
   setErrors: (errors: ValidationError[]) => void
-  // setTriggerSchedule: (schedule: string) => void
 }
 
 export const useFlatConfigStore = create<FlatStoreState>(
@@ -34,11 +33,7 @@ export const useFlatConfigStore = create<FlatStoreState>(
           cron: '0 * * * *',
         },
       },
-      jobs: {},
-      // triggerDispatch: false,
-      // triggerPush: false,
-      // triggerSchedule: '0 * * * *',
-      // jobs: [],
+      jobs: [],
     },
     update: fn => {
       set(fn)
@@ -52,11 +47,3 @@ export const useFlatConfigStore = create<FlatStoreState>(
 )
 
 export default useFlatConfigStore
-
-// export const sanitizeFlatState = (state: FlatState) => {
-//   let sanitizedState = { ...state }
-//   sanitizedState.name = sanitizedState.name || ''
-//   sanitizedState.on = sanitizedState.on || {}
-//   sanitizedState.jobs = sanitizedState.jobs || {}
-//   return sanitizedState
-// }

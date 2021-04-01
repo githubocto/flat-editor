@@ -15,6 +15,11 @@ export type PullConfig = PullHttpConfig | PullSqlConfig
 
 export type PushConfig = {} // TODO: once we have a push action
 
+export type CheckoutStep = {
+  name: string
+  uses: 'actions/checkout@v2'
+}
+
 export type PullStep = {
   name: string
   uses: 'githubocto/flat-pull@v1'
@@ -27,11 +32,15 @@ export type PushStep = {
   with: PushConfig
 }
 
-export type FlatStep = PullStep | PushStep
+export type FlatStep = PullStep | PushStep | CheckoutStep
 
 export type FlatJob = {
   runs_on: string
   steps: FlatStep[]
+}
+
+interface FlatJobWithName extends FlatJob {
+  name: string
 }
 
 interface OnFlatState {
@@ -46,7 +55,7 @@ interface OnFlatState {
 export type FlatState = {
   name: string
   on: OnFlatState
-  jobs: Record<string, FlatJob>
+  jobs: FlatJobWithName[]
 }
 
 export type FlatYamlStep = {
