@@ -94,6 +94,7 @@ export function activate(context: vscode.ExtensionContext) {
       }
 
       fs.writeFileSync(path.join(workflowsDir, 'flat.yml'), stringify(flatStub))
+      showEditor({ isPreview: true })()
     })
   )
 }

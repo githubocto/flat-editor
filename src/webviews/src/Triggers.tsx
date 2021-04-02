@@ -1,7 +1,7 @@
 import React, { FunctionComponent } from 'react'
 import Header from './Header'
 import CronChooser from './settings/CronChooser'
-import TextInput from './settings/TextInput'
+import { Input } from './settings/Input'
 import useFlatConfigStore from './store'
 
 type TriggersProps = {}
@@ -42,7 +42,7 @@ const Triggers: FunctionComponent<TriggersProps> = props => {
         description="These settings determine when your workflow is executed."
       />
 
-      <TextInput
+      <Input
         title="Branches that push"
         value={branches}
         label="A comma-separated list of git branch names that trigger the data to update on push."

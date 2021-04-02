@@ -1,6 +1,6 @@
 import React, { FunctionComponent, useMemo } from 'react'
 import { VSCodeAPI } from './../VSCodeAPI'
-import TextInput from './TextInput'
+import { Input } from './Input'
 import { customAlphabet } from 'nanoid'
 const nanoid = customAlphabet('1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ', 6)
 
@@ -72,7 +72,7 @@ const SecretInput: FunctionComponent<SecretInputProps> = props => {
   // }
   return (
     <div>
-      <TextInput
+      <Input
         title={title}
         label={label}
         value={localValue}
@@ -87,7 +87,7 @@ const SecretInput: FunctionComponent<SecretInputProps> = props => {
             Save
           </button>
         )}
-      </TextInput>
+      </Input>
       {!isDirty && <div className="ml-2 mb-2 italic">✅ Saved</div>}
       {didError && (
         <div className="ml-2 mb-2 italic">

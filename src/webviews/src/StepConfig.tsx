@@ -1,9 +1,12 @@
 import React from 'react'
+import { Clickable } from 'reakit/Clickable'
+
 import type { Step, FlatStep, PullHttpConfig, PullSqlConfig } from '../../types'
-import TextInput from './settings/TextInput'
+import { Input } from './settings/Input'
 import SecretInput from './settings/SecretInput'
 import FieldWithDescription from './settings/FieldWithDescription'
 import useFlatConfigStore from './store'
+import { VSCodeAPI } from './VSCodeAPI'
 
 interface StepConfigProps {
   step: Step
@@ -11,7 +14,9 @@ interface StepConfigProps {
 }
 
 export function StepConfig(props: StepConfigProps) {
-  const { update } = useFlatConfigStore()
+  const { update, workspace } = useFlatConfigStore()
+  const [file, setFile] = React.useState<any>()
+  const filePickerRef = React.useRef<HTMLInputElement | null>(null)
 
   const handleHttpUrlChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     update(store => {
@@ -27,10 +32,23 @@ export function StepConfig(props: StepConfigProps) {
     })
   }
 
+  const handleOpenFilePicker = () => {
+    if (filePickerRef.current) {
+      filePickerRef.current.click()
+    }
+  }
+
+  const handleSqlFilePreview = (path: string) => {
+    VSCodeAPI.postMessage({
+      type: 'previewFile',
+      data: path,
+    })
+  }
+
   if ('with' in props.step && 'http_url' in props.step.with) {
     return (
       <div>
-        <TextInput
+        <Input
           value={props.step.with.http_url}
           title="Where is the data?"
           label="This needs to be a stable, unchanging URL"
@@ -41,7 +59,7 @@ export function StepConfig(props: StepConfigProps) {
   } else if ('with' in props.step && 'sql_format' in props.step.with) {
     return (
       <div>
-        <TextInput
+        <Input
           value={props.step.with.outfile_basename}
           title="Result location"
           label="The filename where you want the results to be saved. This file doesn't need to exist yet."
@@ -49,14 +67,43 @@ export function StepConfig(props: StepConfigProps) {
             handleSqlValueChange('outfile_basename', e.target.value)
           }
         />
-        <TextInput
-          value={props.step.with.sql_queryfile}
-          title="Query filename"
-          label="Save your query in a file and then specify the filename here."
-          handleChange={e =>
-            handleSqlValueChange('sql_queryfile', e.target.value)
-          }
-        />
+        <FieldWithDescription title="Query File">
+          <div className="space-y-2">
+            {props.step.with.sql_queryfile && (
+              <div className="flex items-center space-x-1">
+                <Clickable
+                  as="div"
+                  className="underline appearance-none cursor-pointer"
+                  onClick={() => {
+                    // @ts-ignore
+                    handleSqlFilePreview(props.step.with.sql_queryfile)
+                  }}
+                >
+                  {props.step.with.sql_queryfile}
+                </Clickable>
+              </div>
+            )}
+            <button onClick={handleOpenFilePicker}>
+              Choose a {props.step.with.sql_queryfile ? 'different ' : ''}query
+              file
+            </button>
+          </div>
+          <input
+            accept=".sql"
+            className="sr-only"
+            type="file"
+            ref={filePickerRef}
+            onChange={e => {
+              if (e.target.files && e.target.files.length > 0) {
+                const [file] = e.target.files
+                // @ts-ignore
+                const relativePath = file.path.split(workspace)[1]
+                // @ts-ignore
+                handleSqlValueChange('sql_queryfile', relativePath)
+              }
+            }}
+          />
+        </FieldWithDescription>
         <SecretInput
           stepId={props.jobIndex.toString()}
           title="Connection string"

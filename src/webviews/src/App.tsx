@@ -9,7 +9,7 @@ import { VSCodeAPI } from './VSCodeAPI'
 interface AppProps {}
 
 function App({}: AppProps) {
-  const { state, update, setErrors } = useFlatConfigStore()
+  const { state, setErrors } = useFlatConfigStore()
 
   useEffect(() => {
     flatStateValidationSchema
@@ -29,8 +29,6 @@ function App({}: AppProps) {
       }
       return acc
     }, {})
-
-    console.log(transformedJobs)
 
     const transformedState = {
       ...state,

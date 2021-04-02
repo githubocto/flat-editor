@@ -2,7 +2,7 @@ import React, { FunctionComponent } from 'react'
 import { Clickable } from 'reakit/Clickable'
 import { FlatStep, Step } from '../../types'
 
-import TextInput from './settings/TextInput'
+import { Input } from './settings/Input'
 import { StepConfig } from './StepConfig'
 import useFlatConfigStore from './store'
 
@@ -54,7 +54,7 @@ export const Job: FunctionComponent<JobProps> = props => {
           Remove Job
         </Clickable>
       </div>
-      <TextInput
+      <Input
         title="Job name"
         value={props.name}
         label="A descriptive name for this job."

@@ -2,16 +2,18 @@ import { nanoid } from 'nanoid'
 import React, { FunctionComponent, useMemo } from 'react'
 import FieldWithDescription from './FieldWithDescription'
 
-type TextInputProps = {
+type InputProps = {
   handleChange: React.ChangeEventHandler<HTMLInputElement>
   title: string
   label: string
   value: string
   success?: string
   error?: string
+  type?: string
 }
 
-const TextInput: FunctionComponent<TextInputProps> = props => {
+export const Input: FunctionComponent<InputProps> = props => {
+  const { type = 'text' } = props
   const id = useMemo(() => nanoid(), [])
   let feedback
   if (props.error) {
@@ -37,7 +39,7 @@ const TextInput: FunctionComponent<TextInputProps> = props => {
           <input
             className="flex-1"
             id={id}
-            type="text"
+            type={type}
             onChange={props.handleChange}
             value={props.value}
           />
@@ -49,4 +51,4 @@ const TextInput: FunctionComponent<TextInputProps> = props => {
   )
 }
 
-export default TextInput
+export default Input

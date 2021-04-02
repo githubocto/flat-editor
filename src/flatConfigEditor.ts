@@ -63,6 +63,15 @@ export class FlatConfigEditor implements vscode.CustomTextEditorProvider {
         case 'storeSecret':
           this.storeSecret(webviewPanel, e.data)
           break
+        case 'previewFile':
+          const workspaceRootUri = vscode.workspace.workspaceFolders?.[0].uri
+          if (!workspaceRootUri) {
+            return
+          }
+          const uri = vscode.Uri.joinPath(workspaceRootUri, e.data)
+          const doc = await vscode.workspace.openTextDocument(uri)
+          vscode.window.showTextDocument(doc)
+          break
         default:
           break
       }
@@ -119,6 +128,10 @@ export class FlatConfigEditor implements vscode.CustomTextEditorProvider {
     const parsedConfig = parse(rawFlatYaml)
     const stringifiedConfig = encodeURIComponent(JSON.stringify(parsedConfig))
 
+    const dirName = workspaceRootUri.path.substring(
+      workspaceRootUri.path.lastIndexOf('/') + 1
+    )
+
     return /* html */ `
 			<!DOCTYPE html>
 			<html lang="en">
@@ -143,7 +156,7 @@ export class FlatConfigEditor implements vscode.CustomTextEditorProvider {
 				<title>Flat Editor</title>
 			</head>
 			<body>
-				<div data-config="${stringifiedConfig}" id="root"></div>
+				<div data-workspace="${dirName}" data-config="${stringifiedConfig}" id="root"></div>
 				<script nonce="${nonce}" src="${scriptUri}"></script>
 			</body>
 			</html>`
@@ -166,7 +179,6 @@ export class FlatConfigEditor implements vscode.CustomTextEditorProvider {
       new vscode.Range(0, 0, document.lineCount, 0),
       newText
     )
-
     return vscode.workspace.applyEdit(edit)
   }
 

@@ -6,6 +6,7 @@ import './vscode.css'
 
 // TODO: Type the incoming config data
 let config: any = {}
+let workspace = ''
 
 const root = document.getElementById('root')
 
@@ -13,6 +14,8 @@ if (root) {
   config = JSON.parse(
     decodeURIComponent(root.getAttribute('data-config') || '')
   )
+
+  workspace = root.getAttribute('data-workspace') || ''
 
   // TODO: We need to translate the jobs OBJECT to a jobs ARRAY
   const jobNames = config.hasOwnProperty('jobs') ? Object.keys(config.jobs) : []
@@ -34,10 +37,12 @@ if (root) {
 useFlatConfigStore.setState({
   // @ts-ignore
   state: config,
+  workspace,
 })
 
 ReactDOM.render(
   <React.StrictMode>
+    {workspace}
     <App />
   </React.StrictMode>,
   document.getElementById('root')
