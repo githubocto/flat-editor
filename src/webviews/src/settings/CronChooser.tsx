@@ -47,8 +47,8 @@ const CronChooser: FunctionComponent<CronChooserProps> = props => {
   return (
     <FieldWithDescription title="When to update data">
       <div className="space-y-4 mt-2">
-        <div className="flex items-center space-x-4" role="group">
-          <label className="flex items-center space-x-1">
+        <div className="flex flex-wrap items-center" role="group">
+          <label className="flex items-center space-x-1 mr-4 my-1">
             <input
               type="radio"
               name="cron"
@@ -58,7 +58,7 @@ const CronChooser: FunctionComponent<CronChooserProps> = props => {
             />
             <span>Only on push</span>
           </label>
-          <label className="flex items-center space-x-1">
+          <label className="flex items-center space-x-1 mr-4 my-1">
             <input
               type="radio"
               name="cron"
@@ -70,7 +70,7 @@ const CronChooser: FunctionComponent<CronChooserProps> = props => {
             />
             <span>Every five minutes</span>
           </label>
-          <label className="flex items-center space-x-1">
+          <label className="flex items-center space-x-1 mr-4 my-1">
             <input
               type="radio"
               name="cron"
@@ -80,7 +80,7 @@ const CronChooser: FunctionComponent<CronChooserProps> = props => {
             />
             <span>Every hour</span>
           </label>
-          <label className="flex items-center space-x-1">
+          <label className="flex items-center space-x-1 mr-4 my-1">
             <input
               type="radio"
               name="cron"
@@ -90,7 +90,7 @@ const CronChooser: FunctionComponent<CronChooserProps> = props => {
             />
             <span>Every day</span>
           </label>
-          <label className="flex items-center space-x-1">
+          <label className="flex items-center space-x-1 my-1">
             <input
               onChange={handleRadioChange}
               type="radio"
