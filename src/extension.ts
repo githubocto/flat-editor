@@ -1,4 +1,8 @@
 import * as vscode from 'vscode'
+import * as path from 'path'
+import * as fs from 'fs'
+import { stringify } from 'yaml'
+
 import { FlatConfigEditor } from './flatConfigEditor'
 
 export function activate(context: vscode.ExtensionContext) {
@@ -21,7 +25,11 @@ export function activate(context: vscode.ExtensionContext) {
   const showEditor = ({ isPreview = false, onSide = false }) => () => {
     const workspaceRootUri = vscode.workspace.workspaceFolders?.[0].uri
     if (!workspaceRootUri) return
-    const flatFileUri = vscode.Uri.joinPath(workspaceRootUri, 'flat.yml')
+    const flatFileUri = vscode.Uri.joinPath(
+      workspaceRootUri,
+      '.github/workflows',
+      'flat.yml'
+    )
 
     vscode.commands.executeCommand(
       'vscode.openWith',
@@ -54,5 +62,38 @@ export function activate(context: vscode.ExtensionContext) {
       'extension.showRawToSide',
       showEditor({ isPreview: false, onSide: true })
     )
+  )
+
+  context.subscriptions.push(
+    vscode.commands.registerCommand('extension.initializeFlatYml', async () => {
+      let rootPath: vscode.WorkspaceFolder
+      const folders = vscode.workspace.workspaceFolders
+
+      if (!folders) {
+        return
+      }
+      rootPath = folders[0]
+
+      const workflowsDir = path.join(rootPath.uri.path, '.github/workflows')
+      const flatYmlPath = path.join(workflowsDir, 'flat.yml')
+
+      if (fs.existsSync(flatYmlPath)) {
+        vscode.window.showInformationMessage(
+          'flat.yml already exists! Opening it for you...'
+        )
+        showEditor({ isPreview: true })()
+        return
+      }
+
+      fs.mkdirSync(workflowsDir, { recursive: true })
+
+      const flatStub = {
+        name: 'data',
+        on: {},
+        jobs: {},
+      }
+
+      fs.writeFileSync(path.join(workflowsDir, 'flat.yml'), stringify(flatStub))
+    })
   )
 }

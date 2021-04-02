@@ -109,7 +109,11 @@ export class FlatConfigEditor implements vscode.CustomTextEditorProvider {
       throw new Error('No workspace open')
     }
 
-    const flatFileUri = vscode.Uri.joinPath(workspaceRootUri, 'flat.yml')
+    const flatFileUri = vscode.Uri.joinPath(
+      workspaceRootUri,
+      '.github/workflows',
+      'flat.yml'
+    )
     const document = await vscode.workspace.openTextDocument(flatFileUri)
     const rawFlatYaml = document.getText()
     const parsedConfig = parse(rawFlatYaml)

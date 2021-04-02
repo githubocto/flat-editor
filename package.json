@@ -14,6 +14,7 @@
   "activationEvents": [
     "onCommand:extension.helloWorld",
     "onCommand:extension.showPreview",
+    "onCommand:extension.initializeFlatYml",
     "onCustomEditor:flat.config"
   ],
   "main": "./out/extension.js",
@@ -54,6 +55,11 @@
         "title": "Show raw to the side",
         "category": "Flat Editor",
         "icon": "$(go-to-file)"
+      },
+      {
+        "command": "extension.initializeFlatYml",
+        "title": "Initialize Flat YML File",
+        "category": "Flat Editor"
       },
       {
         "command": "extension.helloWorld",

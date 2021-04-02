@@ -29,8 +29,6 @@ if (root) {
   } else {
     config.jobs = []
   }
-
-  console.log('we received', config)
 }
 
 useFlatConfigStore.setState({
