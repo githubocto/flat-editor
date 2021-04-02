@@ -10,10 +10,11 @@ interface FilePickerProps {
   onChange: (newValue: string) => void
   title: string
   label: string
+  accept?: string
 }
 
 export function FilePicker(props: FilePickerProps) {
-  const { title, label, value, onChange } = props
+  const { title, label, value, onChange, accept = '' } = props
   const { workspace } = useFlatConfigStore()
   const filePickerRef = React.useRef<HTMLInputElement | null>(null)
 
@@ -52,7 +53,7 @@ export function FilePicker(props: FilePickerProps) {
         </button>
       </div>
       <input
-        accept=".sql"
+        accept={accept}
         className="sr-only"
         type="file"
         ref={filePickerRef}

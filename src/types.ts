@@ -1,5 +1,6 @@
 export type PullBaseConfig = {
   outfile_basename: string
+  postprocessing: string
 }
 export type PullHttpConfig = {
   http_url: string

@@ -179,7 +179,7 @@ export class FlatConfigEditor implements vscode.CustomTextEditorProvider {
       new vscode.Range(0, 0, document.lineCount, 0),
       newText
     )
-    return vscode.workspace.applyEdit(edit)
+    vscode.workspace.applyEdit(edit)
   }
 
   private serializeWorkflow(data: FlatState): string {

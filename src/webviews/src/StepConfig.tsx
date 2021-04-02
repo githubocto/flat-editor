@@ -52,6 +52,7 @@ export function StepConfig(props: StepConfigProps) {
           }
         />
         <FilePicker
+          accept=".sql"
           title="Query file"
           label="The file containing the query to run"
           value={props.step.with.sql_queryfile}

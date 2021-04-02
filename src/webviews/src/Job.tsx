@@ -1,8 +1,9 @@
 import React, { FunctionComponent } from 'react'
 import { Clickable } from 'reakit/Clickable'
-import { FlatStep, Step } from '../../types'
+import type { FlatStep } from '../../types'
 
 import { Input } from './settings/Input'
+import { FilePicker } from './settings/FilePicker'
 import { StepConfig } from './StepConfig'
 import useFlatConfigStore from './store'
 
@@ -19,10 +20,16 @@ export const Job: FunctionComponent<JobProps> = props => {
   // Return early if no job, or if we've lost the secondary step
   if (!job || (job && job.steps.length < 2)) return null
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newName = e.target.value
     update(store => {
       store.state.jobs[props.index].name = newName
+    })
+  }
+  const handlePostprocessingChange = (newPath: string) => {
+    update(store => {
+      ;(store.state.jobs[props.index]
+        .steps[1] as FlatStep).with.postprocessing = newPath
     })
   }
 
@@ -58,10 +65,20 @@ export const Job: FunctionComponent<JobProps> = props => {
         title="Job name"
         value={props.name}
         label="A descriptive name for this job."
-        handleChange={handleChange}
+        handleChange={handleNameChange}
         error={nameError}
       />
       <StepConfig jobIndex={props.index} step={job.steps[1]} />
+
+      <FilePicker
+        title="Postprocessing file"
+        label="The file containing the postprocessing script."
+        value={(job.steps[1] as FlatStep).with.postprocessing}
+        accept=".js,.ts"
+        onChange={newPath => {
+          handlePostprocessingChange(newPath)
+        }}
+      />
     </div>
   )
 }
