@@ -1,29 +1,39 @@
 import React, { FunctionComponent, useMemo } from 'react'
 import { VSCodeAPI } from './../VSCodeAPI'
-import FieldWithDescription from './FieldWithDescription'
 import TextInput from './TextInput'
-import useFlatConfigStore from '../store'
+import { customAlphabet } from 'nanoid'
+const nanoid = customAlphabet('1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ', 6)
 
 type SecretInputProps = {
   stepId: string
   title: string
   label: string
-  handleChange?: (newValue: string) => void
+  value: string
+  handleChange: (newValue: string) => void
 }
 
 const SecretInput: FunctionComponent<SecretInputProps> = props => {
+  const { title, label, stepId, value, handleChange } = props
+
   const [localValue, setLocalValue] = React.useState('')
   const [isDirty, setIsDirty] = React.useState(false)
   const [didError, setDidError] = React.useState(false)
+  const [doesExist, setDoesExist] = React.useState(
+    value &&
+      (value.split(' ')[1] || '').split('_')[0] === 'FLAT' &&
+      (value.split(' ')[1] || '').split('_')[2] === 'CONNSTRING'
+  )
 
-  const { title, label, stepId, handleChange } = props
-
-  const fieldName = `FLAT_${stepId}_CONNSTRING`
+  const fieldName = React.useMemo(
+    () => (doesExist ? value : `\${{ FLAT_${nanoid()}_CONNSTRING }}`),
+    []
+  )
+  const innerFieldName = fieldName.split(' ')[1]
 
   const handleSave = async () => {
     VSCodeAPI.postMessage({
       type: 'storeSecret',
-      data: { fieldName, value: localValue },
+      data: { fieldName: innerFieldName, value: localValue },
     })
   }
 
@@ -33,11 +43,12 @@ const SecretInput: FunctionComponent<SecretInputProps> = props => {
       const message = e.data
       console.log(e)
       if (message.command !== 'storeSecretResponse') return
-      if (message.fieldName !== fieldName) return
+      if (message.fieldName !== innerFieldName) return
 
       if (message.status === 'success') {
-        handleChange(`\${{ secrets.${fieldName} }}`)
+        handleChange(fieldName)
         setIsDirty(false)
+        setDoesExist(true)
       } else {
         setDidError(true)
       }

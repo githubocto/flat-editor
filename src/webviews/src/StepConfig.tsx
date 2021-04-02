@@ -19,9 +19,10 @@ export function StepConfig(props: StepConfigProps) {
       ;(step.with as PullHttpConfig).http_url = e.target.value
     })
   }
-  const handleSqlValueChange = (stepName, newValue: string) => {
+  const handleSqlValueChange = (stepName: string, newValue: string) => {
     update(store => {
       const step = store.state.jobs[props.jobIndex].steps[1] as FlatStep
+      // @ts-ignore
       ;(step.with as PullSqlConfig)[stepName] = newValue
     })
   }
@@ -60,6 +61,7 @@ export function StepConfig(props: StepConfigProps) {
           stepId={props.jobIndex.toString()}
           title="Connection string"
           label="We'll encode and store this as a Github Secret, then use it to connect to your database."
+          value={props.step.with.sql_connstring}
           handleChange={newValue =>
             handleSqlValueChange('sql_connstring', newValue)
           }
