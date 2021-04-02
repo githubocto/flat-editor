@@ -1,6 +1,7 @@
 import React from 'react'
 import type { Step, FlatStep, PullHttpConfig, PullSqlConfig } from '../../types'
 import TextInput from './settings/TextInput'
+import SecretInput from './settings/SecretInput'
 import FieldWithDescription from './settings/FieldWithDescription'
 import useFlatConfigStore from './store'
 
@@ -55,12 +56,12 @@ export function StepConfig(props: StepConfigProps) {
             handleSqlValueChange('sql_queryfile', e.target.value)
           }
         />
-        <TextInput
-          value={props.step.with.sql_connstring}
+        <SecretInput
+          stepId={props.jobIndex.toString()}
           title="Connection string"
           label="We'll encode and store this as a Github Secret, then use it to connect to your database."
-          handleChange={e =>
-            handleSqlValueChange('sql_connstring', e.target.value)
+          handleChange={newValue =>
+            handleSqlValueChange('sql_connstring', newValue)
           }
         />
         <FieldWithDescription title="Data format">

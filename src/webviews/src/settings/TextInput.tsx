@@ -33,12 +33,16 @@ const TextInput: FunctionComponent<TextInputProps> = props => {
     <FieldWithDescription title={props.title}>
       <div className="flex flex-col space-y-2">
         <label htmlFor={id}>{props.label}</label>
-        <input
-          id={id}
-          type="text"
-          onChange={props.handleChange}
-          value={props.value}
-        />
+        <div className="flex flex-row items-center">
+          <input
+            className="flex-1"
+            id={id}
+            type="text"
+            onChange={props.handleChange}
+            value={props.value}
+          />
+          {props.children}
+        </div>
       </div>
       {feedback}
     </FieldWithDescription>
