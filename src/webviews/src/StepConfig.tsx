@@ -1,12 +1,11 @@
 import React from 'react'
-import { Clickable } from 'reakit/Clickable'
 
 import type { Step, FlatStep, PullHttpConfig, PullSqlConfig } from '../../types'
 import { Input } from './settings/Input'
+import { FilePicker } from './settings/FilePicker'
 import SecretInput from './settings/SecretInput'
 import FieldWithDescription from './settings/FieldWithDescription'
 import useFlatConfigStore from './store'
-import { VSCodeAPI } from './VSCodeAPI'
 
 interface StepConfigProps {
   step: Step
@@ -15,8 +14,6 @@ interface StepConfigProps {
 
 export function StepConfig(props: StepConfigProps) {
   const { update, workspace } = useFlatConfigStore()
-  const [file, setFile] = React.useState<any>()
-  const filePickerRef = React.useRef<HTMLInputElement | null>(null)
 
   const handleHttpUrlChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     update(store => {
@@ -29,19 +26,6 @@ export function StepConfig(props: StepConfigProps) {
       const step = store.state.jobs[props.jobIndex].steps[1] as FlatStep
       // @ts-ignore
       ;(step.with as PullSqlConfig)[stepName] = newValue
-    })
-  }
-
-  const handleOpenFilePicker = () => {
-    if (filePickerRef.current) {
-      filePickerRef.current.click()
-    }
-  }
-
-  const handleSqlFilePreview = (path: string) => {
-    VSCodeAPI.postMessage({
-      type: 'previewFile',
-      data: path,
     })
   }
 
@@ -67,43 +51,14 @@ export function StepConfig(props: StepConfigProps) {
             handleSqlValueChange('outfile_basename', e.target.value)
           }
         />
-        <FieldWithDescription title="Query File">
-          <div className="space-y-2">
-            {props.step.with.sql_queryfile && (
-              <div className="flex items-center space-x-1">
-                <Clickable
-                  as="div"
-                  className="underline appearance-none cursor-pointer"
-                  onClick={() => {
-                    // @ts-ignore
-                    handleSqlFilePreview(props.step.with.sql_queryfile)
-                  }}
-                >
-                  {props.step.with.sql_queryfile}
-                </Clickable>
-              </div>
-            )}
-            <button onClick={handleOpenFilePicker}>
-              Choose a {props.step.with.sql_queryfile ? 'different ' : ''}query
-              file
-            </button>
-          </div>
-          <input
-            accept=".sql"
-            className="sr-only"
-            type="file"
-            ref={filePickerRef}
-            onChange={e => {
-              if (e.target.files && e.target.files.length > 0) {
-                const [file] = e.target.files
-                // @ts-ignore
-                const relativePath = file.path.split(workspace)[1]
-                // @ts-ignore
-                handleSqlValueChange('sql_queryfile', relativePath)
-              }
-            }}
-          />
-        </FieldWithDescription>
+        <FilePicker
+          title="Query file"
+          label="The file containing the query to run"
+          value={props.step.with.sql_queryfile}
+          onChange={newPath => {
+            handleSqlValueChange('sql_queryfile', newPath)
+          }}
+        />
         <SecretInput
           stepId={props.jobIndex.toString()}
           title="Connection string"
