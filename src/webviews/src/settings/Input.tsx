@@ -10,10 +10,11 @@ type InputProps = {
   success?: string
   error?: string
   type?: string
+  inputStyle?: object
 }
 
 export const Input: FunctionComponent<InputProps> = props => {
-  const { type = 'text' } = props
+  const { type = 'text', inputStyle = {} } = props
   const id = useMemo(() => nanoid(), [])
   let feedback
   if (props.error) {
@@ -40,8 +41,9 @@ export const Input: FunctionComponent<InputProps> = props => {
             className="flex-1"
             id={id}
             type={type}
-            onChange={props.handleChange}
             value={props.value}
+            onChange={props.handleChange}
+            style={inputStyle}
           />
           {props.children}
         </div>

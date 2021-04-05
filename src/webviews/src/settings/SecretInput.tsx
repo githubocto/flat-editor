@@ -14,7 +14,7 @@ type SecretInputProps = {
 const SecretInput: FunctionComponent<SecretInputProps> = props => {
   const { title, label, value, handleChange } = props
 
-  const [localValue, setLocalValue] = React.useState('')
+  const [localValue, setLocalValue] = React.useState(value)
   const [isDirty, setIsDirty] = React.useState(false)
   const [didError, setDidError] = React.useState(false)
   const [doesExist, setDoesExist] = React.useState(
@@ -28,6 +28,10 @@ const SecretInput: FunctionComponent<SecretInputProps> = props => {
     []
   )
   const innerFieldName = fieldName.split(' ')[1]
+  const isSavedAsSecret =
+    fieldName.split('_')[0] === '${{ FLAT' &&
+    fieldName.split('_')[2] === 'CONNSTRING }}' &&
+    localValue === fieldName
 
   const handleSave = async () => {
     VSCodeAPI.postMessage({
@@ -81,24 +85,32 @@ const SecretInput: FunctionComponent<SecretInputProps> = props => {
           title={title}
           label={label}
           value={localValue}
+          inputStyle={isSavedAsSecret ? { opacity: 0.5 } : undefined}
           handleChange={e => {
             setLocalValue(e.target.value)
             setIsDirty(true)
             setDidError(false)
           }}
         >
-          {isDirty && (
+          {isDirty ? (
             <button
               type="submit"
               onClick={handleSave}
               className="btn btn-primary"
+              style={{
+                height: '2.3em',
+              }}
             >
-              Save
+              Save secret
             </button>
+          ) : (
+            <div className="ml-2 italic flex items-center">
+              <div className="codicon codicon-pass pr-1 text-sm pt-px" />
+              Saved as secret
+            </div>
           )}
         </Input>
       </form>
-      {!isDirty && <div className="ml-2 mb-2 italic">✅ Saved</div>}
       {didError && (
         <div className="ml-2 mb-2 italic">
           Something went wrong, please try again.
