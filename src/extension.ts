@@ -5,7 +5,7 @@ import { stringify } from 'yaml'
 
 import { FlatConfigEditor } from './flatConfigEditor'
 
-export function activate(context: vscode.ExtensionContext) {
+export async function activate(context: vscode.ExtensionContext) {
   const editor = FlatConfigEditor.register(context)
   context.subscriptions.push(editor)
 
@@ -28,60 +28,66 @@ export function activate(context: vscode.ExtensionContext) {
 
   context.subscriptions.push(
     vscode.commands.registerCommand(
-      'extension.showPreview',
+      'flat-editor.showPreview',
       showEditor({ isPreview: true, onSide: false })
     )
   )
   context.subscriptions.push(
     vscode.commands.registerCommand(
-      'extension.showRaw',
+      'flat-editor.showRaw',
       showEditor({ isPreview: false, onSide: false })
     )
   )
   context.subscriptions.push(
     vscode.commands.registerCommand(
-      'extension.showPreviewToSide',
+      'flat-editor.showPreviewToSide',
       showEditor({ isPreview: true, onSide: true })
     )
   )
   context.subscriptions.push(
     vscode.commands.registerCommand(
-      'extension.showRawToSide',
+      'flat-editor.showRawToSide',
       showEditor({ isPreview: false, onSide: true })
     )
   )
 
   context.subscriptions.push(
-    vscode.commands.registerCommand('extension.initializeFlatYml', async () => {
-      let rootPath: vscode.WorkspaceFolder
-      const folders = vscode.workspace.workspaceFolders
+    vscode.commands.registerCommand(
+      'flat-editor.initializeFlatYml',
+      async () => {
+        let rootPath: vscode.WorkspaceFolder
+        const folders = vscode.workspace.workspaceFolders
 
-      if (!folders) {
-        return
-      }
-      rootPath = folders[0]
+        if (!folders) {
+          return
+        }
+        rootPath = folders[0]
 
-      const workflowsDir = path.join(rootPath.uri.path, '.github/workflows')
-      const flatYmlPath = path.join(workflowsDir, 'flat.yml')
+        const workflowsDir = path.join(rootPath.uri.path, '.github/workflows')
+        const flatYmlPath = path.join(workflowsDir, 'flat.yml')
 
-      if (fs.existsSync(flatYmlPath)) {
-        vscode.window.showInformationMessage(
-          'flat.yml already exists! Opening it for you...'
+        if (fs.existsSync(flatYmlPath)) {
+          vscode.window.showInformationMessage(
+            'flat.yml already exists! Opening it for you...'
+          )
+          showEditor({ isPreview: true })()
+          return
+        }
+
+        fs.mkdirSync(workflowsDir, { recursive: true })
+
+        const flatStub = {
+          name: 'data',
+          on: {},
+          jobs: {},
+        }
+
+        fs.writeFileSync(
+          path.join(workflowsDir, 'flat.yml'),
+          stringify(flatStub)
         )
         showEditor({ isPreview: true })()
-        return
       }
-
-      fs.mkdirSync(workflowsDir, { recursive: true })
-
-      const flatStub = {
-        name: 'data',
-        on: {},
-        jobs: {},
-      }
-
-      fs.writeFileSync(path.join(workflowsDir, 'flat.yml'), stringify(flatStub))
-      showEditor({ isPreview: true })()
-    })
+    )
   )
 }
