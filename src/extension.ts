@@ -76,7 +76,9 @@ export async function activate(context: vscode.ExtensionContext) {
 
       const flatStub = {
         name: 'data',
-        on: {},
+        on: {
+          schedule: [{ cron: '' }],
+        },
         jobs: {},
       }
 

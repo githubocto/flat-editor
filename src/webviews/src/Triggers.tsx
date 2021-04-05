@@ -9,7 +9,7 @@ const Triggers: FunctionComponent<TriggersProps> = props => {
   const { state, update } = useFlatConfigStore()
 
   const branches = (state.on.push?.branches || []).join(',')
-  const cron = state.on?.schedule?.cron || ''
+  const cron = state.on?.schedule?.[0]?.cron || ''
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     update(store => {
@@ -27,11 +27,14 @@ const Triggers: FunctionComponent<TriggersProps> = props => {
 
   const handleScheduleChange = (schedule: string) => {
     update(store => {
-      if (!store.state.on.schedule) {
-        store.state.on.schedule = { cron: '' }
+      if (schedule) {
+        if (!store.state.on.schedule || !store.state.on.schedule.length) {
+          store.state.on.schedule = [{ cron: '' }]
+        }
+        store.state.on.schedule[0].cron = schedule
+      } else {
+        store.state.on.schedule = []
       }
-
-      store.state.on.schedule.cron = schedule
     })
   }
 

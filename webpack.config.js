@@ -2,7 +2,7 @@ const path = require('path')
 
 module.exports = {
   target: 'node',
-  mode: 'production',
+  mode: 'development',
   entry: './src/extension.ts',
   output: {
     filename: 'extension.js',
@@ -25,7 +25,7 @@ module.exports = {
         exclude: /node_modules/,
         use: [
           {
-            loader: 'ts-loader',
+            loader: 'babel-loader',
           },
         ],
       },

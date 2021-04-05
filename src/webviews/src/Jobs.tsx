@@ -1,5 +1,4 @@
 import React, { FunctionComponent } from 'react'
-import * as DropdownMenu from '@radix-ui/react-dropdown-menu'
 
 import Header from './Header'
 import { Job } from './Job'
@@ -10,17 +9,15 @@ interface JobsProps {}
 const STEP_STUBS = {
   http: {
     name: 'Fetch data',
-    uses: 'githubocto/flat@main',
+    uses: 'githubocto/flat@v1',
     with: {
-      outfile_basename: '',
       http_url: '',
     },
   },
   sql: {
     name: 'Fetch data',
-    uses: 'githubocto/flat@main',
+    uses: 'githubocto/flat@v1',
     with: {
-      outfile_basename: '',
       sql_connstring: '',
       sql_queryfile: '',
       sql_format: 'csv',
@@ -35,7 +32,7 @@ const Jobs: FunctionComponent<JobsProps> = props => {
     update(store => {
       store.state.jobs.push({
         name: '',
-        runs_on: 'ubuntu-latest',
+        'runs-on': 'ubuntu-latest',
         steps: [
           {
             name: 'Check out repo',

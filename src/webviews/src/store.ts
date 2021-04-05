@@ -31,9 +31,11 @@ export const useFlatConfigStore = create<FlatStoreState>(
       on: {
         workflow_dispatch: undefined,
         push: undefined,
-        schedule: {
-          cron: '0 * * * *',
-        },
+        schedule: [
+          {
+            cron: '0 * * * *',
+          },
+        ],
       },
       jobs: [],
     },

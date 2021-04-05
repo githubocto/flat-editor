@@ -2,7 +2,7 @@
 import * as vscode from 'vscode'
 
 export type PullBaseConfig = {
-  outfile_basename: string
+  outfile_basename?: string
   postprocessing: string
 }
 export type PullHttpConfig = {
@@ -45,7 +45,7 @@ export type FlatStep = {
 export type Step = CheckoutStep | FlatStep
 
 export type FlatJob = {
-  runs_on: string
+  'runs-on': string
   steps: Step[]
 }
 
@@ -58,9 +58,9 @@ interface OnFlatState {
   push?: {
     branches: string[]
   }
-  schedule?: {
+  schedule: {
     cron: string
-  }
+  }[]
 }
 export type FlatState = {
   name: string

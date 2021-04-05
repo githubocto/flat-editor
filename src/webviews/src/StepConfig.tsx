@@ -44,7 +44,7 @@ export function StepConfig(props: StepConfigProps) {
     return (
       <div>
         <Input
-          value={props.step.with.outfile_basename}
+          value={props.step.with.outfile_basename || ''}
           title="Result filename"
           label="The filename where you want the results to be saved. This file doesn't need to exist yet."
           handleChange={e =>
