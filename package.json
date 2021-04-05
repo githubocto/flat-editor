@@ -34,50 +34,50 @@
     ],
     "commands": [
       {
-        "command": "flat-editor.showPreview",
+        "command": "flat.showPreview",
         "title": "Show Preview, Please!!!",
         "category": "Flat Editor",
         "icon": "$(go-to-file)"
       },
       {
-        "command": "flat-editor.showRaw",
+        "command": "flat.showRaw",
         "title": "Show Raw, Please!!!",
         "category": "Flat Editor",
         "icon": "$(go-to-file)"
       },
       {
-        "command": "flat-editor.showPreviewToSide",
+        "command": "flat.showPreviewToSide",
         "title": "Show preview to the side",
         "category": "Flat Editor",
         "icon": "$(go-to-file)"
       },
       {
-        "command": "flat-editor.showRawToSide",
+        "command": "flat.showRawToSide",
         "title": "Show raw to the side",
         "category": "Flat Editor",
         "icon": "$(go-to-file)"
       },
       {
-        "command": "flat-editor.initializeFlatYml",
+        "command": "flat.initializeFlatYml",
         "title": "Initialize Flat YML File",
         "category": "Flat Editor"
       },
       {
-        "command": "flat-editor.helloWorld",
+        "command": "flat.helloWorld",
         "title": "Hello World"
       }
     ],
     "menus": {
       "editor/title": [
         {
-          "command": "flat-editor.showPreview",
-          "alt": "flat-editor.showPreviewToSide",
+          "command": "flat.showPreview",
+          "alt": "flat.showPreviewToSide",
           "group": "navigation",
           "when": "resourceFilename == 'flat.yml' && editorLangId == yaml && activeEditor == workbench.editors.files.textFileEditor"
         },
         {
-          "command": "flat-editor.showRaw",
-          "alt": "flat-editor.showRawToSide",
+          "command": "flat.showRaw",
+          "alt": "flat.showRawToSide",
           "group": "navigation",
           "when": "activeEditor == WebviewEditor"
         }
