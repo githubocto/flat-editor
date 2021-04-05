@@ -1,11 +1,14 @@
 import * as vscode from 'vscode'
 import { parse, stringify } from 'yaml'
+import { debounce } from 'ts-debounce'
+
 import { Octokit } from '@octokit/rest'
 import { VSCodeGit } from './git'
 import { getNonce, getSession } from './lib'
 import type { FlatState } from './types'
 
 const sodium = require('tweetsodium')
+
 export class FlatConfigEditor implements vscode.CustomTextEditorProvider {
   public static register(context: vscode.ExtensionContext): vscode.Disposable {
     const provider = new FlatConfigEditor(context)
@@ -26,16 +29,26 @@ export class FlatConfigEditor implements vscode.CustomTextEditorProvider {
     webviewPanel: vscode.WebviewPanel,
     _token: vscode.CancellationToken
   ): Promise<void> {
-    const updateWebview = async () => {
-      webviewPanel.webview.html = await this.getHtmlForWebview(
-        webviewPanel.webview
-      )
+    const updateWebview = async (document: vscode.TextDocument) => {
+      if (vscode.window.activeTextEditor) {
+        webviewPanel.webview.html = await this.getHtmlForWebview(
+          webviewPanel.webview
+        )
+      } else {
+        const rawFlatYaml = document.getText()
+        const parsedConfig = parse(rawFlatYaml)
+
+        webviewPanel.webview.postMessage({
+          command: 'updateState',
+          config: parsedConfig,
+        })
+      }
     }
 
     const changeDocumentSubscription = vscode.workspace.onDidSaveTextDocument(
       e => {
         if (e.uri.toString() === document.uri.toString()) {
-          updateWebview()
+          updateWebview(e)
         }
       }
     )
@@ -165,10 +178,18 @@ export class FlatConfigEditor implements vscode.CustomTextEditorProvider {
 			</html>`
   }
 
+  private saveDocument(document: vscode.TextDocument) {
+    if (document.isDirty) {
+      document.save()
+    }
+  }
+
+  debouncedSave = debounce(this.saveDocument, 300)
+
   /**
    * Write out the yaml to a given document.
    */
-  private updateTextDocument(document: vscode.TextDocument, data: any) {
+  private async updateTextDocument(document: vscode.TextDocument, data: any) {
     // todo
     const edit = new vscode.WorkspaceEdit()
     const currentText = document.getText()
@@ -182,7 +203,8 @@ export class FlatConfigEditor implements vscode.CustomTextEditorProvider {
       new vscode.Range(0, 0, document.lineCount, 0),
       newText
     )
-    vscode.workspace.applyEdit(edit)
+    await vscode.workspace.applyEdit(edit)
+    this.debouncedSave(document)
   }
 
   private serializeWorkflow(data: FlatState): string {

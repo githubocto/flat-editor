@@ -10,14 +10,7 @@ let workspace = ''
 
 const root = document.getElementById('root')
 
-if (root) {
-  config = JSON.parse(
-    decodeURIComponent(root.getAttribute('data-config') || '')
-  )
-
-  workspace = root.getAttribute('data-workspace') || ''
-
-  // TODO: We need to translate the jobs OBJECT to a jobs ARRAY
+function transformConfig(config: any) {
   const jobNames = config.hasOwnProperty('jobs') ? Object.keys(config.jobs) : []
 
   if (jobNames.length) {
@@ -32,12 +25,34 @@ if (root) {
   } else {
     config.jobs = []
   }
+
+  return config
+}
+
+if (root) {
+  config = JSON.parse(
+    decodeURIComponent(root.getAttribute('data-config') || '')
+  )
+
+  workspace = root.getAttribute('data-workspace') || ''
+
+  config = transformConfig(config)
 }
 
 useFlatConfigStore.setState({
   // @ts-ignore
   state: config,
   workspace,
+})
+
+window.addEventListener('message', e => {
+  // @ts-ignore
+  const message = e.data
+  if (message.command === 'updateState') {
+    useFlatConfigStore.setState({
+      state: transformConfig(message.config),
+    })
+  }
 })
 
 ReactDOM.render(
