@@ -6,19 +6,6 @@ import { stringify } from 'yaml'
 import { FlatConfigEditor } from './flatConfigEditor'
 
 export function activate(context: vscode.ExtensionContext) {
-  console.log(
-    'Congratulations, your extension "helloworld-sample" is now active!'
-  )
-
-  const disposable = vscode.commands.registerCommand(
-    'extension.helloWorld',
-    () => {
-      vscode.window.showInformationMessage('Hello World!')
-    }
-  )
-
-  context.subscriptions.push(disposable)
-
   const editor = FlatConfigEditor.register(context)
   context.subscriptions.push(editor)
 

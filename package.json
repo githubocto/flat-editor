@@ -5,6 +5,10 @@
   "version": "0.0.1",
   "publisher": "GitHubOCTO",
   "repository": "https://github.com/githubocto/flat-editor",
+  "bugs": {
+    "url": "https://github.com/githubocto/flat-editor/issues",
+    "email": "idan@github.com"
+  },
   "engines": {
     "vscode": "^1.52.0"
   },
@@ -12,7 +16,6 @@
     "Other"
   ],
   "activationEvents": [
-    "onCommand:extension.helloWorld",
     "onCommand:extension.showPreview",
     "onCommand:extension.initializeFlatYml",
     "onCustomEditor:flat.config"
