@@ -2,7 +2,7 @@
   "name": "flat",
   "displayName": "Flat Editor",
   "description": "An editor for flat-data configurations",
-  "version": "0.0.1",
+  "version": "0.4.0",
   "publisher": "GitHubOCTO",
   "repository": "https://github.com/githubocto/flat-editor",
   "bugs": {
