@@ -55,34 +55,39 @@ const Jobs: FunctionComponent<JobsProps> = props => {
   return (
     <div className="text-vscode-foreground">
       <Header
-        title="Jobs"
-        description="Jobs consist of one or more steps. Mutliple jobs are executed in parallel."
+        title="Where to get data from"
+        description="Flat can fetch data from HTTP endpoints or SQL queries."
+        hasHoverState={false}
       >
-        <DropdownMenu.Root>
-          <DropdownMenu.Trigger>
-            <span className="codicon codicon-add pr-2" /> Add a job
-          </DropdownMenu.Trigger>
-          <DropdownMenu.Content
-            align="start"
-            sideOffset={10}
-            className="w-full min-w-[100px] bg-vscode-extensionButton-prominentBackground z-10"
+        {jobs}
+
+        <div className="font-bold pb-2">
+          Add {state.jobs.length ? 'another' : 'a'} data source
+        </div>
+        <div className="flex">
+          <button
+            className="text-extensionButton-prominentForeground p-2"
+            style={{ marginRight: 1 }}
+            onClick={() => handleJobAdded('http')}
           >
-            <DropdownMenu.Item
-              className="text-extensionButton-prominentForeground p-2"
-              onSelect={() => handleJobAdded('http')}
-            >
-              HTTP
-            </DropdownMenu.Item>
-            <DropdownMenu.Item
-              className="text-extensionButton-prominentForeground p-2"
-              onSelect={() => handleJobAdded('sql')}
-            >
-              SQL
-            </DropdownMenu.Item>
-          </DropdownMenu.Content>
-        </DropdownMenu.Root>
+            <span
+              className="codicon codicon-add pr-1"
+              style={{ fontSize: '0.875rem' }}
+            />{' '}
+            HTTP
+          </button>
+          <button
+            className="text-extensionButton-prominentForeground p-2"
+            onClick={() => handleJobAdded('sql')}
+          >
+            <span
+              className="codicon codicon-add pr-1"
+              style={{ fontSize: '0.875rem' }}
+            />{' '}
+            SQL
+          </button>
+        </div>
       </Header>
-      <div className="p-4 border border-vscode-contrastBorder">{jobs}</div>
     </div>
   )
 }

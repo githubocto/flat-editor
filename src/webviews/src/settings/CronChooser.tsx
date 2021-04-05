@@ -45,7 +45,7 @@ const CronChooser: FunctionComponent<CronChooserProps> = props => {
   }
 
   return (
-    <FieldWithDescription title="When to update data">
+    <FieldWithDescription title="On a schedule">
       <div className="space-y-4 mt-2">
         <div className="flex flex-wrap items-center" role="group">
           <label className="flex items-center space-x-1 mr-4 my-1">

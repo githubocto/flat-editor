@@ -44,41 +44,55 @@ export const Job: FunctionComponent<JobProps> = props => {
   )?.message
 
   return (
-    <div>
-      <div className="p-2 flex items-center justify-between">
-        <p className="text-lg">
-          {props.name ? (
-            props.name
-          ) : (
-            <span className="opacity-50 italic">Job Name</span>
-          )}
-        </p>
-        <Clickable
-          onClick={handleRemoveJob}
-          as="div"
-          className="font-medium underline cursor-pointer"
-        >
-          Remove Job
-        </Clickable>
-      </div>
-      <Input
-        title="Job name"
-        value={props.name}
-        label="A descriptive name for this job."
-        handleChange={handleNameChange}
-        error={nameError}
-      />
-      <StepConfig jobIndex={props.index} step={job.steps[1]} />
-
-      <FilePicker
-        title="Postprocessing file"
-        label="The file containing the postprocessing script."
-        value={(job.steps[1] as FlatStep).with.postprocessing}
-        accept=".js,.ts"
-        onChange={newPath => {
-          handlePostprocessingChange(newPath)
+    <div className="flex mb-6">
+      <div
+        className="flex-none w-5 pt-2 text-right"
+        style={{
+          paddingTop: 13,
         }}
-      />
+      >
+        {props.index + 1}.
+      </div>
+      <div className="flex-1 w-full">
+        <div className="p-2 flex items-center justify-between overflow-hidden">
+          <p className="flex-1 text-lg font-bold setting-item-cat-label-container pl-2 overflow-ellipsis overflow-hidden">
+            {props.name ? (
+              props.name
+            ) : (
+              <span className="opacity-50 italic">Name</span>
+            )}
+          </p>
+          <Clickable
+            onClick={handleRemoveJob}
+            as="div"
+            className="flex-none cursor-pointer flex items-center"
+          >
+            <span
+              className="codicon codicon-x pr-1"
+              style={{ fontSize: '0.875rem' }}
+            />
+            <div className="font-medium underline">Remove</div>
+          </Clickable>
+        </div>
+        <Input
+          title="Job name"
+          value={props.name}
+          label="A descriptive name for this data source. This is used to identify the job in the GitHub Action."
+          handleChange={handleNameChange}
+          error={nameError}
+        />
+        <StepConfig jobIndex={props.index} step={job.steps[1]} />
+
+        <FilePicker
+          title="Postprocessing file"
+          label="The file containing the postprocessing script."
+          value={(job.steps[1] as FlatStep).with.postprocessing}
+          accept=".js,.ts"
+          onChange={newPath => {
+            handlePostprocessingChange(newPath)
+          }}
+        />
+      </div>
     </div>
   )
 }

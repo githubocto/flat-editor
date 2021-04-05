@@ -5,7 +5,6 @@ import { customAlphabet } from 'nanoid'
 const nanoid = customAlphabet('1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ', 6)
 
 type SecretInputProps = {
-  stepId: string
   title: string
   label: string
   value: string
@@ -13,7 +12,7 @@ type SecretInputProps = {
 }
 
 const SecretInput: FunctionComponent<SecretInputProps> = props => {
-  const { title, label, stepId, value, handleChange } = props
+  const { title, label, value, handleChange } = props
 
   const [localValue, setLocalValue] = React.useState('')
   const [isDirty, setIsDirty] = React.useState(false)
@@ -41,7 +40,6 @@ const SecretInput: FunctionComponent<SecretInputProps> = props => {
     window.addEventListener('message', e => {
       // @ts-ignore
       const message = e.data
-      console.log(e)
       if (message.command !== 'storeSecretResponse') return
       if (message.fieldName !== innerFieldName) return
 
@@ -49,6 +47,7 @@ const SecretInput: FunctionComponent<SecretInputProps> = props => {
         handleChange(fieldName)
         setIsDirty(false)
         setDoesExist(true)
+        setLocalValue(fieldName)
       } else {
         setDidError(true)
       }
@@ -72,22 +71,33 @@ const SecretInput: FunctionComponent<SecretInputProps> = props => {
   // }
   return (
     <div>
-      <Input
-        title={title}
-        label={label}
-        value={localValue}
-        handleChange={e => {
-          setLocalValue(e.target.value)
-          setIsDirty(true)
-          setDidError(false)
+      <form
+        onSubmit={e => {
+          e.preventDefault()
+          handleSave()
         }}
       >
-        {isDirty && (
-          <button onClick={handleSave} className="btn btn-primary">
-            Save
-          </button>
-        )}
-      </Input>
+        <Input
+          title={title}
+          label={label}
+          value={localValue}
+          handleChange={e => {
+            setLocalValue(e.target.value)
+            setIsDirty(true)
+            setDidError(false)
+          }}
+        >
+          {isDirty && (
+            <button
+              type="submit"
+              onClick={handleSave}
+              className="btn btn-primary"
+            >
+              Save
+            </button>
+          )}
+        </Input>
+      </form>
       {!isDirty && <div className="ml-2 mb-2 italic">✅ Saved</div>}
       {didError && (
         <div className="ml-2 mb-2 italic">

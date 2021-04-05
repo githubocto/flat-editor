@@ -34,8 +34,8 @@ export function StepConfig(props: StepConfigProps) {
       <div>
         <Input
           value={props.step.with.http_url}
-          title="Where is the data?"
-          label="This needs to be a stable, unchanging URL"
+          title="Endpoint url"
+          label="Which endpoint should we pull data from? This needs to be a stable, unchanging URL."
           handleChange={handleHttpUrlChange}
         />
       </div>
@@ -45,7 +45,7 @@ export function StepConfig(props: StepConfigProps) {
       <div>
         <Input
           value={props.step.with.outfile_basename}
-          title="Result location"
+          title="Result filename"
           label="The filename where you want the results to be saved. This file doesn't need to exist yet."
           handleChange={e =>
             handleSqlValueChange('outfile_basename', e.target.value)
@@ -53,7 +53,7 @@ export function StepConfig(props: StepConfigProps) {
         />
         <FilePicker
           accept=".sql"
-          title="Query file"
+          title="File with SQL query"
           label="The file containing the query to run"
           value={props.step.with.sql_queryfile}
           onChange={newPath => {
@@ -61,7 +61,6 @@ export function StepConfig(props: StepConfigProps) {
           }}
         />
         <SecretInput
-          stepId={props.jobIndex.toString()}
           title="Connection string"
           label="We'll encode and store this as a Github Secret, then use it to connect to your database."
           value={props.step.with.sql_connstring}

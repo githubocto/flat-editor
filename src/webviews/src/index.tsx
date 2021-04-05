@@ -42,7 +42,6 @@ useFlatConfigStore.setState({
 
 ReactDOM.render(
   <React.StrictMode>
-    {workspace}
     <App />
   </React.StrictMode>,
   document.getElementById('root')

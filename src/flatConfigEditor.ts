@@ -57,6 +57,9 @@ export class FlatConfigEditor implements vscode.CustomTextEditorProvider {
     // Receive message from the webview.
     webviewPanel.webview.onDidReceiveMessage(async e => {
       switch (e.type) {
+        case 'openEditor':
+          this.showEditor(e.data)
+          break
         case 'updateText':
           this.updateTextDocument(document, e.data)
           break
@@ -283,8 +286,32 @@ export class FlatConfigEditor implements vscode.CustomTextEditorProvider {
       })
     }
   }
+
+  public showEditor = ({
+    isPreview = false,
+    onSide = false,
+  }: ShowEditorOptions): void => {
+    const workspaceRootUri = vscode.workspace.workspaceFolders?.[0].uri
+    if (!workspaceRootUri) return
+    const flatFileUri = vscode.Uri.joinPath(
+      workspaceRootUri,
+      '.github/workflows',
+      'flat.yml'
+    )
+
+    vscode.commands.executeCommand(
+      'vscode.openWith',
+      flatFileUri,
+      isPreview ? 'flat.config' : 'default',
+      onSide ? { viewColumn: vscode.ViewColumn.Beside, preview: false } : {}
+    )
+  }
 }
 
+interface ShowEditorOptions {
+  isPreview?: boolean
+  onSide?: boolean
+}
 interface SecretData {
   fieldName: string
   value: string

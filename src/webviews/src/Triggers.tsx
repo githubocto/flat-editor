@@ -38,12 +38,12 @@ const Triggers: FunctionComponent<TriggersProps> = props => {
   return (
     <div className="text-vscode-foreground pb-4">
       <Header
-        title="Triggers"
-        description="These settings determine when your workflow is executed."
+        title="When to update the data"
+        description="Configure when to update the data."
       />
 
       <Input
-        title="Branches that push"
+        title="On push"
         value={branches}
         label="A comma-separated list of git branch names that trigger the data to update on push."
         handleChange={handleChange}

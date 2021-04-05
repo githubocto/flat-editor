@@ -6,8 +6,8 @@ type FieldWithDescriptionProps = {
 
 const FieldWithDescription: FunctionComponent<FieldWithDescriptionProps> = props => {
   return (
-    <div className="hover:bg-vscode-notebook-rowHoverBackground p-2">
-      <div className="font-bold text-vscode-settings-headerForeground py-1">
+    <div className="hover:bg-vscode-notebook-rowHoverBackground p-4">
+      <div className="font-bold text-vscode-settings-headerForeground pb-1">
         {props.title}
       </div>
       {props.children}
