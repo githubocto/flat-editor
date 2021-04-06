@@ -12,3 +12,4 @@ node_modules
 .parcel-cache
 tailwind.config.json
 webpack.config.js
+screenshots
