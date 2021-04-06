@@ -20,6 +20,7 @@ type FlatStoreState = {
   errors: ValidationError[]
   update: (fn: (draft: Draft<FlatStoreState>) => void) => void
   setErrors: (errors: ValidationError[]) => void
+  files?: string[]
 }
 
 export const useFlatConfigStore = create<FlatStoreState>(
@@ -47,6 +48,7 @@ export const useFlatConfigStore = create<FlatStoreState>(
         draft.errors = errors
       })
     },
+    files: undefined,
   }))
 )
 

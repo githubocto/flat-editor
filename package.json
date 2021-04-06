@@ -146,6 +146,8 @@
     "@radix-ui/react-dropdown-menu": "^0.0.17",
     "classcat": "^5.0.3",
     "cronstrue": "^1.110.0",
+    "downshift": "^6.1.2",
+    "fast-glob": "^3.2.5",
     "formik": "^2.2.6",
     "git-url-parse": "^11.4.4",
     "immer": "^9.0.1",

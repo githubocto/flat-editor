@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom'
 import App from './App'
 import { useFlatConfigStore } from './store'
 import './vscode.css'
+import { VSCodeAPI } from './VSCodeAPI'
 
 // TODO: Type the incoming config data
 let config: any = {}
@@ -49,12 +50,20 @@ useFlatConfigStore.setState({
   workspace,
 })
 
+VSCodeAPI.postMessage({
+  type: 'refreshFiles',
+})
+
 window.addEventListener('message', e => {
   // @ts-ignore
   const message = e.data
   if (message.command === 'updateState') {
     useFlatConfigStore.setState({
       state: transformConfig(message.config),
+    })
+  } else if (message.command === 'updateFiles') {
+    useFlatConfigStore.setState({
+      files: message.files,
     })
   }
 })

@@ -1,4 +1,5 @@
 import * as vscode from 'vscode'
+import * as fg from 'fast-glob'
 import { parse, stringify } from 'yaml'
 import { debounce } from 'ts-debounce'
 
@@ -78,6 +79,9 @@ export class FlatConfigEditor implements vscode.CustomTextEditorProvider {
           break
         case 'storeSecret':
           this.storeSecret(webviewPanel, e.data)
+          break
+        case 'refreshFiles':
+          this.loadFiles(webviewPanel)
           break
         case 'previewFile':
           const workspaceRootUri = vscode.workspace.workspaceFolders?.[0].uri
@@ -327,6 +331,26 @@ export class FlatConfigEditor implements vscode.CustomTextEditorProvider {
       isPreview ? 'flat.config' : 'default',
       onSide ? { viewColumn: vscode.ViewColumn.Beside, preview: false } : {}
     )
+  }
+
+  private loadFiles = async (webviewPanel: vscode.WebviewPanel) => {
+    const workspaceRootUri = vscode.workspace.workspaceFolders?.[0].uri
+    if (!workspaceRootUri) return
+
+    const files = await fg(
+      [
+        workspaceRootUri.path + '/**/*',
+        `!${workspaceRootUri.path}/.git`,
+        `!${workspaceRootUri.path}/.vscode`,
+      ],
+      { dot: true }
+    )
+    const parsedFiles = files.map(file => file.split(workspaceRootUri.path)[1])
+
+    await webviewPanel.webview.postMessage({
+      command: 'updateFiles',
+      files: parsedFiles,
+    })
   }
 }
 
