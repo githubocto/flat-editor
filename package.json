@@ -36,7 +36,7 @@
         "displayName": "Flat Config",
         "selector": [
           {
-            "filenamePattern": "*.yml"
+            "filenamePattern": "**/.github/workflows/flat.yml"
           }
         ],
         "priority": "default"
@@ -45,25 +45,25 @@
     "commands": [
       {
         "command": "flat.showPreview",
-        "title": "Show Preview, Please!!!",
+        "title": "Show Editor",
         "category": "Flat Editor",
         "icon": "$(go-to-file)"
       },
       {
         "command": "flat.showRaw",
-        "title": "Show Raw, Please!!!",
+        "title": "Show Raw YAML File",
         "category": "Flat Editor",
         "icon": "$(go-to-file)"
       },
       {
         "command": "flat.showPreviewToSide",
-        "title": "Show preview to the side",
+        "title": "Show Editor to the Side",
         "category": "Flat Editor",
         "icon": "$(go-to-file)"
       },
       {
         "command": "flat.showRawToSide",
-        "title": "Show raw to the side",
+        "title": "Show Raw YAML File to the Side",
         "category": "Flat Editor",
         "icon": "$(go-to-file)"
       },
@@ -71,10 +71,6 @@
         "command": "flat.initializeFlatYml",
         "title": "Initialize Flat YML File",
         "category": "Flat Editor"
-      },
-      {
-        "command": "flat.helloWorld",
-        "title": "Hello World"
       }
     ],
     "menus": {
@@ -83,13 +79,13 @@
           "command": "flat.showPreview",
           "alt": "flat.showPreviewToSide",
           "group": "navigation",
-          "when": "resourceFilename == 'flat.yml' && editorLangId == yaml && activeEditor == workbench.editors.files.textFileEditor"
+          "when": "resourcePath =~ /.github/workflows/flat.yml$/ && editorLangId == yaml && activeEditor == workbench.editors.files.textFileEditor"
         },
         {
           "command": "flat.showRaw",
           "alt": "flat.showRawToSide",
           "group": "navigation",
-          "when": "activeEditor == WebviewEditor"
+          "when": "resourcePath =~ /.github/workflows/flat.yml$/ && activeEditor == WebviewEditor"
         }
       ]
     }
