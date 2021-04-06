@@ -18,7 +18,7 @@ export const Job: FunctionComponent<JobProps> = props => {
   const job = state.jobs[props.index]
 
   // Return early if no job, or if we've lost the secondary step
-  if (!job || (job && job.steps.length < 2)) return null
+  if (!job || !job.steps || job.steps.length < 2) return null
 
   const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newName = e.target.value
@@ -28,6 +28,8 @@ export const Job: FunctionComponent<JobProps> = props => {
   }
   const handlePostprocessingChange = (newPath: string) => {
     update(store => {
+      if (!store.state.jobs[props.index].steps)
+        store.state.jobs[props.index].steps = []
       ;(store.state.jobs[props.index]
         .steps[1] as FlatStep).with.postprocessing = newPath
     })

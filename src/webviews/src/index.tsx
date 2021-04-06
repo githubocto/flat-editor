@@ -11,6 +11,10 @@ let workspace = ''
 const root = document.getElementById('root')
 
 function transformConfig(config: any) {
+  if (!config) config = {}
+  if (!config.on) config.on = {}
+  if (!config.jobs) config.jobs = {}
+
   const jobNames = config.hasOwnProperty('jobs') ? Object.keys(config.jobs) : []
 
   if (jobNames.length) {

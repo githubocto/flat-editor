@@ -12,14 +12,14 @@ const Triggers: FunctionComponent<TriggersProps> = props => {
 
   const handleScheduleChange = (schedule: string) => {
     update(store => {
-      if (schedule) {
-        if (!store.state.on.schedule || !store.state.on.schedule.length) {
-          store.state.on.schedule = [{ cron: '' }]
-        }
-        store.state.on.schedule[0].cron = schedule
-      } else {
-        store.state.on.schedule = []
+      // not likely, but handling borked state
+      if (Array.isArray(store.state.on)) {
+        store.state.on = { schedule: [{ cron: '' }] }
       }
+      if (!store.state.on?.schedule || !store.state.on?.schedule.length) {
+        store.state.on.schedule = [{ cron: '' }]
+      }
+      store.state.on.schedule[0].cron = schedule
     })
   }
 
