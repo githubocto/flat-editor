@@ -37,7 +37,7 @@ export const Input: FunctionComponent<InputProps> = props => {
     <FieldWithDescription title={props.title}>
       <div className="flex flex-col space-y-2">
         <label htmlFor={id}>{props.label}</label>
-        <div className="flex flex-row items-center">
+        <div className="flex flex-row flex-wrap items-center">
           <input
             className="flex-1"
             id={id}

@@ -8,7 +8,6 @@ type CronChooserProps = {
 }
 
 const defaultSchedules = {
-  never: '',
   fiveMinutes: '* * * * *',
   hour: '0 * * * *',
   day: '0 0 * * * ',
@@ -48,16 +47,6 @@ const CronChooser: FunctionComponent<CronChooserProps> = props => {
     <FieldWithDescription title="On a schedule">
       <div className="space-y-4 mt-2">
         <div className="flex flex-wrap items-center" role="group">
-          <label className="flex items-center space-x-1 mr-4 my-1">
-            <input
-              type="radio"
-              name="cron"
-              checked={!showCustom && props.value === defaultSchedules.never}
-              onChange={handleRadioChange}
-              value={defaultSchedules.never}
-            />
-            <span>Only on push</span>
-          </label>
           <label className="flex items-center space-x-1 mr-4 my-1">
             <input
               type="radio"

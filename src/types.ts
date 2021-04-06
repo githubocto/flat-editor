@@ -55,9 +55,6 @@ interface FlatUIJob extends FlatJob {
 
 interface OnFlatState {
   workflow_dispatch?: any
-  push?: {
-    branches: string[]
-  }
   schedule: {
     cron: string
   }[]
@@ -91,7 +88,6 @@ export type FlatYamlDoc = {
   name: 'Flat'
   on: {
     workflow_dispatch: null
-    push?: null
     schedule?: [
       {
         cron: string
