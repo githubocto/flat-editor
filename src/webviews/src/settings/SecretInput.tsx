@@ -19,17 +19,17 @@ const SecretInput: FunctionComponent<SecretInputProps> = props => {
   const [didError, setDidError] = React.useState(false)
   const [doesExist, setDoesExist] = React.useState(
     value &&
-      (value.split(' ')[1] || '').split('_')[0] === 'FLAT' &&
+      (value.split(' ')[1] || '').split('_')[0] === 'secrets.FLAT' &&
       (value.split(' ')[1] || '').split('_')[2] === 'CONNSTRING'
   )
 
   const fieldName = React.useMemo(
-    () => (doesExist ? value : `\${{ FLAT_${nanoid()}_CONNSTRING }}`),
+    () => (doesExist ? value : `\${{ secrets.FLAT_${nanoid()}_CONNSTRING }}`),
     []
   )
-  const innerFieldName = fieldName.split(' ')[1]
+  const innerFieldName = fieldName.split(' ')[1].replace('secrets.', '')
   const isSavedAsSecret =
-    fieldName.split('_')[0] === '${{ FLAT' &&
+    fieldName.split('_')[0] === '${{ secrets.FLAT' &&
     fieldName.split('_')[2] === 'CONNSTRING }}' &&
     localValue === fieldName
 
