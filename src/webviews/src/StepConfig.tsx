@@ -9,7 +9,7 @@ import useFlatConfigStore from './store'
 
 interface StepConfigProps {
   step: Step
-  jobIndex: number
+  stepIndex: number
 }
 
 export function StepConfig(props: StepConfigProps) {
@@ -17,14 +17,14 @@ export function StepConfig(props: StepConfigProps) {
 
   const handleHttpValueChange = (stepName: string, newValue: string) => {
     update(store => {
-      const step = store.state.jobs[props.jobIndex].steps[1] as FlatStep
+      const step = store.state.jobs.scheduled.steps[props.stepIndex] as FlatStep
       // @ts-ignore
       ;(step.with as PullHttpConfig)[stepName] = newValue
     })
   }
   const handleSqlValueChange = (stepName: string, newValue: string) => {
     update(store => {
-      const step = store.state.jobs[props.jobIndex].steps[1] as FlatStep
+      const step = store.state.jobs.scheduled.steps[props.stepIndex] as FlatStep
       // @ts-ignore
       ;(step.with as PullSqlConfig)[stepName] = newValue
     })

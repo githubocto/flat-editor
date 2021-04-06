@@ -21,25 +21,9 @@ function App({}: AppProps) {
         setErrors(err.inner)
       })
 
-    // Convert jobs ARRAY to jobs OBJECT
-    const transformedJobs = state.jobs.reduce((acc, next) => {
-      // @ts-ignore
-      acc[next.name] = {
-        ...omit(next, 'name'),
-      }
-      return acc
-    }, {})
-
-    const transformedState = {
-      ...state,
-      jobs: transformedJobs,
-    }
-
-    if (isStubData) return
-
     VSCodeAPI.postMessage({
       type: 'updateText',
-      data: transformedState,
+      data: state,
     })
   }, [state])
 

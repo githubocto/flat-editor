@@ -40,7 +40,20 @@ export const useFlatConfigStore = create<FlatStoreState>(
           },
         ],
       },
-      jobs: [],
+      jobs: {
+        scheduled: {
+          steps: [
+            {
+              name: 'Setup deno',
+              uses: 'denolib/setup-deno@v2',
+            },
+            {
+              name: 'Check out repo',
+              uses: 'actions/checkout@v2',
+            },
+          ],
+        },
+      },
     },
     update: fn => {
       set(fn)

@@ -80,7 +80,21 @@ export async function activate(context: vscode.ExtensionContext) {
           schedule: [{ cron: '' }],
           workflow_dispatch: {},
         },
-        jobs: {},
+        jobs: {
+          scheduled: {
+            'runs-on': 'ubuntu-latest',
+            steps: [
+              {
+                name: 'Setup deno',
+                uses: 'denolib/setup-deno@v2',
+              },
+              {
+                name: 'Check out repo',
+                uses: 'actions/checkout@v2',
+              },
+            ],
+          },
+        },
       }
 
       fs.writeFileSync(path.join(workflowsDir, 'flat.yml'), stringify(flatStub))

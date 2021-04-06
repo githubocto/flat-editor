@@ -20,21 +20,20 @@ function transformConfig(config: any) {
     }
   if (!config.on) config.on = {}
   if (!config.jobs) config.jobs = {}
-
-  const jobNames = config.hasOwnProperty('jobs') ? Object.keys(config.jobs) : []
-
-  if (jobNames.length) {
-    console.log('we are transforming the incoming data')
-
-    config.jobs = jobNames.map(jobName => {
-      return {
-        name: jobName,
-        ...config.jobs[jobName],
-      }
-    })
-  } else {
-    config.jobs = []
-  }
+  if (!config.jobs.scheduled)
+    config.jobs.scheduled = {
+      'runs-on': 'ubuntu-latest',
+      steps: [
+        {
+          name: 'Setup deno',
+          uses: 'denolib/setup-deno@v2',
+        },
+        {
+          name: 'Check out repo',
+          uses: 'actions/checkout@v2',
+        },
+      ],
+    }
 
   return config
 }

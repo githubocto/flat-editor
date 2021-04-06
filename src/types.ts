@@ -3,7 +3,7 @@ import * as vscode from 'vscode'
 
 export type PullBaseConfig = {
   outfile_basename?: string
-  postprocessing: string
+  postprocess: string
 }
 export type PullHttpConfig = {
   http_url: string
@@ -42,15 +42,16 @@ export type FlatStep = {
   with: PullConfig
 }
 
-export type Step = CheckoutStep | FlatStep
+export type DenoStep = {
+  name: 'Setup deno'
+  uses: 'denolib/setup-deno@v2'
+}
+
+export type Step = CheckoutStep | FlatStep | DenoStep
 
 export type FlatJob = {
   'runs-on': string
   steps: Step[]
-}
-
-interface FlatUIJob extends FlatJob {
-  name: string
 }
 
 interface OnFlatState {
@@ -62,7 +63,11 @@ interface OnFlatState {
 export type FlatState = {
   name: string
   on: OnFlatState
-  jobs: FlatUIJob[]
+  jobs: {
+    scheduled: {
+      steps: Step[]
+    }
+  }
 }
 
 export type FlatYamlStep = {
@@ -76,6 +81,10 @@ export type FlatYamlStep = {
 export type FlatYamlJob = {
   'runs-on': 'ubuntu-latest'
   steps: [
+    {
+      name: 'Setup deno'
+      uses: 'denolib/setup-deno@v2'
+    },
     {
       name: 'Checkout repo'
       uses: 'actions/checkout@v2'
@@ -95,7 +104,7 @@ export type FlatYamlDoc = {
     ]
   }
   jobs: {
-    [k: string]: FlatYamlJob
+    scheduled: FlatYamlJob
   }
 }
 

@@ -1,8 +1,9 @@
 import React, { FunctionComponent } from 'react'
 
 import Header from './Header'
-import { Job } from './Job'
+import { Step } from './Step'
 import useFlatConfigStore from './store'
+import type { FlatStep } from './../../types'
 
 interface JobsProps {}
 
@@ -30,24 +31,14 @@ const Jobs: FunctionComponent<JobsProps> = props => {
 
   const handleJobAdded = (type: 'http' | 'sql') => {
     update(store => {
-      store.state.jobs.push({
-        name: '',
-        'runs-on': 'ubuntu-latest',
-        steps: [
-          {
-            name: 'Check out repo',
-            uses: 'actions/checkout@v2',
-          },
-          // @ts-ignore
-          STEP_STUBS[type],
-        ],
-      })
+      // @ts-ignore
+      store.state.jobs.scheduled.steps.push(STEP_STUBS[type])
     })
   }
 
-  const jobs = state.jobs.map((j, i) => (
-    <Job index={i} name={j.name} type="pull" key={i} />
-  ))
+  const steps = state.jobs.scheduled.steps
+    .slice(2)
+    .map((j, i) => <Step index={i + 2} step={j as FlatStep} key={i} />)
 
   return (
     <div className="text-vscode-foreground">
@@ -56,10 +47,10 @@ const Jobs: FunctionComponent<JobsProps> = props => {
         description="Flat can fetch data from HTTP endpoints or SQL queries."
         hasHoverState={false}
       >
-        {jobs}
+        {steps}
 
         <div className="font-bold pb-2">
-          Add {state.jobs.length ? 'another' : 'a'} data source
+          Add {state.jobs.scheduled.steps.length ? 'another' : 'a'} data source
         </div>
         <div className="flex">
           <button
