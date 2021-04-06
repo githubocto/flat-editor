@@ -78,6 +78,7 @@ export async function activate(context: vscode.ExtensionContext) {
         name: 'data',
         on: {
           schedule: [{ cron: '' }],
+          workflow_dispatch: {},
         },
         jobs: {},
       }

@@ -12,7 +12,12 @@ let workspace = ''
 const root = document.getElementById('root')
 
 function transformConfig(config: any) {
-  if (!config) config = {}
+  if (!config)
+    config = {
+      on: {
+        workflow_dispatch: {},
+      },
+    }
   if (!config.on) config.on = {}
   if (!config.jobs) config.jobs = {}
 
