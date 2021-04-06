@@ -15,10 +15,11 @@ interface StepConfigProps {
 export function StepConfig(props: StepConfigProps) {
   const { update, workspace } = useFlatConfigStore()
 
-  const handleHttpUrlChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleHttpValueChange = (stepName: string, newValue: string) => {
     update(store => {
       const step = store.state.jobs[props.jobIndex].steps[1] as FlatStep
-      ;(step.with as PullHttpConfig).http_url = e.target.value
+      // @ts-ignore
+      ;(step.with as PullHttpConfig)[stepName] = newValue
     })
   }
   const handleSqlValueChange = (stepName: string, newValue: string) => {
@@ -33,10 +34,19 @@ export function StepConfig(props: StepConfigProps) {
     return (
       <div>
         <Input
+          value={props.step.with.outfile_basename || ''}
+          placeholder="data"
+          title="Result filename"
+          label="The filename where you want the results to be saved. This file doesn't need to exist yet."
+          handleChange={e =>
+            handleHttpValueChange('outfile_basename', e.target.value)
+          }
+        />
+        <Input
           value={props.step.with.http_url}
           title="Endpoint url"
           label="Which endpoint should we pull data from? This needs to be a stable, unchanging URL."
-          handleChange={handleHttpUrlChange}
+          handleChange={e => handleHttpValueChange('http_url', e.target.value)}
         />
       </div>
     )
@@ -45,6 +55,7 @@ export function StepConfig(props: StepConfigProps) {
       <div>
         <Input
           value={props.step.with.outfile_basename || ''}
+          placeholder="data"
           title="Result filename"
           label="The filename where you want the results to be saved. This file doesn't need to exist yet."
           handleChange={e =>
