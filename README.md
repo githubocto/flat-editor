@@ -49,7 +49,7 @@ To create an HTTP action, you'll be asked for the following inputs:
 
 ### Creating a SQL action
 
-![Screenshot of SQL creation view for Flat extension](https://raw.githubusercontent.com/githubocto/flat-vscode/main/docs/sql.png)
+![Screenshot of SQL creation view for Flat extension](./screenshots/sql-action.png)
 
 To create a SQL action, you'll be asked for the following inputs:
 

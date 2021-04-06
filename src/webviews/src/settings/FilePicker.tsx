@@ -11,10 +11,11 @@ interface FilePickerProps {
   title: string
   label: string
   accept?: string
+  buttonText: string
 }
 
 export function FilePicker(props: FilePickerProps) {
-  const { title, label, value, onChange, accept = '' } = props
+  const { title, label, value, onChange, accept, buttonText = '' } = props
   const { workspace } = useFlatConfigStore()
   const filePickerRef = React.useRef<HTMLInputElement | null>(null)
 
@@ -49,7 +50,8 @@ export function FilePicker(props: FilePickerProps) {
           </div>
         )}
         <button onClick={handleOpenFilePicker}>
-          Choose a {value ? 'different ' : ''}query file
+          Choose a {value ? 'different ' : ''}
+          {buttonText}
         </button>
       </div>
       <input
