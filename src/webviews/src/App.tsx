@@ -1,5 +1,4 @@
 import React, { useEffect } from 'react'
-import omit from 'lodash-es/omit'
 import Jobs from './Jobs'
 import useFlatConfigStore from './store'
 import Triggers from './Triggers'
@@ -20,6 +19,8 @@ function App({}: AppProps) {
       .catch(function (err) {
         setErrors(err.inner)
       })
+
+    if (isStubData) return
 
     VSCodeAPI.postMessage({
       type: 'updateText',
