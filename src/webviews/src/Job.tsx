@@ -85,7 +85,7 @@ export const Job: FunctionComponent<JobProps> = props => {
 
         <FilePicker
           title="Postprocessing file"
-          label="The file containing the postprocessing script."
+          label="The file containing the postprocessing script. This needs to be within the same repository."
           value={(job.steps[1] as FlatStep).with.postprocessing}
           accept=".js,.ts"
           onChange={newPath => {
