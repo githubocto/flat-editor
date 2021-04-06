@@ -44,6 +44,16 @@ export class FlatConfigEditor implements vscode.CustomTextEditorProvider {
           config: parsedConfig,
         })
       }
+      updateWebviewState()
+    }
+
+    const updateWebviewState = async () => {
+      const rawFlatYaml = document.getText()
+      const parsedConfig = parse(rawFlatYaml)
+      webviewPanel.webview.postMessage({
+        command: 'updateState',
+        config: parsedConfig,
+      })
     }
 
     const changeDocumentSubscription = vscode.workspace.onDidSaveTextDocument(
@@ -53,6 +63,10 @@ export class FlatConfigEditor implements vscode.CustomTextEditorProvider {
         }
       }
     )
+
+    webviewPanel.onDidChangeViewState(e => {
+      updateWebviewState()
+    })
 
     // Make sure we get rid of the listener when our editor is closed.
     webviewPanel.onDidDispose(() => {
@@ -67,6 +81,8 @@ export class FlatConfigEditor implements vscode.CustomTextEditorProvider {
     webviewPanel.webview.html = await this.getHtmlForWebview(
       webviewPanel.webview
     )
+
+    updateWebviewState()
 
     // Receive message from the webview.
     webviewPanel.webview.onDidReceiveMessage(async e => {
@@ -146,7 +162,6 @@ export class FlatConfigEditor implements vscode.CustomTextEditorProvider {
     const document = await vscode.workspace.openTextDocument(flatFileUri)
     const rawFlatYaml = document.getText()
     const parsedConfig = parse(rawFlatYaml)
-    const stringifiedConfig = encodeURIComponent(JSON.stringify(parsedConfig))
 
     const dirName = workspaceRootUri.path.substring(
       workspaceRootUri.path.lastIndexOf('/') + 1
@@ -176,16 +191,14 @@ export class FlatConfigEditor implements vscode.CustomTextEditorProvider {
 				<title>Flat Editor</title>
 			</head>
 			<body>
-				<div data-workspace="${dirName}" data-config="${stringifiedConfig}" id="root"></div>
+				<div data-workspace="${dirName}" id="root"></div>
 				<script nonce="${nonce}" src="${scriptUri}"></script>
 			</body>
 			</html>`
   }
 
   private saveDocument(document: vscode.TextDocument) {
-    if (document.isDirty) {
-      document.save()
-    }
+    document.save()
   }
 
   debouncedSave = debounce(this.saveDocument, 300)
@@ -193,10 +206,23 @@ export class FlatConfigEditor implements vscode.CustomTextEditorProvider {
   /**
    * Write out the yaml to a given document.
    */
-  private async updateTextDocument(document: vscode.TextDocument, data: any) {
+  private async updateTextDocument(_: vscode.TextDocument, data: any) {
+    const workspaceRootUri = vscode.workspace.workspaceFolders?.[0].uri
+    if (!workspaceRootUri) {
+      throw new Error('No workspace open')
+    }
+
+    const flatFileUri = vscode.Uri.joinPath(
+      workspaceRootUri,
+      '.github/workflows',
+      'flat.yml'
+    )
+    const document = await vscode.workspace.openTextDocument(flatFileUri)
+    const currentText = document.getText()
+
     // todo
     const edit = new vscode.WorkspaceEdit()
-    const currentText = document.getText()
+
     const newText = this.serializeWorkflow(data)
     if (currentText === newText) return
 
@@ -214,17 +240,11 @@ export class FlatConfigEditor implements vscode.CustomTextEditorProvider {
   private serializeWorkflow(data: FlatState): string {
     // const doc: FlatYamlDoc = {
     //   name: 'Flat',
-    //   on: {
-    //     workflow_dispatch: null,
     //   },
     //   jobs: {},
     // }
     // if (data.triggerPush) {
-    //   doc.on.push = null
-    // }
     // if (data.triggerSchedule) {
-    //   doc.on.schedule = [
-    //     {
     //       cron: data.triggerSchedule,
     //     },
     //   ]
@@ -232,8 +252,6 @@ export class FlatConfigEditor implements vscode.CustomTextEditorProvider {
 
     // data.jobs.forEach(j => {
     //   doc.jobs[j.name] = {
-    //     'runs-on': 'ubuntu-latest',
-    //     steps: [
     //       {
     //         name: 'Checkout repo',
     //         uses: 'actions/checkout@v2',

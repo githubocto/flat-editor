@@ -9,7 +9,7 @@ import { VSCodeAPI } from './VSCodeAPI'
 interface AppProps {}
 
 function App({}: AppProps) {
-  const { state, setErrors } = useFlatConfigStore()
+  const { state, setErrors, isStubData } = useFlatConfigStore()
 
   useEffect(() => {
     flatStateValidationSchema
@@ -34,6 +34,8 @@ function App({}: AppProps) {
       ...state,
       jobs: transformedJobs,
     }
+
+    if (isStubData) return
 
     VSCodeAPI.postMessage({
       type: 'updateText',

@@ -21,12 +21,14 @@ type FlatStoreState = {
   update: (fn: (draft: Draft<FlatStoreState>) => void) => void
   setErrors: (errors: ValidationError[]) => void
   files?: string[]
+  isStubData: boolean
 }
 
 export const useFlatConfigStore = create<FlatStoreState>(
   immer(set => ({
     errors: [],
     workspace: '',
+    isStubData: true,
     state: {
       name: 'Flat',
       on: {

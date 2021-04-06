@@ -39,20 +39,17 @@ function transformConfig(config: any) {
   return config
 }
 
+config = transformConfig(config)
+
 if (root) {
-  config = JSON.parse(
-    decodeURIComponent(root.getAttribute('data-config') || '')
-  )
-
   workspace = root.getAttribute('data-workspace') || ''
-
-  config = transformConfig(config)
 }
 
 useFlatConfigStore.setState({
   // @ts-ignore
   state: config,
   workspace,
+  isStubData: true,
 })
 
 VSCodeAPI.postMessage({
@@ -65,6 +62,7 @@ window.addEventListener('message', e => {
   if (message.command === 'updateState') {
     useFlatConfigStore.setState({
       state: transformConfig(message.config),
+      isStubData: false,
     })
   } else if (message.command === 'updateFiles') {
     useFlatConfigStore.setState({
