@@ -18,12 +18,26 @@ yup.addMethod(yup.array, 'unique', function (message) {
 })
 
 const jobValidationSchema = yup.object().shape({
-  name: yup.string().required('Please enter a job name'),
+  name: yup
+    .string()
+    .required('Please enter a job name')
+    .matches(
+      /^([a-zA-Z_]){1}([a-zA-Z_\-\d])*$/,
+      "Names must start with a letter or '_' and contain only alphanumeric characters, '-', or '_'"
+    ),
 })
 
 export const flatStateValidationSchema = yup.object().shape({
-  triggerPush: yup.bool(),
-  triggerSchedule: yup.string().required('Please provide a trigger schedule'),
+  // on: yup.shape({
+  //   push: yup.optional(
+  //     yup.shape({
+  //       branches: yup.array(),
+  //     })
+  //   ),
+  //   schedule: yup.shape({
+  //     cron: yup.string().required('Please provide a trigger schedule'),
+  //   }),
+  // }),
   jobs: yup
     .array()
     .of(jobValidationSchema)
