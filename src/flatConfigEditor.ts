@@ -345,7 +345,9 @@ export class FlatConfigEditor implements vscode.CustomTextEditorProvider {
       ],
       { dot: true }
     )
-    const parsedFiles = files.map(file => file.split(workspaceRootUri.path)[1])
+    const parsedFiles = files.map(
+      file => `.${file.split(workspaceRootUri.path)[1]}`
+    )
 
     await webviewPanel.webview.postMessage({
       command: 'updateFiles',
