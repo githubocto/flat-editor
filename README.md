@@ -1,8 +1,8 @@
+# Flat
+
 <p>
   <img src="https://img.shields.io/visual-studio-marketplace/v/githubocto.flat.svg">
 </p>
-
-# Flat
 
 Flat is a VSCode extension that steps you through the process of creating a [Flat action](https://github.com/githubocto/flat), which makes it easy to fetch data and commit it to your repository as flatfiles.
 
