@@ -79,6 +79,9 @@ export async function activate(context: vscode.ExtensionContext) {
         on: {
           schedule: [{ cron: '' }],
           workflow_dispatch: {},
+          push: {
+            paths: ['.github/workflows/flat.yml'],
+          },
         },
         jobs: {
           scheduled: {

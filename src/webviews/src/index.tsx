@@ -16,6 +16,9 @@ function transformConfig(config: any) {
     config = {
       on: {
         workflow_dispatch: {},
+        push: {
+          paths: ['.github/workflows/flat.yml'],
+        },
       },
     }
   if (!config.on) config.on = {}

@@ -33,7 +33,9 @@ export const useFlatConfigStore = create<FlatStoreState>(
       name: 'Flat',
       on: {
         workflow_dispatch: undefined,
-        push: undefined,
+        push: {
+          paths: ['.github/workflows/flat.yml'],
+        },
         schedule: [
           {
             cron: '0 * * * *',
