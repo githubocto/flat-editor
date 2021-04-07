@@ -164,11 +164,28 @@ export class FlatConfigEditor implements vscode.CustomTextEditorProvider {
     )
     const document = await vscode.workspace.openTextDocument(flatFileUri)
     const rawFlatYaml = document.getText()
-    const parsedConfig = parse(rawFlatYaml)
 
     const dirName = workspaceRootUri.path.substring(
       workspaceRootUri.path.lastIndexOf('/') + 1
     )
+
+    let gitRepo = ''
+    const gitConfigFileUri = vscode.Uri.joinPath(
+      workspaceRootUri,
+      '.git/config'
+    )
+    const gitDocument = await vscode.workspace.openTextDocument(
+      gitConfigFileUri
+    )
+    const gitConfigString = gitDocument.getText()
+    try {
+      gitRepo =
+        gitConfigString
+          .split(`[remote "origin"]\n\turl = git@github.com:`)[1]
+          .split('.')[0] || ''
+    } catch (e) {
+      console.log(e)
+    }
 
     return /* html */ `
 			<!DOCTYPE html>
@@ -194,7 +211,7 @@ export class FlatConfigEditor implements vscode.CustomTextEditorProvider {
 				<title>Flat Editor</title>
 			</head>
 			<body>
-				<div data-workspace="${dirName}" id="root"></div>
+				<div data-workspace="${dirName}" data-gitrepo=${gitRepo} id="root"></div>
 				<script nonce="${nonce}" src="${scriptUri}"></script>
 			</body>
 			</html>`

@@ -17,6 +17,7 @@ interface ValidationError {
 type FlatStoreState = {
   state: FlatState
   workspace: string
+  gitRepo: string
   errors: ValidationError[]
   update: (fn: (draft: Draft<FlatStoreState>) => void) => void
   setErrors: (errors: ValidationError[]) => void
@@ -28,6 +29,7 @@ export const useFlatConfigStore = create<FlatStoreState>(
   immer(set => ({
     errors: [],
     workspace: '',
+    gitRepo: '',
     isStubData: true,
     state: {
       name: 'Flat',

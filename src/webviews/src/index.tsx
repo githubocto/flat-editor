@@ -8,6 +8,7 @@ import { VSCodeAPI } from './VSCodeAPI'
 // TODO: Type the incoming config data
 let config: any = {}
 let workspace = ''
+let gitRepo = ''
 
 const root = document.getElementById('root')
 
@@ -42,12 +43,14 @@ config = transformConfig(config)
 
 if (root) {
   workspace = root.getAttribute('data-workspace') || ''
+  gitRepo = root.getAttribute('data-gitrepo') || ''
 }
 
 useFlatConfigStore.setState({
   // @ts-ignore
   state: config,
   workspace,
+  gitRepo,
   isStubData: true,
 })
 
