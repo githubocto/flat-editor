@@ -44,7 +44,6 @@ export class FlatConfigEditor implements vscode.CustomTextEditorProvider {
           config: parsedConfig,
         })
       }
-      updateWebviewState()
     }
 
     const updateWebviewState = async () => {
@@ -64,10 +63,6 @@ export class FlatConfigEditor implements vscode.CustomTextEditorProvider {
       }
     )
 
-    webviewPanel.onDidChangeViewState(e => {
-      updateWebviewState()
-    })
-
     // Make sure we get rid of the listener when our editor is closed.
     webviewPanel.onDidDispose(() => {
       changeDocumentSubscription.dispose()
@@ -81,8 +76,6 @@ export class FlatConfigEditor implements vscode.CustomTextEditorProvider {
     webviewPanel.webview.html = await this.getHtmlForWebview(
       webviewPanel.webview
     )
-
-    updateWebviewState()
 
     // Receive message from the webview.
     webviewPanel.webview.onDidReceiveMessage(async e => {
@@ -101,6 +94,9 @@ export class FlatConfigEditor implements vscode.CustomTextEditorProvider {
           break
         case 'getFileContents':
           this.loadFileContents(webviewPanel, e.data)
+          break
+        case 'refreshState':
+          updateWebviewState()
           break
         case 'previewFile':
           const workspaceRootUri = vscode.workspace.workspaceFolders?.[0].uri
@@ -382,6 +378,7 @@ export class FlatConfigEditor implements vscode.CustomTextEditorProvider {
   ) => {
     const workspaceRootUri = vscode.workspace.workspaceFolders?.[0].uri
     if (!workspaceRootUri) return
+    if (!filePath) return
 
     const fileUri = vscode.Uri.joinPath(workspaceRootUri, filePath)
     const document = await vscode.workspace.openTextDocument(fileUri)
