@@ -99,6 +99,9 @@ export class FlatConfigEditor implements vscode.CustomTextEditorProvider {
         case 'refreshFiles':
           this.loadFiles(webviewPanel)
           break
+        case 'getFileContents':
+          this.loadFileContents(webviewPanel, e.data)
+          break
         case 'previewFile':
           const workspaceRootUri = vscode.workspace.workspaceFolders?.[0].uri
           if (!workspaceRootUri) {
@@ -370,6 +373,24 @@ export class FlatConfigEditor implements vscode.CustomTextEditorProvider {
     await webviewPanel.webview.postMessage({
       command: 'updateFiles',
       files: parsedFiles,
+    })
+  }
+
+  private loadFileContents = async (
+    webviewPanel: vscode.WebviewPanel,
+    filePath: string
+  ) => {
+    const workspaceRootUri = vscode.workspace.workspaceFolders?.[0].uri
+    if (!workspaceRootUri) return
+
+    const fileUri = vscode.Uri.joinPath(workspaceRootUri, filePath)
+    const document = await vscode.workspace.openTextDocument(fileUri)
+    const rawText = document.getText()
+
+    await webviewPanel.webview.postMessage({
+      command: 'returnFileContents',
+      file: filePath,
+      contents: rawText,
     })
   }
 }

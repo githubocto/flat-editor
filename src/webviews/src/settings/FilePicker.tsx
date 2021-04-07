@@ -4,6 +4,7 @@ import { Clickable } from 'reakit/Clickable'
 import { useCombobox } from 'downshift'
 
 import FieldWithDescription from './FieldWithDescription'
+import { FilePreview } from './FilePreview'
 import { VSCodeAPI } from '../VSCodeAPI'
 import useFlatConfigStore from '../store'
 
@@ -151,6 +152,9 @@ export function FilePicker(props: FilePickerProps) {
           )}
         </ul>
       </div>
+
+      <FilePreview file={value} />
+
       {value && (
         <div className="mt-1">
           <Clickable

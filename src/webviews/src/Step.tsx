@@ -2,7 +2,6 @@ import React, { FunctionComponent } from 'react'
 import { Clickable } from 'reakit/Clickable'
 import type { FlatStep } from '../../types'
 
-import { Input } from './settings/Input'
 import { FilePicker } from './settings/FilePicker'
 import { StepConfig } from './StepConfig'
 import useFlatConfigStore from './store'
