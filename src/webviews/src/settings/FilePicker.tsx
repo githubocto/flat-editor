@@ -87,7 +87,6 @@ export function FilePicker(props: FilePickerProps) {
             {...getInputProps({
               onFocus: () => {
                 triggerFilesRefresh()
-                openMenu()
               },
             })}
           />
