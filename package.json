@@ -144,6 +144,7 @@
   "dependencies": {
     "@octokit/rest": "^18.5.2",
     "@radix-ui/react-dropdown-menu": "^0.0.17",
+    "@types/isomorphic-fetch": "^0.0.35",
     "classcat": "^5.0.3",
     "cronstrue": "^1.110.0",
     "downshift": "^6.1.2",
@@ -151,6 +152,7 @@
     "formik": "^2.2.6",
     "git-url-parse": "^11.4.4",
     "immer": "^9.0.1",
+    "isomorphic-fetch": "^3.0.0",
     "lodash-es": "^4.17.21",
     "nanoid": "^3.1.22",
     "react": "^17.0.1",

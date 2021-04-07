@@ -1,5 +1,6 @@
 import * as vscode from 'vscode'
 import * as fg from 'fast-glob'
+import * as fetch from 'isomorphic-fetch'
 import { parse, stringify } from 'yaml'
 import { debounce } from 'ts-debounce'
 
@@ -97,6 +98,8 @@ export class FlatConfigEditor implements vscode.CustomTextEditorProvider {
           break
         case 'refreshState':
           updateWebviewState()
+        case 'getUrlContents':
+          this.loadUrlContents(webviewPanel, e.data)
           break
         case 'previewFile':
           const workspaceRootUri = vscode.workspace.workspaceFolders?.[0].uri
@@ -405,6 +408,20 @@ export class FlatConfigEditor implements vscode.CustomTextEditorProvider {
       } catch (e) {
         resolve({})
       }
+    })
+  }
+
+  private loadUrlContents = async (
+    webviewPanel: vscode.WebviewPanel,
+    url: string
+  ) => {
+    const res = await fetch(url)
+    const contents = await res.text()
+
+    await webviewPanel.webview.postMessage({
+      command: 'returnUrlContents',
+      url: url,
+      contents: contents,
     })
   }
 }

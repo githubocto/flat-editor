@@ -3,6 +3,7 @@ import React from 'react'
 import type { Step, FlatStep, PullHttpConfig, PullSqlConfig } from '../../types'
 import { Input } from './settings/Input'
 import { FilePicker } from './settings/FilePicker'
+import { HttpEndpointPreview } from './settings/HttpEndpointPreview'
 import SecretInput from './settings/SecretInput'
 import FieldWithDescription from './settings/FieldWithDescription'
 import useFlatConfigStore from './store'
@@ -50,7 +51,9 @@ export function StepConfig(props: StepConfigProps) {
           title="Endpoint url"
           label="Which endpoint should we pull data from? This needs to be a stable, unchanging URL."
           handleChange={e => handleHttpValueChange('http_url', e.target.value)}
-        />
+        >
+          <HttpEndpointPreview url={props.step.with.http_url} />
+        </Input>
       </div>
     )
   } else if ('with' in props.step && 'sql_queryfile' in props.step.with) {

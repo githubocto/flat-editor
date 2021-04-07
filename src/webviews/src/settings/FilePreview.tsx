@@ -31,8 +31,8 @@ export const FilePreview: FunctionComponent<FilePreviewProps> = props => {
   if (!fileContent) return null
 
   return (
-    <code className="block bg-vscode-notebook-rowHoverBackground p-2 px-3 text-xs max-h-24 overflow-auto whitespace-pre-wrap">
-      {fileContent}
-    </code>
+    <pre className="block bg-vscode-notebook-rowHoverBackground p-2 px-3 text-xs max-h-24 overflow-auto whitespace-pre-wrap">
+      <code>{(fileContent || '').slice(0, 100000)}</code>
+    </pre>
   )
 }
