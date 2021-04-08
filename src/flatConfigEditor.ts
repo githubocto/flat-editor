@@ -169,23 +169,10 @@ export class FlatConfigEditor implements vscode.CustomTextEditorProvider {
       workspaceRootUri.path.lastIndexOf('/') + 1
     )
 
-    let gitRepo = ''
-    const gitConfigFileUri = vscode.Uri.joinPath(
-      workspaceRootUri,
-      '.git/config'
-    )
-    const gitDocument = await vscode.workspace.openTextDocument(
-      gitConfigFileUri
-    )
-    const gitConfigString = gitDocument.getText()
-    try {
-      gitRepo =
-        gitConfigString
-          .split(`[remote "origin"]\n\turl = git@github.com:`)[1]
-          .split('.')[0] || ''
-    } catch (e) {
-      console.log(e)
-    }
+    const gitClient = new VSCodeGit()
+    await gitClient.activateExtension()
+    const { name, owner } = gitClient.repoDetails
+    const gitRepo = `${owner}/${name}`
 
     return /* html */ `
 			<!DOCTYPE html>
