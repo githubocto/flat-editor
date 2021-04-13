@@ -97,7 +97,7 @@ export async function activate(context: vscode.ExtensionContext) {
               },
               {
                 name: 'Commit data',
-                type: 'download',
+                type: 'commit',
                 uses: 'githubocto/flat@main',
               },
             ],

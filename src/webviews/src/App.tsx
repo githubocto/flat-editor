@@ -1,14 +1,24 @@
 import React, { useEffect } from 'react'
 import flatten from 'lodash-es/flatten'
 import uniq from 'lodash-es/uniq'
+import last from 'lodash-es/last'
+import isEqual from 'lodash-es/isEqual'
+import size from 'lodash-es/size'
+
 import Jobs from './Jobs'
 import useFlatConfigStore from './store'
 import Triggers from './Triggers'
 import { flatStateValidationSchema } from './validation'
 import { VSCodeAPI } from './VSCodeAPI'
-import { FlatDownloadStep, PullSqlConfig } from '../../types'
+import { FlatCommitStep, FlatDownloadStep, PullSqlConfig } from '../../types'
 
 interface AppProps {}
+
+const stubLastStep: FlatCommitStep = {
+  name: 'Commit data',
+  type: 'commit',
+  uses: 'githubocto/flat@main',
+}
 
 function App({}: AppProps) {
   const { state, setErrors, isStubData } = useFlatConfigStore()
@@ -50,6 +60,23 @@ function App({}: AppProps) {
           })
         ),
       ])
+    }
+
+    const lastStep = last(cloned.jobs.scheduled.steps)
+
+    // Primitive check to see if the commit step is the last step in the workflow.
+    if (
+      !isEqual(lastStep, stubLastStep) &&
+      size(cloned.jobs.scheduled.steps) > 3
+    ) {
+      const indexOfCommitStep = cloned.jobs.scheduled.steps.findIndex(step =>
+        isEqual(step, stubLastStep)
+      )
+
+      if (indexOfCommitStep >= 0) {
+        cloned.jobs.scheduled.steps.splice(indexOfCommitStep, 1)
+        cloned.jobs.scheduled.steps.push(stubLastStep)
+      }
     }
 
     VSCodeAPI.postMessage({
