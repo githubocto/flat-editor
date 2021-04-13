@@ -2,8 +2,7 @@
 import * as vscode from 'vscode'
 
 export type PullBaseConfig = {
-  outfile_basename?: string
-  postprocess: string
+  downloaded_filename?: string
 }
 export type PullHttpConfig = {
   http_url: string
