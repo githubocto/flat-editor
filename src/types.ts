@@ -16,27 +16,19 @@ export type PullSqlConfig = {
 
 export type PullConfig = PullHttpConfig | PullSqlConfig
 
-export type PushConfig = {} // TODO: once we have a push action
-
-export type PullStep = {
-  name: string
-  uses: 'githubocto/flat-pull@v1'
-  with: PullConfig
-}
-
-export type PushStep = {
-  name: string
-  uses: 'githubocto/flat-push@v1'
-  with: PushConfig
-}
-
 export type CheckoutStep = {
   name: string
   uses: 'actions/checkout@v2'
 }
 
-export type FlatStep = {
+export type FlatDownloadStep = {
   name: 'Fetch data'
+  uses: 'githubocto/flat@main'
+  with: PullConfig
+}
+
+export type FlatCommitStep = {
+  name: 'Commit data'
   uses: 'githubocto/flat@main'
   with: PullConfig
 }
@@ -46,7 +38,7 @@ export type DenoStep = {
   uses: 'denolib/setup-deno@v2'
 }
 
-export type Step = CheckoutStep | FlatStep | DenoStep
+export type Step = CheckoutStep | FlatDownloadStep | DenoStep | FlatCommitStep
 
 export type FlatJob = {
   'runs-on': string
