@@ -54,12 +54,12 @@ export function StepConfig(props: StepConfigProps) {
     return (
       <div>
         <Input
-          value={props.step.with.outfile_basename || ''}
+          value={props.step.with.downloaded_filename || ''}
           placeholder="data"
           title="Result filename"
           label="The filename where you want the results to be saved. This file doesn't need to exist yet."
           handleChange={e =>
-            handleSqlValueChange('outfile_basename', e.target.value)
+            handleSqlValueChange('downloaded_filename', e.target.value)
           }
         />
         <FilePicker
