@@ -11,7 +11,7 @@ import { FlatStep, PullSqlConfig } from '../../types'
 interface AppProps {}
 
 function App({}: AppProps) {
-  const { state, setErrors, isStubData } = useFlatConfigStore()
+  const { state, setErrors, isStubData, gitRepo } = useFlatConfigStore()
 
   useEffect(() => {
     flatStateValidationSchema
@@ -63,6 +63,8 @@ function App({}: AppProps) {
     })
   }
 
+  const actionsUrl = gitRepo && `https://github.com/${gitRepo}/actions`
+
   return (
     <div className="p-4">
       <div className="mb-2 p-4">
@@ -77,6 +79,30 @@ function App({}: AppProps) {
       </div>
       <Triggers />
       <Jobs />
+
+      <div className="pt-4 pl-4 pb-6">
+        <p className="text-lg font-bold pb-1">
+          You're all set!{' '}
+          <span
+            className="codicon codicon-rocket pl-1"
+            style={{ fontSize: '0.875rem' }}
+          />
+        </p>
+        <p>
+          Commit, push, and check out your new Action{' '}
+          {actionsUrl ? (
+            <span>
+              <a className="underline" href={actionsUrl}>
+                on GitHub
+              </a>
+              .
+            </span>
+          ) : (
+            'on GitHub.  '
+          )}{' '}
+          It should run automatically, once pushed.
+        </p>
+      </div>
     </div>
   )
 }

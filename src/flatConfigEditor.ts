@@ -164,11 +164,14 @@ export class FlatConfigEditor implements vscode.CustomTextEditorProvider {
     )
     const document = await vscode.workspace.openTextDocument(flatFileUri)
     const rawFlatYaml = document.getText()
-    const parsedConfig = parse(rawFlatYaml)
 
     const dirName = workspaceRootUri.path.substring(
       workspaceRootUri.path.lastIndexOf('/') + 1
     )
+
+    const { owner, name } = await this.getRepoDetails()
+
+    const gitRepo = owner && name ? `${owner}/${name}` : ''
 
     return /* html */ `
 			<!DOCTYPE html>
@@ -194,7 +197,7 @@ export class FlatConfigEditor implements vscode.CustomTextEditorProvider {
 				<title>Flat Editor</title>
 			</head>
 			<body>
-				<div data-workspace="${dirName}" id="root"></div>
+				<div data-workspace="${dirName}" data-gitrepo="${gitRepo}" id="root"></div>
 				<script nonce="${nonce}" src="${scriptUri}"></script>
 			</body>
 			</html>`
@@ -285,11 +288,8 @@ export class FlatConfigEditor implements vscode.CustomTextEditorProvider {
 
     if (!session) return
 
-    const gitClient = new VSCodeGit()
-    await gitClient.activateExtension()
-
-    // Next, let's grab the repo name.
-    const { name, owner } = gitClient.repoDetails
+    const { owner, name } = await this.getRepoDetails()
+    if (!owner || !name) return
 
     const octokit = new Octokit({
       auth: session.accessToken,
@@ -391,6 +391,23 @@ export class FlatConfigEditor implements vscode.CustomTextEditorProvider {
       command: 'returnFileContents',
       file: filePath,
       contents: rawText,
+    })
+  }
+
+  private getRepoDetails(): Promise<{ name?: string; owner?: string }> {
+    return new Promise(async (resolve, reject) => {
+      try {
+        const gitClient = new VSCodeGit()
+        await gitClient.activateExtension()
+        await gitClient.waitForRepo(5)
+
+        // Next, let's grab the repo name.
+        const { name, owner } = gitClient.repoDetails
+
+        resolve({ name, owner })
+      } catch (e) {
+        resolve({})
+      }
     })
   }
 }
