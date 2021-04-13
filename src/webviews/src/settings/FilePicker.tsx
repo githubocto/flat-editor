@@ -9,7 +9,7 @@ import { VSCodeAPI } from '../VSCodeAPI'
 import useFlatConfigStore from '../store'
 
 interface FilePickerProps {
-  value: string
+  value?: string
   onChange: (newValue: string) => void
   title: string
   label: string
@@ -88,6 +88,7 @@ export function FilePicker(props: FilePickerProps) {
             {...getInputProps({
               onFocus: () => {
                 triggerFilesRefresh()
+                openMenu()
               },
             })}
           />
@@ -153,7 +154,7 @@ export function FilePicker(props: FilePickerProps) {
         </ul>
       </div>
 
-      <FilePreview file={value} />
+      <FilePreview file={value || ''} />
 
       {value && (
         <div className="mt-1">

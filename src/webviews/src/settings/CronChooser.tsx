@@ -10,7 +10,7 @@ type CronChooserProps = {
 const defaultSchedules = {
   fiveMinutes: '* * * * *',
   hour: '0 * * * *',
-  day: '0 0 * * * ',
+  day: '0 0 * * *',
 }
 
 const CronChooser: FunctionComponent<CronChooserProps> = props => {

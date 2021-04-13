@@ -20,7 +20,7 @@ export const Step: FunctionComponent<StepProps> = props => {
       store.state.jobs.scheduled.steps[props.index].name = newName
     })
   }
-  const handlePostprocessChange = (newPath: string) => {
+  const handlePostprocessChange = (newPath?: string) => {
     update(store => {
       ;(store.state.jobs.scheduled.steps[
         props.index
@@ -48,7 +48,7 @@ export const Step: FunctionComponent<StepProps> = props => {
         <div className="p-2 flex items-center justify-between overflow-hidden">
           <div className="text-lg font-bold">
             Fetch data via{' '}
-            {'with' in props.step && 'sql_format' in props.step.with
+            {'with' in props.step && 'sql_queryfile' in props.step.with
               ? 'SQL'
               : 'HTTP'}
           </div>
@@ -73,7 +73,7 @@ export const Step: FunctionComponent<StepProps> = props => {
           value={props.step.with.postprocess}
           accept=".js,.ts"
           onChange={newPath => {
-            handlePostprocessChange(newPath)
+            handlePostprocessChange(newPath || undefined)
           }}
           isClearable
         />

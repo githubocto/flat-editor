@@ -3,6 +3,7 @@ import * as vscode from 'vscode'
 
 export type PullBaseConfig = {
   downloaded_filename?: string
+  postprocess?: string
 }
 export type PullHttpConfig = {
   http_url: string
@@ -11,7 +12,6 @@ export type PullHttpConfig = {
 export type PullSqlConfig = {
   sql_connstring: string
   sql_queryfile: string
-  sql_format: 'csv' | 'json'
 } & PullBaseConfig
 
 export type PullConfig = PullHttpConfig | PullSqlConfig
