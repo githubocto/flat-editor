@@ -56,7 +56,7 @@ export type FlatJob = {
 interface OnFlatState {
   workflow_dispatch?: any
   push?: {
-    paths: ['.github/workflows/flat.yml']
+    paths: string[]
   }
   schedule: {
     cron: string

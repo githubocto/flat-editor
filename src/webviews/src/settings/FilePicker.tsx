@@ -50,7 +50,7 @@ export function FilePicker(props: FilePickerProps) {
     getItemProps,
     openMenu,
   } = useCombobox({
-    selectedItem: value,
+    selectedItem: value || '',
     items: filteredFiles,
     onInputValueChange: ({ inputValue }) => {
       setInputValue(inputValue || '')

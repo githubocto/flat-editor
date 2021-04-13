@@ -22,6 +22,8 @@ function transformConfig(config: any) {
       },
     }
   if (!config.on) config.on = {}
+  if (!config.on.push) config.on.push = {}
+  if (!config.on.push.paths) config.on.push.paths = []
   if (!config.jobs) config.jobs = {}
   if (!config.jobs.scheduled)
     config.jobs.scheduled = {
