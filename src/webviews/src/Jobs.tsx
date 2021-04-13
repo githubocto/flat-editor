@@ -3,7 +3,7 @@ import React, { FunctionComponent } from 'react'
 import Header from './Header'
 import { Step } from './Step'
 import useFlatConfigStore from './store'
-import type { FlatStep } from './../../types'
+import type { FlatDownloadStep } from './../../types'
 
 interface JobsProps {}
 
@@ -30,14 +30,19 @@ const Jobs: FunctionComponent<JobsProps> = props => {
 
   const handleJobAdded = (type: 'http' | 'sql') => {
     update(store => {
+      const step = STEP_STUBS[type] as FlatDownloadStep
       // @ts-ignore
-      store.state.jobs.scheduled.steps.push(STEP_STUBS[type])
+      store.state.jobs.scheduled.steps.splice(
+        store.state.jobs.scheduled.steps.length - 1,
+        0,
+        step
+      )
     })
   }
 
   const steps = state.jobs.scheduled.steps
-    .slice(2)
-    .map((j, i) => <Step index={i + 2} step={j as FlatStep} key={i} />)
+    .slice(2, state.jobs.scheduled.steps.length - 1)
+    .map((j, i) => <Step index={i + 2} step={j as FlatDownloadStep} key={i} />)
 
   return (
     <div className="text-vscode-foreground">

@@ -1,13 +1,13 @@
 import React, { FunctionComponent } from 'react'
 import { Clickable } from 'reakit/Clickable'
-import type { FlatStep } from '../../types'
+import type { FlatDownloadStep } from '../../types'
 
 import { FilePicker } from './settings/FilePicker'
 import { StepConfig } from './StepConfig'
 import useFlatConfigStore from './store'
 
 type StepProps = {
-  step: FlatStep
+  step: FlatDownloadStep
   index: number
 }
 
@@ -24,7 +24,7 @@ export const Step: FunctionComponent<StepProps> = props => {
     update(store => {
       ;(store.state.jobs.scheduled.steps[
         props.index
-      ] as FlatStep).with.postprocess = newPath
+      ] as FlatDownloadStep).with.postprocess = newPath
     })
   }
 

@@ -1,6 +1,11 @@
 import React from 'react'
 
-import type { Step, FlatStep, PullHttpConfig, PullSqlConfig } from '../../types'
+import type {
+  Step,
+  FlatDownloadStep,
+  PullHttpConfig,
+  PullSqlConfig,
+} from '../../types'
 import { Input } from './settings/Input'
 import { FilePicker } from './settings/FilePicker'
 import SecretInput from './settings/SecretInput'
@@ -17,14 +22,18 @@ export function StepConfig(props: StepConfigProps) {
 
   const handleHttpValueChange = (stepName: string, newValue?: string) => {
     update(store => {
-      const step = store.state.jobs.scheduled.steps[props.stepIndex] as FlatStep
+      const step = store.state.jobs.scheduled.steps[
+        props.stepIndex
+      ] as FlatDownloadStep
       // @ts-ignore
       ;(step.with as PullHttpConfig)[stepName] = newValue
     })
   }
   const handleSqlValueChange = (stepName: string, newValue: string) => {
     update(store => {
-      const step = store.state.jobs.scheduled.steps[props.stepIndex] as FlatStep
+      const step = store.state.jobs.scheduled.steps[
+        props.stepIndex
+      ] as FlatDownloadStep
       // @ts-ignore
       ;(step.with as PullSqlConfig)[stepName] = newValue
     })

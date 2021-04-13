@@ -95,6 +95,11 @@ export async function activate(context: vscode.ExtensionContext) {
                 name: 'Check out repo',
                 uses: 'actions/checkout@v2',
               },
+              {
+                name: 'Commit data',
+                type: 'download',
+                uses: 'githubocto/flat@main',
+              },
             ],
           },
         },

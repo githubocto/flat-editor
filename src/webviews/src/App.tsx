@@ -6,7 +6,7 @@ import useFlatConfigStore from './store'
 import Triggers from './Triggers'
 import { flatStateValidationSchema } from './validation'
 import { VSCodeAPI } from './VSCodeAPI'
-import { FlatStep, PullSqlConfig } from '../../types'
+import { FlatDownloadStep, PullSqlConfig } from '../../types'
 
 interface AppProps {}
 
@@ -35,13 +35,15 @@ function App({}: AppProps) {
         ...flatten(
           state.jobs.scheduled.steps.map(step => {
             let files = []
-            if (!(step as FlatStep).with) return []
-            if ((step as FlatStep).with.postprocess !== undefined) {
-              files.push((step as FlatStep).with.postprocess)
+            if (!(step as FlatDownloadStep).with) return []
+            if ((step as FlatDownloadStep).with.postprocess !== undefined) {
+              files.push((step as FlatDownloadStep).with.postprocess)
             }
-            if (((step as FlatStep).with as PullSqlConfig).sql_queryfile) {
+            if (
+              ((step as FlatDownloadStep).with as PullSqlConfig).sql_queryfile
+            ) {
               files.push(
-                ((step as FlatStep).with as PullSqlConfig).sql_queryfile
+                ((step as FlatDownloadStep).with as PullSqlConfig).sql_queryfile
               )
             }
             return files

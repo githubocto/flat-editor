@@ -30,7 +30,7 @@ export type FlatDownloadStep = {
 export type FlatCommitStep = {
   name: 'Commit data'
   uses: 'githubocto/flat@main'
-  with: PullConfig
+  type: 'commit'
 }
 
 export type DenoStep = {
