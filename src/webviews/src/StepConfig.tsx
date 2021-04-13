@@ -15,7 +15,7 @@ interface StepConfigProps {
 export function StepConfig(props: StepConfigProps) {
   const { update, workspace } = useFlatConfigStore()
 
-  const handleHttpValueChange = (stepName: string, newValue: string) => {
+  const handleHttpValueChange = (stepName: string, newValue?: string) => {
     update(store => {
       const step = store.state.jobs.scheduled.steps[props.stepIndex] as FlatStep
       // @ts-ignore
@@ -34,12 +34,15 @@ export function StepConfig(props: StepConfigProps) {
     return (
       <div>
         <Input
-          value={props.step.with.outfile_basename || ''}
+          value={props.step.with.downloaded_filename || ''}
           placeholder="data"
           title="Result filename"
           label="The filename where you want the results to be saved. This file doesn't need to exist yet."
           handleChange={e =>
-            handleHttpValueChange('outfile_basename', e.target.value)
+            handleHttpValueChange(
+              'downloaded_filename',
+              e.target.value || undefined
+            )
           }
         />
         <Input
@@ -50,7 +53,7 @@ export function StepConfig(props: StepConfigProps) {
         />
       </div>
     )
-  } else if ('with' in props.step && 'sql_format' in props.step.with) {
+  } else if ('with' in props.step && 'sql_queryfile' in props.step.with) {
     return (
       <div>
         <Input
@@ -79,34 +82,6 @@ export function StepConfig(props: StepConfigProps) {
             handleSqlValueChange('sql_connstring', newValue)
           }
         />
-        <FieldWithDescription title="Data format">
-          <div className="flex flex-col space-y-2">
-            <div>What format would you like the result to be in?</div>
-
-            <div className="flex flex-wrap items-center space-x-4" role="group">
-              <label className="flex items-center space-x-1">
-                <input
-                  type="radio"
-                  name="sql_format"
-                  checked={props.step.with.sql_format === 'csv'}
-                  onChange={() => handleSqlValueChange('sql_format', 'csv')}
-                  value="csv"
-                />
-                <span>CSV</span>
-              </label>
-              <label className="flex items-center space-x-1">
-                <input
-                  type="radio"
-                  name="sql_format"
-                  checked={props.step.with.sql_format === 'json'}
-                  onChange={() => handleSqlValueChange('sql_format', 'json')}
-                  value="json"
-                />
-                <span>JSON</span>
-              </label>
-            </div>
-          </div>
-        </FieldWithDescription>
       </div>
     )
   } else {

@@ -21,7 +21,6 @@ const STEP_STUBS = {
     with: {
       sql_connstring: '',
       sql_queryfile: '',
-      sql_format: 'csv',
     },
   },
 }
