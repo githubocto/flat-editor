@@ -20,7 +20,9 @@
     "Other"
   ],
   "activationEvents": [
-    "*"
+    "onLanguage:yaml",
+    "onCustomEditor:flat.config",
+    "onCommand:flat.initializeFlatYml"
   ],
   "babel": {
     "presets": [
