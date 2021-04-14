@@ -77,7 +77,7 @@ export async function activate(context: vscode.ExtensionContext) {
       const flatStub = {
         name: 'data',
         on: {
-          schedule: [{ cron: '' }],
+          schedule: [{ cron: '0 0 * * *' }],
           workflow_dispatch: {},
           push: {
             paths: ['.github/workflows/flat.yml'],
