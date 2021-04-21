@@ -22,11 +22,11 @@ If you're starting from an empty repository, invoke the VSCode Command Palette v
 
 This will generate a `flat.yml` file in the `.github/workflows` directory, and will open a GUI through which you can configure your Flat action.
 
-![Screenshot of Flat Action configuration GUI](./screenshots/gui.png)
+![Screenshot of Flat Action configuration GUI](./screenshots/gui-view.png)
 
 At any given time, you can view the raw content of the underlying YML file via the **View the raw YAML** button in the GUI, or via the following button at the top right of your VSCode workspace.
 
-![Screenshot of 'Show Preview' VSCode toolbar button](./screenshots/show-preview.png)
+![Screenshot of 'Show Preview' VSCode toolbar button](./screenshots/show-preview-button.png)
 
 Changes to `flat.yml` are saved automatically when using the GUI, but feel free to save manually via <kbd>Cmd</kbd>+<kbd>S</kbd> if the habit is as deeply engrained for you as it is for us 😀
 
