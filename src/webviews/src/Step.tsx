@@ -68,7 +68,7 @@ export const Step: FunctionComponent<StepProps> = props => {
         <StepConfig stepIndex={props.index} step={props.step} />
 
         <FilePicker
-          title="Postprocessing file"
+          title="Postprocessing file (optional)"
           label="The file containing the postprocessing script. This needs to be within the same repository."
           value={props.step.with.postprocess}
           accept=".js,.ts"
