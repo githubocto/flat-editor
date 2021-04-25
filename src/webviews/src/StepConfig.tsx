@@ -37,7 +37,7 @@ export function StepConfig(props: StepConfigProps) {
         <Input
           value={props.step.with.downloaded_filename || ''}
           placeholder="data"
-          title="Result filename"
+          title="Downloaded filename"
           label="The filename where you want the results to be saved. This file doesn't need to exist yet."
           handleChange={e =>
             handleHttpValueChange(
@@ -62,8 +62,8 @@ export function StepConfig(props: StepConfigProps) {
         <Input
           value={props.step.with.downloaded_filename || ''}
           placeholder="data"
-          title="Ingested filename"
-          label="The filename (with extension) where you want the results to be saved. This file doesn't need to exist yet."
+          title="Downloaded filename"
+          label="The filename (with a csv or json extension) where you want the results to be saved. This file doesn't need to exist yet."
           handleChange={e =>
             handleSqlValueChange('downloaded_filename', e.target.value)
           }
