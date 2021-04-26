@@ -14,7 +14,7 @@ const defaultSchedules = {
 }
 
 const CronChooser: FunctionComponent<CronChooserProps> = props => {
-  const [customCron, setCustomCron] = React.useState('*/5 * * * *')
+  const [customCron, setCustomCron] = React.useState('0 0 * * *')
   const [showCustom, setShowCustom] = React.useState(false)
   const [cronFeedback, setCronFeedback] = React.useState<string | Error>('')
 

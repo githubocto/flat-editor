@@ -40,7 +40,7 @@ export const useFlatConfigStore = create<FlatStoreState>(
         },
         schedule: [
           {
-            cron: '0 * * * *',
+            cron: '0 0 * * *',
           },
         ],
       },
