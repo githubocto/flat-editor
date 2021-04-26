@@ -103,12 +103,12 @@ const SecretInput: FunctionComponent<SecretInputProps> = props => {
             >
               Save secret
             </button>
-          ) : (
+          ) : isSavedAsSecret ? (
             <div className="ml-2 italic flex items-center">
               <div className="codicon codicon-pass pr-1 text-sm pt-px" />
               Saved as secret
             </div>
-          )}
+          ) : null}
         </Input>
       </form>
       {didError && (
