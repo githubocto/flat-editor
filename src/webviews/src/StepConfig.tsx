@@ -36,8 +36,8 @@ export function StepConfig(props: StepConfigProps) {
       <div>
         <Input
           value={props.step.with.downloaded_filename || ''}
-          placeholder="data"
-          title="Downloaded filename"
+          placeholder="data.json"
+          title="Downloaded filename (required)"
           label="The filename where you want the results to be saved. This file doesn't need to exist yet."
           handleChange={e =>
             handleHttpValueChange(
@@ -48,7 +48,7 @@ export function StepConfig(props: StepConfigProps) {
         />
         <Input
           value={props.step.with.http_url}
-          title="Endpoint url"
+          title="Endpoint url (required)"
           label="Which endpoint should we pull data from? This needs to be a stable, unchanging URL."
           handleChange={e => handleHttpValueChange('http_url', e.target.value)}
         >
@@ -61,8 +61,8 @@ export function StepConfig(props: StepConfigProps) {
       <div>
         <Input
           value={props.step.with.downloaded_filename || ''}
-          placeholder="data"
-          title="Downloaded filename"
+          placeholder="data.json"
+          title="Downloaded filename (required)"
           label="The filename (with a csv or json extension) where you want the results to be saved. This file doesn't need to exist yet."
           handleChange={e =>
             handleSqlValueChange('downloaded_filename', e.target.value)
@@ -78,7 +78,7 @@ export function StepConfig(props: StepConfigProps) {
           }}
         />
         <SecretInput
-          title="Connection string"
+          title="Connection string (required)"
           label="We'll encode and store this as a Github Secret, then use it to connect to your database."
           value={props.step.with.sql_connstring}
           handleChange={newValue =>

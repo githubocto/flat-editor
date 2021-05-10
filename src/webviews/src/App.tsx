@@ -13,6 +13,12 @@ interface AppProps {}
 function App({}: AppProps) {
   const { state, setErrors, isStubData, gitRepo } = useFlatConfigStore()
 
+  const showErrorState = state.jobs.scheduled.steps
+    .filter(step => step.uses.includes('githubocto/flat'))
+    .some(step => {
+      return !Boolean((step as FlatStep)?.with?.downloaded_filename)
+    })
+
   useEffect(() => {
     flatStateValidationSchema
       .validate(state, { abortEarly: false })
@@ -80,29 +86,39 @@ function App({}: AppProps) {
       <Triggers />
       <Jobs />
 
-      <div className="pt-4 pl-4 pb-6">
-        <p className="text-lg font-bold pb-1">
-          You're all set!{' '}
-          <span
-            className="codicon codicon-rocket pl-1"
-            style={{ fontSize: '0.875rem' }}
-          />
-        </p>
-        <p>
-          Commit, push, and check out your new Action{' '}
-          {actionsUrl ? (
-            <span>
-              <a className="underline" href={actionsUrl}>
-                on GitHub
-              </a>
-              .
-            </span>
-          ) : (
-            'on GitHub.  '
-          )}{' '}
-          It should run automatically, once pushed.
-        </p>
-      </div>
+      {showErrorState ? (
+        <div className="border-2 border-vscode-editorOverviewRuler-warningForeground bg-vscode-settings-dropdownBackground text-sm p-4 flex items-center">
+          <span className="codicon codicon-warning mr-1 text-vscode-editorOverviewRuler-warningForeground" />
+          <p>
+            Make sure all of your steps have a{' '}
+            <strong>downloaded_filename</strong> specified!
+          </p>
+        </div>
+      ) : (
+        <div className="pt-4 pl-4 pb-6">
+          <p className="text-lg font-bold pb-1">
+            You're all set!{' '}
+            <span
+              className="codicon codicon-rocket pl-1"
+              style={{ fontSize: '0.875rem' }}
+            />
+          </p>
+          <p>
+            Commit, push, and check out your new Action{' '}
+            {actionsUrl ? (
+              <span>
+                <a className="underline" href={actionsUrl}>
+                  on GitHub
+                </a>
+                .
+              </span>
+            ) : (
+              'on GitHub.  '
+            )}{' '}
+            It should run automatically, once pushed.
+          </p>
+        </div>
+      )}
     </div>
   )
 }
