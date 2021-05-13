@@ -43,7 +43,10 @@ export type FlatStep = {
 
 export type DenoStep = {
   name: 'Setup deno'
-  uses: 'denolib/setup-deno@v2'
+  uses: 'denoland/setup-deno@main',
+  with: {
+    'deno-version': 'v1.x'
+  }
 }
 
 export type Step = CheckoutStep | FlatStep | DenoStep
@@ -85,7 +88,10 @@ export type FlatYamlJob = {
   steps: [
     {
       name: 'Setup deno'
-      uses: 'denolib/setup-deno@v2'
+      uses: 'denoland/setup-deno@main',
+      with: {
+        'deno-version': 'v1.x'
+      }
     },
     {
       name: 'Checkout repo'

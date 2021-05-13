@@ -89,7 +89,10 @@ export async function activate(context: vscode.ExtensionContext) {
             steps: [
               {
                 name: 'Setup deno',
-                uses: 'denolib/setup-deno@v2',
+                uses: 'denoland/setup-deno@main',
+                with: {
+                  'deno-version': 'v1.x'
+                }
               },
               {
                 name: 'Check out repo',
