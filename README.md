@@ -1,18 +1,18 @@
-# Flat
+# Flat Editor VSCode Extension
 
 <p>
   <img src="https://img.shields.io/visual-studio-marketplace/v/githubocto.flat.svg">
 </p>
 
-Flat is a VSCode extension that steps you through the process of creating a [Flat action](https://github.com/githubocto/flat), which makes it easy to fetch data and commit it to your repository.
+👉🏽 👉🏽 👉🏽 **Full writeup**: [Flat Data Project](https://octo.github.com/projects/flat-data) 👈🏽 👈🏽 👈🏽
 
-Just as [materialized views](https://en.wikipedia.org/wiki/Materialized_view) make it easier and faster to work the with results of a query, Flat makes it easy to materialize data from anywhere into your workspace.
+Flat Editor is a VSCode extension that steps you through the process of creating a [Flat Data Action](https://github.com/githubocto/flat), which makes it easy to fetch data and commit it to your repository.
 
-Flat streamlines a pattern popularized by [Simon Willison](https://simonwillison.net/2020/Oct/9/git-scraping/) and [Alex Gaynor](https://github.com/alex/nyt-2020-election-scraper)). The pattern of pulling data into git is an interesting one that deserves a dead-simple developer experience. Flat is an experiment from [GitHub's Office of the CTO](https://octo.github.com) to make it easier for anyone to employ this pattern.
+Flat Data is a GitHub action which makes it easy to fetch data and commit it to your repository as flatfiles. The action is intended to be run on a schedule, retrieving data from any supported target and creating a commit if there is any change to the fetched data. Flat Data builds on the [“git scraping” approach pioneered by Simon Willison](https://simonwillison.net/2020/Oct/9/git-scraping/) to offer a simple pattern for bringing working datasets into your repositories and versioning them, because developing against local datasets is faster and easier than working with data over the wire.
 
 ## Usage
 
-### VS Code & Codespaces
+### VSCode
 
 To use Flat Editor, first [install the extension](https://marketplace.visualstudio.com/items?itemName=githubocto.flat).
 
