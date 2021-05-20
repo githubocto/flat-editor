@@ -80,7 +80,12 @@ push:
 
 Deploy a new version with:
 
-`vsce publish [minor|major|patch]`
+First make sure you're a part of the githubocto marketplace team [here](https://marketplace.visualstudio.com/manage/publishers/githubocto).
+
+1. Bump the version in package.json
+2. Get a PAT [here](https://dev.azure.com/githubocto/_usersSettings/tokens) (first time)
+3. `vsce login githubocto` (first time)
+4. `vsce publish [minor|major|patch]`
 
 ## Issues
 
