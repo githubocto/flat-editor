@@ -76,6 +76,12 @@ push:
     - ./rearrange-vax-data.ts
 ```
 
+## Development and Deployment
+
+Deploy a new version with:
+
+`vsce publish [minor|major|patch]`
+
 ## Issues
 
 If you run into any trouble or have questions, feel free to [open an issue](https://github.com/githubocto/flat-editor/issues). Sharing your `flat.yml` with us in the issue will help us understand what might be happening.
