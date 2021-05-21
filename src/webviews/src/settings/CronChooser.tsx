@@ -1,5 +1,5 @@
 import * as cronstrue from 'cronstrue'
-import React, { FunctionComponent } from 'react'
+import React, { FunctionComponent, useEffect } from 'react'
 import FieldWithDescription from './FieldWithDescription'
 
 type CronChooserProps = {
@@ -13,9 +13,18 @@ const defaultSchedules = {
   day: '0 0 * * *',
 }
 
+const determineInitialCustomValue = (schedule?: string) => {
+  if (!schedule) return false
+  return !Object.values(defaultSchedules).includes(schedule)
+}
+
 const CronChooser: FunctionComponent<CronChooserProps> = props => {
-  const [customCron, setCustomCron] = React.useState('0 0 * * *')
-  const [showCustom, setShowCustom] = React.useState(false)
+  const isInitiallyCustom = determineInitialCustomValue(props.value)
+
+  const [customCron, setCustomCron] = React.useState(
+    isInitiallyCustom ? props.value : defaultSchedules.day
+  )
+  const [showCustom, setShowCustom] = React.useState(() => isInitiallyCustom)
   const [cronFeedback, setCronFeedback] = React.useState<string | Error>('')
 
   const validateCron = (val: string) => {
@@ -42,6 +51,15 @@ const CronChooser: FunctionComponent<CronChooserProps> = props => {
     setShowCustom(custom)
     props.onChange(custom ? customCron : e.target.value)
   }
+
+  useEffect(() => {
+    if (!props.value) return
+    const isCustom = determineInitialCustomValue(props.value)
+    if (isCustom && !showCustom) {
+      setShowCustom(true)
+      setCustomCron(props.value)
+    }
+  }, [props.value])
 
   return (
     <FieldWithDescription title="On a schedule">
@@ -85,6 +103,7 @@ const CronChooser: FunctionComponent<CronChooserProps> = props => {
               type="radio"
               name="cron"
               value="custom"
+              checked={showCustom}
             />
             <span>On a custom schedule</span>
           </label>
