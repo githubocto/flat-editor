@@ -26,8 +26,7 @@ const Triggers: FunctionComponent<TriggersProps> = props => {
   return (
     <div className="text-vscode-foreground pb-4">
       <Header title="When to update the data" description="" />
-
-      <CronChooser value={cron} onChange={handleScheduleChange} />
+      {cron && <CronChooser value={cron} onChange={handleScheduleChange} />}
     </div>
   )
 }
