@@ -1,5 +1,5 @@
 import * as cronstrue from 'cronstrue'
-import React, { FunctionComponent } from 'react'
+import React, { FunctionComponent, useEffect } from 'react'
 import FieldWithDescription from './FieldWithDescription'
 
 type CronChooserProps = {
@@ -51,6 +51,15 @@ const CronChooser: FunctionComponent<CronChooserProps> = props => {
     setShowCustom(custom)
     props.onChange(custom ? customCron : e.target.value)
   }
+
+  useEffect(() => {
+    if (!props.value) return
+    const isCustom = determineInitialCustomValue(props.value)
+    if (isCustom && !showCustom) {
+      setShowCustom(true)
+      setCustomCron(props.value)
+    }
+  }, [props.value])
 
   return (
     <FieldWithDescription title="On a schedule">
