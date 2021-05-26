@@ -10,14 +10,14 @@ interface JobsProps {}
 const STEP_STUBS = {
   http: {
     name: 'Fetch data',
-    uses: 'githubocto/flat@v2',
+    uses: 'githubocto/flat@v3',
     with: {
       http_url: '',
     },
   },
   sql: {
     name: 'Fetch data',
-    uses: 'githubocto/flat@v2',
+    uses: 'githubocto/flat@v3',
     with: {
       sql_connstring: '',
       sql_queryfile: '',
