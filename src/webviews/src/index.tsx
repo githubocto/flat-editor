@@ -34,8 +34,8 @@ function transformConfig(config: any) {
           name: 'Setup deno',
           uses: 'denoland/setup-deno@main',
           with: {
-            'deno-version': 'v1.x'
-          }
+            'deno-version': 'v1.10.x',
+          },
         },
         {
           name: 'Check out repo',

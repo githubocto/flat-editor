@@ -43,9 +43,9 @@ export type FlatStep = {
 
 export type DenoStep = {
   name: 'Setup deno'
-  uses: 'denoland/setup-deno@main',
+  uses: 'denoland/setup-deno@main'
   with: {
-    'deno-version': 'v1.x'
+    'deno-version': 'v1.10.x'
   }
 }
 
@@ -88,9 +88,9 @@ export type FlatYamlJob = {
   steps: [
     {
       name: 'Setup deno'
-      uses: 'denoland/setup-deno@main',
+      uses: 'denoland/setup-deno@main'
       with: {
-        'deno-version': 'v1.x'
+        'deno-version': 'v1.10.x'
       }
     },
     {
