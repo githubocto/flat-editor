@@ -61,7 +61,7 @@ export async function activate(context: vscode.ExtensionContext) {
       }
       rootPath = folders[0]
 
-      const workflowsDir = path.join(rootPath.uri.path, '.github/workflows')
+      const workflowsDir = path.join(rootPath.uri.fsPath, '.github/workflows')
       const flatYmlPath = path.join(workflowsDir, 'flat.yml')
 
       if (fs.existsSync(flatYmlPath)) {
