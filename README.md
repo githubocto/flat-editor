@@ -82,10 +82,11 @@ Deploy a new version with:
 
 First make sure you're a part of the githubocto marketplace team [here](https://marketplace.visualstudio.com/manage/publishers/githubocto).
 
-1. Bump the version in package.json
-2. Get a PAT [here](https://dev.azure.com/githubocto/_usersSettings/tokens) (first time)
-3. `vsce login githubocto` (first time)
-4. `vsce publish [minor|major|patch]`
+
+1. Get a PAT [here](https://dev.azure.com/githubocto/_usersSettings/tokens) (first time)
+2. `vsce login githubocto` (first time)
+3. `vsce publish [minor|major|patch]` This will create a new version and update package.json accordingly.
+4. `git push` the change to `package.json`
 
 ## Issues
 
