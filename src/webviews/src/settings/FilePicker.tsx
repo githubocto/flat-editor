@@ -18,6 +18,7 @@ import {
   VSCodeOption,
   VSCodeTextField,
 } from '@vscode/webview-ui-toolkit/react'
+import { useEffect } from 'react'
 
 interface FilePickerProps {
   value?: string
@@ -29,19 +30,29 @@ interface FilePickerProps {
 }
 
 export function FilePicker(props: FilePickerProps) {
-  const { label, value, onChange, accept = '' } = props
+  const { label, value, onChange, accept = '', title } = props
   const [localValue, setLocalValue] = React.useState(value)
   const { files = [] } = useFlatConfigStore()
 
+  useEffect(() => {
+    if (localValue === '' && Boolean(value)) {
+      onChange(null)
+    }
+  }, [value, localValue])
+
   const acceptedExtensions = accept.split(',')
 
-  const filteredFiles = files.filter((file: string) => {
-    const hasAccepetedExtension =
-      !acceptedExtensions.length ||
-      acceptedExtensions.includes(`.${file.split('.').slice(-1)}`)
-    const hasFilterString = file.includes(localValue)
-    return hasAccepetedExtension && hasFilterString
-  })
+  const filteredFiles = files
+    .filter(file => {
+      return (
+        !acceptedExtensions.length ||
+        acceptedExtensions.includes(`.${file.split('.').slice(-1)}`)
+      )
+    })
+    .filter(file => {
+      if (!localValue) return true
+      return file.includes(localValue)
+    })
 
   const handleFocus = () => {
     VSCodeAPI.postMessage({
@@ -69,14 +80,15 @@ export function FilePicker(props: FilePickerProps) {
         <ComboboxInput
           value={localValue}
           onFocus={handleFocus}
+          disabled={files.length === 0}
           onInput={e => {
             setLocalValue(e.target.value)
-            onChange(e.target.value)
           }}
           className="w-full"
           as={VSCodeTextField}
+          placeholder={files.length === 0 ? 'Loading files...' : 'Pick a file'}
         >
-          {label}
+          {title}
         </ComboboxInput>
         <ComboboxPopover className="!bg-[color:var(--dropdown-background)]">
           {!files && <div className="p-2">Loading...</div>}
@@ -103,18 +115,23 @@ export function FilePicker(props: FilePickerProps) {
           )}
         </ComboboxPopover>
       </Combobox>
-      <FilePreview file={value || ''} />
-      {value && (
-        <div className="mt-2">
-          <VSCodeButton
-            appearance="secondary"
-            onClick={() => {
-              handlePreview(value)
-            }}
-          >
-            <span slot="start" className="codicon codicon-eye" />
-            View file
-          </VSCodeButton>
+      <div className="mt-2">
+        <p className="text-[12px] mt-1 mb-0 font-medium">{label}</p>
+      </div>
+      {files.includes(localValue) && (
+        <div>
+          <FilePreview file={localValue || ''} />
+          <div className="mt-2">
+            <VSCodeButton
+              appearance="secondary"
+              onClick={() => {
+                handlePreview(localValue)
+              }}
+            >
+              <span slot="start" className="codicon codicon-eye" />
+              View file
+            </VSCodeButton>
+          </div>
         </div>
       )}
     </div>
