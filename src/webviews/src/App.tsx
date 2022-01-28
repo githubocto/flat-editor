@@ -8,6 +8,7 @@ import { flatStateValidationSchema } from './validation'
 import { VSCodeAPI } from './VSCodeAPI'
 import { FlatStep, PullSqlConfig } from '../../types'
 import { ErrorState } from './error-state'
+import { VSCodeButton, VSCodeDivider } from '@vscode/webview-ui-toolkit/react'
 
 interface AppProps {}
 
@@ -77,16 +78,23 @@ function App({}: AppProps) {
   const actionsUrl = gitRepo && `https://github.com/${gitRepo}/actions`
 
   return (
-    <div className="p-8">
-      <div className="mb-2 p-4">
-        <h1 className="text-2xl font-bold text-vscode-settings-headerForeground py-2">
-          Flat Editor
-        </h1>
-        <p className="mb-2">
-          This is a gui for setting up a Flat Action, which will pull external
-          data and update it using GitHub Actions.
-        </p>
-        <button onClick={handleOpenRaw}>View the raw YAML</button>
+    <div className="p-4">
+      <header>
+        <div className="mb-2">
+          <h1 className="text-[26px] leading-[30px] font-medium my-0">
+            Flat Editor
+          </h1>
+        </div>
+        <div className="mb-4">
+          <p className="text-[13px] font-medium my-0">
+            This is a gui for setting up a Flat Action, which will pull external
+            data and update it using GitHub Actions.
+          </p>
+        </div>
+        <VSCodeButton onClick={handleOpenRaw}>View the raw YAML</VSCodeButton>
+      </header>
+      <div className="my-4">
+        <VSCodeDivider />
       </div>
       <Triggers />
       <Jobs />

@@ -1,5 +1,11 @@
-import * as cronstrue from 'cronstrue'
 import React, { FunctionComponent, useEffect } from 'react'
+import {
+  VSCodeRadioGroup,
+  VSCodeRadio,
+  VSCodeTextField,
+  VSCodeLink,
+} from '@vscode/webview-ui-toolkit/react'
+import * as cronstrue from 'cronstrue'
 import FieldWithDescription from './FieldWithDescription'
 
 type CronChooserProps = {
@@ -37,19 +43,18 @@ const CronChooser: FunctionComponent<CronChooserProps> = props => {
       setCronFeedback(new Error(error as string))
     }
   }
-  const handleCustomCronChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const val = e.target.value
+  const handleCustomCronChange = (val: string) => {
     setCustomCron(val)
     validateCron(val)
   }
 
-  const handleRadioChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const custom = e.target.value === 'custom'
+  const handleRadioChange = (value: string) => {
+    const custom = value === 'custom'
     if (custom) {
       validateCron(customCron)
     }
     setShowCustom(custom)
-    props.onChange(custom ? customCron : e.target.value)
+    props.onChange(custom ? customCron : value)
   }
 
   useEffect(() => {
@@ -62,96 +67,95 @@ const CronChooser: FunctionComponent<CronChooserProps> = props => {
   }, [props.value])
 
   return (
-    <FieldWithDescription title="On a schedule">
-      <div className="space-y-4 mt-2">
-        <div className="flex flex-wrap items-center" role="group">
-          <label className="flex items-center space-x-1 mr-4 my-1">
-            <input
-              type="radio"
-              name="cron"
-              checked={
-                !showCustom && props.value === defaultSchedules.fiveMinutes
-              }
-              onChange={handleRadioChange}
-              value={defaultSchedules.fiveMinutes}
-            />
-            <span>Every five minutes</span>
-          </label>
-          <label className="flex items-center space-x-1 mr-4 my-1">
-            <input
-              type="radio"
-              name="cron"
-              checked={!showCustom && props.value === defaultSchedules.hour}
-              onChange={handleRadioChange}
-              value={defaultSchedules.hour}
-            />
-            <span>Every hour</span>
-          </label>
-          <label className="flex items-center space-x-1 mr-4 my-1">
-            <input
-              type="radio"
-              name="cron"
-              checked={!showCustom && props.value === defaultSchedules.day}
-              onChange={handleRadioChange}
-              value={defaultSchedules.day}
-            />
-            <span>Every day</span>
-          </label>
-          <label className="flex items-center space-x-1 my-1">
-            <input
-              onChange={handleRadioChange}
-              type="radio"
-              name="cron"
-              value="custom"
-              checked={showCustom}
-            />
-            <span>On a custom schedule</span>
-          </label>
-        </div>
-        {showCustom && (
-          <div className="space-y-2">
-            <p className="mt-1 text-xs opacity-50">
-              Enter a custom CRON schedule (
-              <a className="underline" href="https://crontab.guru/">
-                Need help?
-              </a>
-              )
-            </p>
-            <div className="flex">
-              <input
+    <div>
+      <VSCodeRadioGroup>
+        <label slot="label">Schedule</label>
+        <VSCodeRadio
+          onChange={
+            // @ts-ignore
+            e => handleRadioChange(e.target.value)
+          }
+          checked={!showCustom && props.value === defaultSchedules.fiveMinutes}
+          value={defaultSchedules.fiveMinutes}
+        >
+          Every five minutes
+        </VSCodeRadio>
+        <VSCodeRadio
+          onChange={
+            // @ts-ignore
+            e => handleRadioChange(e.target.value)
+          }
+          checked={!showCustom && props.value === defaultSchedules.hour}
+          value={defaultSchedules.hour}
+        >
+          Every hour
+        </VSCodeRadio>
+        <VSCodeRadio
+          // @ts-ignore
+          onChange={
+            // @ts-ignore
+            e => handleRadioChange(e.target.value)
+          }
+          checked={!showCustom && props.value === defaultSchedules.day}
+          value={defaultSchedules.day}
+        >
+          Every day
+        </VSCodeRadio>
+        <VSCodeRadio
+          onChange={
+            // @ts-ignore
+            e => handleRadioChange(e.target.value)
+          }
+          checked={showCustom}
+          value="custom"
+        >
+          Custom
+        </VSCodeRadio>
+      </VSCodeRadioGroup>
+      {showCustom && (
+        <>
+          <div className="mt-4">
+            <div className="flex items-center">
+              <VSCodeTextField
                 value={customCron}
-                onChange={handleCustomCronChange}
-                className="shadow-sm block w-64"
+                onInput={
+                  // @ts-ignore
+                  e => handleCustomCronChange(e.target.value)
+                }
                 placeholder="Enter custom schedule"
-                type="text"
-              />
-            </div>
-            {cronFeedback && (
-              <div>
-                {cronFeedback instanceof Error ? (
-                  <div className="text-vscode-inputValidation-errorForeground flex flex-row items-start">
-                    <div className="codicon codicon-error pr-1 text-sm pt-px" />
-                    <div>{cronFeedback.message}</div>
-                  </div>
-                ) : (
-                  <div>
-                    <div className="text-vscode-inputValidation-infoForeground flex flex-row items-start">
-                      <div className="codicon codicon-pass pr-1 text-sm pt-px" />
-                      <div>
-                        Will run:{' '}
-                        {cronFeedback === 'Every minute'
-                          ? 'Every five minutes'
-                          : cronFeedback}
-                      </div>
-                    </div>{' '}
-                  </div>
-                )}
+              >
+                Enter a custom CRON schedule
+              </VSCodeTextField>
+              <div className="ml-4">
+                <VSCodeLink href="https://crontab.guru/">
+                  Need help with CRON syntax?
+                </VSCodeLink>
               </div>
-            )}
+            </div>
           </div>
-        )}
-      </div>
-    </FieldWithDescription>
+          {cronFeedback && (
+            <div className="mt-1">
+              {cronFeedback instanceof Error ? (
+                <div className="flex items-center space-x-1 text-[#F14C4C]">
+                  <i className="codicon codicon-error text-sm pt-px" />
+                  <p className="text-[12px]">{cronFeedback.message}</p>
+                </div>
+              ) : (
+                <div className="flex items-center space-x-1 text-[#73C991]">
+                  <i className="codicon codicon-pass pr-1 text-sm pt-px" />
+                  <p className="text-[12px]">
+                    Will run:{' '}
+                    {cronFeedback === 'Every minute'
+                      ? 'Every five minutes'
+                      : cronFeedback}
+                  </p>
+                </div>
+              )}
+            </div>
+          )}
+        </>
+      )}
+    </div>
   )
 }
 
