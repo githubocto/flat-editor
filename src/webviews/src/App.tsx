@@ -77,7 +77,7 @@ function App({}: AppProps) {
   const actionsUrl = gitRepo && `https://github.com/${gitRepo}/actions`
 
   return (
-    <div className="p-4">
+    <div className="p-8">
       <div className="mb-2 p-4">
         <h1 className="text-2xl font-bold text-vscode-settings-headerForeground py-2">
           Flat Editor
