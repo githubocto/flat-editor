@@ -5,8 +5,8 @@ import { Input } from './settings/Input'
 import { FilePicker } from './settings/FilePicker'
 import { HttpEndpointPreview } from './settings/HttpEndpointPreview'
 import SecretInput from './settings/SecretInput'
-import FieldWithDescription from './settings/FieldWithDescription'
 import useFlatConfigStore from './store'
+import { VSCodeTextField } from '@vscode/webview-ui-toolkit/react'
 
 interface StepConfigProps {
   step: Step
@@ -33,32 +33,56 @@ export function StepConfig(props: StepConfigProps) {
 
   if ('with' in props.step && 'http_url' in props.step.with) {
     return (
-      <div>
-        <Input
-          value={props.step.with.downloaded_filename || ''}
-          placeholder="data.json"
-          title="Downloaded filename (required)"
-          label="The filename where you want the results to be saved. This file doesn't need to exist yet."
-          handleChange={e =>
-            handleHttpValueChange(
-              'downloaded_filename',
-              e.target.value || undefined
-            )
-          }
-        />
-        <Input
-          value={props.step.with.http_url}
-          title="Endpoint url (required)"
-          label="Which endpoint should we pull data from? This needs to be a stable, unchanging URL."
-          handleChange={e => handleHttpValueChange('http_url', e.target.value)}
-        >
-          <HttpEndpointPreview url={props.step.with.http_url} />
-        </Input>
-      </div>
+      <>
+        <div>
+          <VSCodeTextField
+            value={props.step.with.downloaded_filename || ''}
+            placeholder="data.json"
+            required
+            className="w-full"
+            onInput={
+              // @ts-ignore
+              e => {
+                handleHttpValueChange(
+                  'downloaded_filename',
+                  e.target.value || undefined
+                )
+              }
+            }
+          >
+            Downloaded Filename (required)
+          </VSCodeTextField>
+          <p className="text-[12px] mt-1 mb-0 font-medium">
+            The filename where you want the results to be saved. This file
+            doesn't need to exist yet.
+          </p>
+        </div>
+        <div>
+          <VSCodeTextField
+            className="w-full"
+            onInput={
+              // @ts-ignore
+              e => {
+                handleHttpValueChange('http_url', e.target.value)
+              }
+            }
+            value={props.step.with.http_url}
+          >
+            Endpoint url (required)
+          </VSCodeTextField>
+          <p className="text-[12px] mt-1 mb-0 font-medium">
+            Which endpoint should we pull data from? This needs to be a stable,
+            unchanging URL.
+          </p>
+          <div className="mt-2">
+            <HttpEndpointPreview url={props.step.with.http_url} />
+          </div>
+        </div>
+      </>
     )
   } else if ('with' in props.step && 'sql_queryfile' in props.step.with) {
     return (
-      <div>
+      <>
         <Input
           value={props.step.with.downloaded_filename || ''}
           placeholder="data.json"
@@ -85,7 +109,7 @@ export function StepConfig(props: StepConfigProps) {
             handleSqlValueChange('sql_connstring', newValue)
           }
         />
-      </div>
+      </>
     )
   } else {
     return null

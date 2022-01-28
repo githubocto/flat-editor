@@ -96,8 +96,10 @@ function App({}: AppProps) {
       <div className="my-4">
         <VSCodeDivider />
       </div>
-      <Triggers />
-      <Jobs />
+      <div className="space-y-6">
+        <Triggers />
+        <Jobs />
+      </div>
 
       {showErrorState ? (
         <div className="border-2 border-vscode-editorOverviewRuler-warningForeground bg-vscode-settings-dropdownBackground text-sm p-4 flex items-center">

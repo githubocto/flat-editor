@@ -1,5 +1,4 @@
 import React from 'react'
-import Header from './Header'
 import CronChooser from './settings/CronChooser'
 import useFlatConfigStore from './store'
 
