@@ -117,7 +117,9 @@ export function FilePicker(props: FilePickerProps) {
         </ComboboxPopover>
       </Combobox>
       <div className="mt-2">
-        <p className="text-[12px] mt-1 mb-0 font-medium">{label}</p>
+        <p className="text-[12px] mt-1 mb-0 text-[color:var(--vscode-descriptionForeground)]">
+          {label}
+        </p>
       </div>
       {files.includes(localValue) && (
         <div>

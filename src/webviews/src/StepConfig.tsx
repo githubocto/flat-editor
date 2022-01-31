@@ -50,7 +50,7 @@ export function StepConfig(props: StepConfigProps) {
           >
             Downloaded Filename (required)
           </VSCodeTextField>
-          <p className="text-[12px] mt-1 mb-0 font-medium">
+          <p className="text-[12px] mt-1 mb-0 text-[color:var(--vscode-descriptionForeground)]">
             The filename where you want the results to be saved. This file
             doesn't need to exist yet.
           </p>
@@ -68,7 +68,7 @@ export function StepConfig(props: StepConfigProps) {
           >
             Endpoint url (required)
           </VSCodeTextField>
-          <p className="text-[12px] mt-1 mb-0 font-medium">
+          <p className="text-[12px] mt-1 mb-0 text-[color:var(--vscode-descriptionForeground)]">
             Which endpoint should we pull data from? This needs to be a stable,
             unchanging URL.
           </p>
@@ -93,7 +93,7 @@ export function StepConfig(props: StepConfigProps) {
           >
             Downloaded filename (required)
           </VSCodeTextField>
-          <p className="text-[12px] mt-1 mb-0 font-medium">
+          <p className="text-[12px] mt-1 mb-0 text-[color:var(--vscode-descriptionForeground)]">
             The filename (with a csv or json extension) where you want the
             results to be saved. This file doesn't need to exist yet.
           </p>

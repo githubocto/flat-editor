@@ -82,7 +82,9 @@ const SecretInput: FunctionComponent<SecretInputProps> = props => {
             >
               {title}
             </VSCodeTextField>
-            <p className="text-[12px] mt-1 mb-0 font-medium">{label}</p>
+            <p className="text-[12px] mt-1 mb-0 text-[color:var(--vscode-descriptionForeground)]">
+              {label}
+            </p>
           </div>
           <div className="ml-4">
             <VSCodeButton
