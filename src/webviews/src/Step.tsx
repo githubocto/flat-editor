@@ -1,8 +1,4 @@
-import {
-  VSCodeBadge,
-  VSCodeButton,
-  VSCodeTag,
-} from '@vscode/webview-ui-toolkit/react'
+import { VSCodeButton, VSCodeTag } from '@vscode/webview-ui-toolkit/react'
 import React, { FunctionComponent } from 'react'
 import type { FlatStep } from '../../types'
 

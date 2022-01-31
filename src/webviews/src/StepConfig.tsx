@@ -83,15 +83,23 @@ export function StepConfig(props: StepConfigProps) {
   } else if ('with' in props.step && 'sql_queryfile' in props.step.with) {
     return (
       <>
-        <Input
-          value={props.step.with.downloaded_filename || ''}
-          placeholder="data.json"
-          title="Downloaded filename (required)"
-          label="The filename (with a csv or json extension) where you want the results to be saved. This file doesn't need to exist yet."
-          handleChange={e =>
-            handleSqlValueChange('downloaded_filename', e.target.value)
-          }
-        />
+        <div>
+          <VSCodeTextField
+            className="w-full"
+            value={props.step.with.downloaded_filename || ''}
+            placeholder="data.json"
+            onInput={
+              // @ts-ignore
+              e => handleSqlValueChange('downloaded_filename', e.target.value)
+            }
+          >
+            Downloaded filename (required)
+          </VSCodeTextField>
+          <p className="text-[12px] mt-1 mb-0 font-medium">
+            The filename (with a csv or json extension) where you want the
+            results to be saved. This file doesn't need to exist yet.
+          </p>
+        </div>
         <FilePicker
           accept=".sql"
           title="File with SQL query"

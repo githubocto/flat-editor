@@ -1,6 +1,6 @@
-import React, { FunctionComponent, useMemo } from 'react'
+import React, { FunctionComponent } from 'react'
 import { VSCodeAPI } from './../VSCodeAPI'
-import { Input } from './Input'
+import { VSCodeButton, VSCodeTextField } from '@vscode/webview-ui-toolkit/react'
 import { customAlphabet } from 'nanoid'
 const nanoid = customAlphabet('1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ', 6)
 
@@ -57,22 +57,6 @@ const SecretInput: FunctionComponent<SecretInputProps> = props => {
       }
     })
   }, [])
-  // let feedback
-  // if (props.error) {
-  //   feedback = (
-  //     <div className="pt-2 text-vscode-inputValidation-errorForeground flex flex-row items-start">
-  //       <div className="codicon codicon-error pr-1 text-sm pt-px" />
-  //       <div>{props.error}</div>
-  //     </div>
-  //   )
-  // } else if (props.success) {
-  //   feedback = (
-  //     <div className="pt-2 text-vscode-inputValidation-infoForeground flex flex-row items-start">
-  //       <div className="codicon codicon-pass pr-1 text-sm pt-px" />
-  //       <div>{props.success}</div>
-  //     </div>
-  //   )
-  // }
   return (
     <div>
       <form
@@ -81,40 +65,47 @@ const SecretInput: FunctionComponent<SecretInputProps> = props => {
           handleSave()
         }}
       >
-        <Input
-          title={title}
-          label={label}
-          value={localValue}
-          inputStyle={isSavedAsSecret ? { opacity: 0.5 } : undefined}
-          handleChange={e => {
-            setLocalValue(e.target.value)
-            setIsDirty(true)
-            setDidError(false)
-          }}
-        >
-          {isDirty ? (
-            <button
-              type="submit"
-              onClick={handleSave}
-              className="btn btn-primary"
-              style={{
-                height: '2.3em',
-              }}
+        <div className="flex items-center">
+          <div className="flex-1">
+            <VSCodeTextField
+              className="w-full"
+              placeholder="Enter secret value"
+              style={isSavedAsSecret ? { opacity: 0.5 } : undefined}
+              onInput={
+                // @ts-ignore
+                e => {
+                  setLocalValue(e.target.value)
+                  setIsDirty(true)
+                  setDidError(false)
+                }
+              }
             >
-              Save secret
-            </button>
-          ) : isSavedAsSecret ? (
-            <div className="ml-2 italic flex items-center">
-              <div className="codicon codicon-pass pr-1 text-sm pt-px" />
-              Saved as secret
-            </div>
-          ) : null}
-        </Input>
+              {title}
+            </VSCodeTextField>
+            <p className="text-[12px] mt-1 mb-0 font-medium">{label}</p>
+          </div>
+          <div className="ml-4">
+            <VSCodeButton
+              type="submit"
+              disabled={isSavedAsSecret || !isDirty}
+              onClick={handleSave}
+            >
+              {isSavedAsSecret ? (
+                <>
+                  Saved successfully
+                  <span className="codicon codicon-pass ml-2" slot="end"></span>
+                </>
+              ) : (
+                'Save as secret'
+              )}
+            </VSCodeButton>
+          </div>
+        </div>
       </form>
       {didError && (
-        <div className="ml-2 mb-2 italic">
+        <p className="text-[#F14C4C] mt-2">
           Something went wrong, please try again.
-        </div>
+        </p>
       )}
     </div>
   )

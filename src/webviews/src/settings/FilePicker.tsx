@@ -89,6 +89,7 @@ export function FilePicker(props: FilePickerProps) {
           placeholder={files.length === 0 ? 'Loading files...' : 'Pick a file'}
         >
           {title}
+          <span slot="end" class="codicon codicon-chevron-down"></span>
         </ComboboxInput>
         <ComboboxPopover className="!bg-[color:var(--dropdown-background)]">
           {!files && <div className="p-2">Loading...</div>}
