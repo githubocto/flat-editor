@@ -22,7 +22,7 @@ const defaultSchedules = {
 
 const CronFallback = ({ error }: { error: any }) => {
   return (
-    <div className="flex items-center space-x-1 text-[#F14C4C]">
+    <div className="flex items-center space-x-1 text-[color:var(--vscode-errorForeground)]">
       <i className="codicon codicon-error text-sm pt-px" />
       <p className="text-[12px]">{error}</p>
     </div>

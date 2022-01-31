@@ -109,7 +109,7 @@ function App({}: AppProps) {
       </div>
       <div>
         {showErrorState ? (
-          <div className="text-[#F14C4C] flex items-center">
+          <div className="text-[color:var(--vscode-errorForeground)] flex items-center">
             <span className="codicon codicon-warning" />
             <p className="ml-1">
               Make sure all of your steps have a{' '}

@@ -105,7 +105,7 @@ const SecretInput: FunctionComponent<SecretInputProps> = props => {
         </div>
       </form>
       {didError && (
-        <p className="text-[#F14C4C] mt-2">
+        <p className="text-[color:var(--vscode-errorForeground)] mt-2">
           Something went wrong, please try again.
         </p>
       )}
