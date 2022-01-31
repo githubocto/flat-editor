@@ -6,7 +6,6 @@ import {
   VSCodeLink,
 } from '@vscode/webview-ui-toolkit/react'
 import * as cronstrue from 'cronstrue'
-import FieldWithDescription from './FieldWithDescription'
 
 type CronChooserProps = {
   value: string

@@ -1,7 +1,5 @@
 import React from 'react'
-
 import type { Step, FlatStep, PullHttpConfig, PullSqlConfig } from '../../types'
-import { Input } from './settings/Input'
 import { FilePicker } from './settings/FilePicker'
 import { HttpEndpointPreview } from './settings/HttpEndpointPreview'
 import SecretInput from './settings/SecretInput'
