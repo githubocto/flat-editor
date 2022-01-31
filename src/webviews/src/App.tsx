@@ -8,7 +8,11 @@ import { flatStateValidationSchema } from './validation'
 import { VSCodeAPI } from './VSCodeAPI'
 import { FlatStep, PullSqlConfig } from '../../types'
 import { ErrorState } from './error-state'
-import { VSCodeButton, VSCodeDivider } from '@vscode/webview-ui-toolkit/react'
+import {
+  VSCodeButton,
+  VSCodeDivider,
+  VSCodeLink,
+} from '@vscode/webview-ui-toolkit/react'
 
 interface AppProps {}
 
@@ -100,40 +104,38 @@ function App({}: AppProps) {
         <Triggers />
         <Jobs />
       </div>
-
-      {showErrorState ? (
-        <div className="border-2 border-vscode-editorOverviewRuler-warningForeground bg-vscode-settings-dropdownBackground text-sm p-4 flex items-center">
-          <span className="codicon codicon-warning mr-1 text-vscode-editorOverviewRuler-warningForeground" />
-          <p>
-            Make sure all of your steps have a{' '}
-            <strong>downloaded_filename</strong> specified!
-          </p>
-        </div>
-      ) : (
-        <div className="pt-4 pl-4 pb-6">
-          <p className="text-lg font-bold pb-1">
-            You're all set!{' '}
-            <span
-              className="codicon codicon-rocket pl-1"
-              style={{ fontSize: '0.875rem' }}
-            />
-          </p>
-          <p>
-            Commit, push, and check out your new Action{' '}
-            {actionsUrl ? (
-              <span>
-                <a className="underline" href={actionsUrl}>
-                  on GitHub
-                </a>
-                .
+      <div className="my-4">
+        <VSCodeDivider />
+      </div>
+      <div>
+        {showErrorState ? (
+          <div className="text-[#F14C4C] flex items-center">
+            <span className="codicon codicon-warning" />
+            <p className="ml-1">
+              Make sure all of your steps have a{' '}
+              <strong>downloaded_filename</strong> specified!
+            </p>
+          </div>
+        ) : (
+          <div>
+            <div className="flex items-center">
+              <span className="codicon codicon-rocket" />
+              <p className="ml-1 my-0">You're all set!</p>
+            </div>
+            <span className="inline-flex mt-2 items-center">
+              Commit, push, and check out your new Action{' '}
+              <span className="mx-1 inline-flex items-center">
+                {actionsUrl ? (
+                  <VSCodeLink href={actionsUrl}>on GitHub</VSCodeLink>
+                ) : (
+                  'on GitHub.'
+                )}{' '}
               </span>
-            ) : (
-              'on GitHub.  '
-            )}{' '}
-            It should run automatically, once pushed.
-          </p>
-        </div>
-      )}
+              It should run automatically, once pushed.
+            </span>
+          </div>
+        )}
+      </div>
     </div>
   )
 }
