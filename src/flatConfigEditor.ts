@@ -74,9 +74,20 @@ export class FlatConfigEditor implements vscode.CustomTextEditorProvider {
       enableScripts: true,
     }
 
-    webviewPanel.webview.html = await this.getHtmlForWebview(
-      webviewPanel.webview
-    )
+    try {
+      webviewPanel.webview.html = await this.getHtmlForWebview(
+        webviewPanel.webview
+      )
+    } catch (e) {
+      await vscode.window.showErrorMessage(
+        "Please make sure you're in a repository with a valid upstream GitHub remote"
+      )
+      await vscode.commands.executeCommand(
+        'workbench.action.revertAndCloseActiveEditor'
+      )
+      // For whatever reason, this doesn't close the webview.
+      await webviewPanel.dispose()
+    }
 
     // Receive message from the webview.
     webviewPanel.webview.onDidReceiveMessage(async e => {
@@ -100,6 +111,11 @@ export class FlatConfigEditor implements vscode.CustomTextEditorProvider {
           updateWebviewState()
         case 'getUrlContents':
           this.loadUrlContents(webviewPanel, e.data)
+          break
+        case 'refreshGitDetails':
+          webviewPanel.webview.html = await this.getHtmlForWebview(
+            webviewPanel.webview
+          )
           break
         case 'previewFile':
           const workspaceRootUri = vscode.workspace.workspaceFolders?.[0].uri
@@ -168,7 +184,27 @@ export class FlatConfigEditor implements vscode.CustomTextEditorProvider {
       workspaceRootUri.path.lastIndexOf('/') + 1
     )
 
-    const { owner, name } = await this.getRepoDetails()
+    let name,
+      owner = ''
+
+    try {
+      const details = await vscode.window.withProgress(
+        {
+          location: vscode.ProgressLocation.Notification,
+        },
+        async progress => {
+          progress.report({
+            message: `Checking for GitHub repository in directory: ${dirName}`,
+          })
+
+          return await this.getRepoDetails()
+        }
+      )
+      owner = details.owner || ''
+      name = details.name
+    } catch (e) {
+      console.error('Error getting GitHub repository details', e)
+    }
 
     const gitRepo = owner && name ? `${owner}/${name}` : ''
 
@@ -399,14 +435,14 @@ export class FlatConfigEditor implements vscode.CustomTextEditorProvider {
       try {
         const gitClient = new VSCodeGit()
         await gitClient.activateExtension()
-        await gitClient.waitForRepo(5)
+        await gitClient.waitForRepo(3)
 
         // Next, let's grab the repo name.
         const { name, owner } = gitClient.repoDetails
 
         resolve({ name, owner })
       } catch (e) {
-        resolve({})
+        reject('Couldnt activate git')
       }
     })
   }

@@ -31,10 +31,9 @@ export class VSCodeGit {
 
   waitForRepo(times: number): Promise<{ name: string; owner: string }> {
     let count = 0
-    const timeToStop = count === times
 
     return new Promise((resolve, reject) => {
-      const checkRepoExists = setInterval(() => {
+      let interval = setInterval(() => {
         try {
           const remotes = this.repository._repository.remotes
           if (remotes.length > 0) {
@@ -42,15 +41,14 @@ export class VSCodeGit {
             const parsed = GitUrlParse(remote.pushUrl)
             resolve({ name: parsed.name, owner: parsed.owner })
           } else {
-            if (timeToStop) {
+            if (count === times) {
+              clearInterval(interval)
               reject(new Error("Couldn't get repo details"))
             }
             count++
           }
         } catch (e) {
           reject(new Error("Couldn't get repo details"))
-        } finally {
-          clearInterval(checkRepoExists)
         }
       }, 1000)
     })
