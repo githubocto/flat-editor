@@ -85,7 +85,7 @@ export class FlatConfigEditor implements vscode.CustomTextEditorProvider {
       await vscode.commands.executeCommand(
         'workbench.action.revertAndCloseActiveEditor'
       )
-      // For whateever reason, this doesn't close the webview.
+      // For whatever reason, this doesn't close the webview.
       await webviewPanel.dispose()
     }
 
