@@ -112,6 +112,11 @@ export class FlatConfigEditor implements vscode.CustomTextEditorProvider {
         case 'getUrlContents':
           this.loadUrlContents(webviewPanel, e.data)
           break
+        case 'refreshGitDetails':
+          webviewPanel.webview.html = await this.getHtmlForWebview(
+            webviewPanel.webview
+          )
+          break
         case 'previewFile':
           const workspaceRootUri = vscode.workspace.workspaceFolders?.[0].uri
           if (!workspaceRootUri) {
@@ -183,11 +188,22 @@ export class FlatConfigEditor implements vscode.CustomTextEditorProvider {
       owner = ''
 
     try {
-      const details = await this.getRepoDetails()
-      name = details.name
+      const details = await vscode.window.withProgress(
+        {
+          location: vscode.ProgressLocation.Notification,
+        },
+        async progress => {
+          progress.report({
+            message: `Checking for GitHub repository in directory: ${dirName}`,
+          })
+
+          return await this.getRepoDetails()
+        }
+      )
       owner = details.owner || ''
+      name = details.name
     } catch (e) {
-      throw Error('No repository or GitHub remote found.')
+      console.error('Error getting GitHub repository details', e)
     }
 
     const gitRepo = owner && name ? `${owner}/${name}` : ''
@@ -419,7 +435,7 @@ export class FlatConfigEditor implements vscode.CustomTextEditorProvider {
       try {
         const gitClient = new VSCodeGit()
         await gitClient.activateExtension()
-        await gitClient.waitForRepo(5)
+        await gitClient.waitForRepo(3)
 
         // Next, let's grab the repo name.
         const { name, owner } = gitClient.repoDetails

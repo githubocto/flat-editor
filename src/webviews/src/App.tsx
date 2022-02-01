@@ -7,11 +7,16 @@ import Triggers from './Triggers'
 import { flatStateValidationSchema } from './validation'
 import { VSCodeAPI } from './VSCodeAPI'
 import { FlatStep, PullSqlConfig } from '../../types'
+import { ErrorState } from './error-state'
 
 interface AppProps {}
 
 function App({}: AppProps) {
   const { state, setErrors, isStubData, gitRepo } = useFlatConfigStore()
+
+  if (!gitRepo) {
+    return <ErrorState />
+  }
 
   const showErrorState = state.jobs.scheduled.steps
     .filter(step => step.uses.includes('githubocto/flat'))
