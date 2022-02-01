@@ -44,7 +44,7 @@ const Jobs: FunctionComponent<JobsProps> = props => {
     <div>
       <header>
         <div className="mb-2">
-          <h2 className="my-0 text-[26px] leading-[30px] font-normal">
+          <h2 className="my-0 text-[20px] leading-[30px] font-normal">
             Where to get data from
           </h2>
         </div>

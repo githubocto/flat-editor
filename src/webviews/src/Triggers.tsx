@@ -24,7 +24,7 @@ export function Triggers(props: TriggersProps) {
   return (
     <div>
       <div className="mb-2">
-        <h2 className="my-0 text-[26px] leading-[30px] font-normal">
+        <h2 className="my-0 text-[20px] leading-[30px] font-normal">
           When to update the data
         </h2>
       </div>

@@ -82,7 +82,7 @@ function App({}: AppProps) {
   const actionsUrl = gitRepo && `https://github.com/${gitRepo}/actions`
 
   return (
-    <div className="p-4">
+    <div className="p-8">
       <header>
         <div className="mb-2">
           <h1 className="text-[26px] leading-[30px] font-medium my-0">
