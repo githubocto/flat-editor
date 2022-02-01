@@ -111,11 +111,11 @@ function App({}: AppProps) {
             </p>
           </div>
         ) : (
-          <p className="my-0 flex items-center">
-            Commit, push, and check out your new Action on
-            <VSCodeLink className="mx-1" href={actionsUrl}>
+          <p className="my-0">
+            Commit, push, and check out your new Action on{' '}
+            <VSCodeLink className="align-super" href={actionsUrl}>
               on GitHub
-            </VSCodeLink>
+            </VSCodeLink>{' '}
             It should run automatically, once pushed.
           </p>
         )}
