@@ -74,9 +74,20 @@ export class FlatConfigEditor implements vscode.CustomTextEditorProvider {
       enableScripts: true,
     }
 
-    webviewPanel.webview.html = await this.getHtmlForWebview(
-      webviewPanel.webview
-    )
+    try {
+      webviewPanel.webview.html = await this.getHtmlForWebview(
+        webviewPanel.webview
+      )
+    } catch (e) {
+      await vscode.window.showErrorMessage(
+        "Please make sure you're in a repository with a valid upstream GitHub remote"
+      )
+      await vscode.commands.executeCommand(
+        'workbench.action.revertAndCloseActiveEditor'
+      )
+      // For whateever reason, this doesn't close the webview.
+      await webviewPanel.dispose()
+    }
 
     // Receive message from the webview.
     webviewPanel.webview.onDidReceiveMessage(async e => {
@@ -168,7 +179,16 @@ export class FlatConfigEditor implements vscode.CustomTextEditorProvider {
       workspaceRootUri.path.lastIndexOf('/') + 1
     )
 
-    const { owner, name } = await this.getRepoDetails()
+    let name,
+      owner = ''
+
+    try {
+      const details = await this.getRepoDetails()
+      name = details.name
+      owner = details.owner || ''
+    } catch (e) {
+      throw Error('No repository or GitHub remote found.')
+    }
 
     const gitRepo = owner && name ? `${owner}/${name}` : ''
 
@@ -406,7 +426,7 @@ export class FlatConfigEditor implements vscode.CustomTextEditorProvider {
 
         resolve({ name, owner })
       } catch (e) {
-        resolve({})
+        reject('Couldnt activate git')
       }
     })
   }
