@@ -82,7 +82,7 @@ function App({}: AppProps) {
   const actionsUrl = gitRepo && `https://github.com/${gitRepo}/actions`
 
   return (
-    <div className="p-8">
+    <div className="p-8 space-y-6">
       <header>
         <div className="mb-2">
           <h1 className="text-[26px] leading-[30px] font-medium my-0">
@@ -97,16 +97,10 @@ function App({}: AppProps) {
         </div>
         <VSCodeButton onClick={handleOpenRaw}>View the raw YAML</VSCodeButton>
       </header>
-      <div className="my-4">
-        <VSCodeDivider />
-      </div>
-      <div className="space-y-6">
-        <Triggers />
-        <Jobs />
-      </div>
-      <div className="my-4">
-        <VSCodeDivider />
-      </div>
+      <VSCodeDivider />
+      <Triggers />
+      <Jobs />
+      <VSCodeDivider />
       <div>
         {showErrorState ? (
           <div className="text-[color:var(--vscode-errorForeground)] flex items-center">
