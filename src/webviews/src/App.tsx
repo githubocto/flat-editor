@@ -90,7 +90,7 @@ function App({}: AppProps) {
           </h1>
         </div>
         <div className="mb-4">
-          <p className="text-[13px] font-medium my-0">
+          <p className="text-[13px] my-0">
             This is a gui for setting up a Flat Action, which will pull external
             data and update it using GitHub Actions.
           </p>
