@@ -438,6 +438,8 @@ export class FlatConfigEditor implements vscode.CustomTextEditorProvider {
     webviewPanel: vscode.WebviewPanel,
     url: string
   ) => {
+    // FIX: For whatever reason, we're getting an undefined URL when the extension mounts with a certain Flat YML
+    if (!url) return
     const res = await fetch(url)
     const contents = await res.text()
 
