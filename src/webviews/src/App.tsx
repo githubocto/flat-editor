@@ -105,29 +105,19 @@ function App({}: AppProps) {
         {showErrorState ? (
           <div className="text-[color:var(--vscode-errorForeground)] flex items-center">
             <span className="codicon codicon-warning" />
-            <p className="ml-1">
+            <p className="ml-1 my-0">
               Make sure all of your steps have a{' '}
-              <strong>downloaded_filename</strong> specified!
+              <span className="font-bold">downloaded_filename</span> specified!
             </p>
           </div>
         ) : (
-          <div>
-            <div className="flex items-center">
-              <span className="codicon codicon-rocket" />
-              <p className="ml-1 my-0">You're all set!</p>
-            </div>
-            <span className="inline-flex mt-2 items-center">
-              Commit, push, and check out your new Action{' '}
-              <span className="mx-1 inline-flex items-center">
-                {actionsUrl ? (
-                  <VSCodeLink href={actionsUrl}>on GitHub</VSCodeLink>
-                ) : (
-                  'on GitHub.'
-                )}{' '}
-              </span>
-              It should run automatically, once pushed.
-            </span>
-          </div>
+          <p className="my-0 flex items-center">
+            Commit, push, and check out your new Action on
+            <VSCodeLink className="mx-1" href={actionsUrl}>
+              on GitHub
+            </VSCodeLink>
+            It should run automatically, once pushed.
+          </p>
         )}
       </div>
     </div>

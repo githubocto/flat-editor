@@ -60,12 +60,18 @@ const Jobs: FunctionComponent<JobsProps> = props => {
           Add {state.jobs.scheduled.steps.length ? 'another' : 'a'} data source
         </div>
         <div className="flex items-center space-x-2">
-          <VSCodeButton onClick={() => handleJobAdded('http')}>
-            <span className="codicon codicon-add" slot="start" /> HTTP
+          <VSCodeButton
+            appearance="secondary"
+            onClick={() => handleJobAdded('http')}
+          >
+            <span className="codicon codicon-add" slot="start" /> Add from HTTP
           </VSCodeButton>
-          <VSCodeButton onClick={() => handleJobAdded('sql')}>
+          <VSCodeButton
+            appearance="secondary"
+            onClick={() => handleJobAdded('sql')}
+          >
             <span className="codicon codicon-add pr-1" slot="start" />
-            SQL
+            Add from SQL
           </VSCodeButton>
         </div>
       </footer>

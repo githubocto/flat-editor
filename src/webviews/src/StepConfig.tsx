@@ -57,6 +57,7 @@ export function StepConfig(props: StepConfigProps) {
         </div>
         <div>
           <VSCodeTextField
+            required
             className="w-full"
             onInput={
               // @ts-ignore
@@ -86,6 +87,7 @@ export function StepConfig(props: StepConfigProps) {
             className="w-full"
             value={props.step.with.downloaded_filename || ''}
             placeholder="data.json"
+            required
             onInput={
               // @ts-ignore
               e => handleSqlValueChange('downloaded_filename', e.target.value)

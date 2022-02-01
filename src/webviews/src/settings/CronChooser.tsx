@@ -6,6 +6,7 @@ import {
   VSCodeTextField,
   VSCodeLink,
 } from '@vscode/webview-ui-toolkit/react'
+import { RadioGroupOrientation } from '@vscode/webview-ui-toolkit'
 import * as cronstrue from 'cronstrue'
 import { useState } from 'react'
 
@@ -22,9 +23,9 @@ const defaultSchedules = {
 
 const CronFallback = ({ error }: { error: any }) => {
   return (
-    <div className="flex items-center space-x-1 text-[color:var(--vscode-errorForeground)]">
+    <div className="flex items-center mt-2 text-[color:var(--vscode-errorForeground)]">
       <i className="codicon codicon-error text-sm pt-px" />
-      <p className="text-[12px]">{error}</p>
+      <span className="text-[12px] ml-1">{error}</span>
     </div>
   )
 }
@@ -32,12 +33,12 @@ const CronFallback = ({ error }: { error: any }) => {
 const ValidateCron = ({ value }: { value: string }) => {
   const feedback = cronstrue.toString(value)
   return (
-    <div className="flex items-center space-x-1 text-[#73C991]">
-      <i className="codicon codicon-pass pr-1 text-sm pt-px" />
-      <p className="text-[12px]">
+    <div className="flex items-center mt-2 text-[color:var(--vscode-descriptionForeground)]">
+      <i className="codicon codicon-pass text-sm pt-px" />
+      <span className="text-[12px] ml-1">
         Will run:{' '}
         {feedback === 'Every minute' ? 'Every five minutes' : feedback}
-      </p>
+      </span>
     </div>
   )
 }
@@ -58,29 +59,27 @@ const CustomCronTextField = ({
 
   return (
     <div>
-      <div className="flex items-center">
-        <VSCodeTextField
-          value={localValue}
-          onInput={
-            // @ts-ignore
-            e => {
-              setValue(e.target.value)
-              onChange(e.target.value)
-            }
+      <VSCodeTextField
+        value={localValue}
+        onInput={
+          // @ts-ignore
+          e => {
+            setValue(e.target.value)
+            onChange(e.target.value)
           }
-          placeholder="Enter custom schedule"
-        >
-          Enter a custom CRON schedule
-        </VSCodeTextField>
-        <div className="ml-4">
-          <VSCodeLink href="https://crontab.guru/">
-            Need help with CRON syntax?
-          </VSCodeLink>
-        </div>
-      </div>
+        }
+        placeholder="Enter custom schedule"
+      >
+        Enter a custom CRON schedule
+      </VSCodeTextField>
       <ErrorBoundary resetKeys={[localValue]} FallbackComponent={CronFallback}>
         <ValidateCron value={localValue} />
       </ErrorBoundary>
+      <div className="mt-1">
+        <VSCodeLink href="https://crontab.guru/">
+          Need help with CRON syntax?
+        </VSCodeLink>
+      </div>
     </div>
   )
 }
@@ -108,7 +107,7 @@ const CronChooser: FunctionComponent<CronChooserProps> = props => {
 
   return (
     <div>
-      <VSCodeRadioGroup>
+      <VSCodeRadioGroup orientation={RadioGroupOrientation.vertical}>
         <label slot="label">Schedule</label>
         <VSCodeRadio
           onChange={
