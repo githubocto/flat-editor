@@ -147,10 +147,7 @@ export class FlatConfigEditor implements vscode.CustomTextEditorProvider {
     const codiconsUri = webview.asWebviewUri(
       vscode.Uri.joinPath(
         this.context.extensionUri,
-        'node_modules',
-        '@vscode/codicons',
-        'dist',
-        'codicon.css'
+        'out/webviews/public/codicon.css'
       )
     )
 

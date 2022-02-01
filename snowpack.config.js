@@ -3,6 +3,7 @@ module.exports = {
   mount: {
     'src/webviews/public': { url: '/', static: true },
     'src/webviews/src': { url: '/' },
+    'node_modules/@vscode/codicons/dist': { url: '/public', static: true },
   },
   plugins: [
     '@snowpack/plugin-dotenv',
