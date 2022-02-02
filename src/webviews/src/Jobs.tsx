@@ -4,6 +4,7 @@ import Header from './Header'
 import { Step } from './Step'
 import useFlatConfigStore from './store'
 import type { FlatStep } from './../../types'
+import { VSCodeButton, VSCodeDivider } from '@vscode/webview-ui-toolkit/react'
 
 interface JobsProps {}
 
@@ -40,41 +41,40 @@ const Jobs: FunctionComponent<JobsProps> = props => {
     .map((j, i) => <Step index={i + 2} step={j as FlatStep} key={i} />)
 
   return (
-    <div className="text-vscode-foreground">
-      <Header
-        title="Where to get data from"
-        description="Flat can fetch data from HTTP endpoints or SQL queries."
-        hasHoverState={false}
-      >
-        {steps}
-
+    <div>
+      <header>
+        <div className="mb-2">
+          <h2 className="my-0 text-[20px] leading-[30px] font-normal">
+            Where to get data from
+          </h2>
+        </div>
+        <p className="text-[13px] my-0">
+          Flat can fetch data from HTTP endpoints or SQL queries.
+        </p>
+      </header>
+      <section className="mt-4">
+        <div className="space-y-6">{steps}</div>
+      </section>
+      <footer className="mt-4">
         <div className="font-bold pb-2">
           Add {state.jobs.scheduled.steps.length ? 'another' : 'a'} data source
         </div>
-        <div className="flex">
-          <button
-            className="text-extensionButton-prominentForeground p-2"
-            style={{ marginRight: 1 }}
+        <div className="flex items-center space-x-2">
+          <VSCodeButton
+            appearance="secondary"
             onClick={() => handleJobAdded('http')}
           >
-            <span
-              className="codicon codicon-add pr-1"
-              style={{ fontSize: '0.875rem' }}
-            />{' '}
-            HTTP
-          </button>
-          <button
-            className="text-extensionButton-prominentForeground p-2"
+            <span className="codicon codicon-add" slot="start" /> Add from HTTP
+          </VSCodeButton>
+          <VSCodeButton
+            appearance="secondary"
             onClick={() => handleJobAdded('sql')}
           >
-            <span
-              className="codicon codicon-add pr-1"
-              style={{ fontSize: '0.875rem' }}
-            />{' '}
-            SQL
-          </button>
+            <span className="codicon codicon-add pr-1" slot="start" />
+            Add from SQL
+          </VSCodeButton>
         </div>
-      </Header>
+      </footer>
     </div>
   )
 }

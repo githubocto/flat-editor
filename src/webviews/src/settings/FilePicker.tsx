@@ -1,12 +1,24 @@
+// @ts-nocheck
 import React from 'react'
-import cc from 'classcat'
-import { Clickable } from 'reakit/Clickable'
-import { useCombobox } from 'downshift'
 
-import FieldWithDescription from './FieldWithDescription'
+import {
+  Combobox,
+  ComboboxInput,
+  ComboboxPopover,
+  ComboboxList,
+  ComboboxOption,
+} from '@reach/combobox'
+import '@reach/combobox/styles.css'
+
 import { FilePreview } from './FilePreview'
 import { VSCodeAPI } from '../VSCodeAPI'
 import useFlatConfigStore from '../store'
+import {
+  VSCodeButton,
+  VSCodeOption,
+  VSCodeTextField,
+} from '@vscode/webview-ui-toolkit/react'
+import { useEffect } from 'react'
 
 interface FilePickerProps {
   value?: string
@@ -18,50 +30,35 @@ interface FilePickerProps {
 }
 
 export function FilePicker(props: FilePickerProps) {
-  const {
-    title,
-    label,
-    value,
-    onChange,
-    accept = '',
-    isClearable = false,
-  } = props
-  const { files } = useFlatConfigStore()
-  const [inputValue, setInputValue] = React.useState('')
+  const { label, value, onChange, accept = '', title } = props
+  const [localValue, setLocalValue] = React.useState(value)
+  const { files = [] } = useFlatConfigStore()
+
+  useEffect(() => {
+    if (localValue === '' && Boolean(value)) {
+      onChange(null)
+    }
+  }, [value, localValue])
 
   const acceptedExtensions = accept.split(',')
 
-  const filteredFiles = (files || []).filter((file: string) => {
-    const hasAccepetedExtension =
-      !acceptedExtensions.length ||
-      acceptedExtensions.includes(`.${file.split('.').slice(-1)}`)
-    const hasFilterString = file.includes(inputValue)
-    return hasAccepetedExtension && hasFilterString
-  })
+  const filteredFiles = files
+    .filter(file => {
+      return (
+        !acceptedExtensions.length ||
+        acceptedExtensions.includes(`.${file.split('.').slice(-1)}`)
+      )
+    })
+    .filter(file => {
+      if (!localValue) return true
+      return file.includes(localValue)
+    })
 
-  const {
-    isOpen,
-    getToggleButtonProps,
-    getLabelProps,
-    getMenuProps,
-    getInputProps,
-    getComboboxProps,
-    highlightedIndex,
-    getItemProps,
-    openMenu,
-  } = useCombobox({
-    selectedItem: value || '',
-    items: filteredFiles,
-    onInputValueChange: ({ inputValue }) => {
-      setInputValue(inputValue || '')
-      if (filteredFiles.includes(inputValue || '')) onChange(inputValue || '')
-      if (!inputValue && isClearable) onChange('')
-    },
-    onSelectedItemChange: ({ selectedItem }) => {
-      if (!selectedItem) return
-      onChange(selectedItem)
-    },
-  })
+  const handleFocus = () => {
+    VSCodeAPI.postMessage({
+      type: 'refreshFiles',
+    })
+  }
 
   const handlePreview = (path: string) => {
     VSCodeAPI.postMessage({
@@ -70,106 +67,76 @@ export function FilePicker(props: FilePickerProps) {
     })
   }
 
-  const triggerFilesRefresh = () => {
-    VSCodeAPI.postMessage({
-      type: 'refreshFiles',
-    })
-  }
-
   return (
-    <FieldWithDescription title={title}>
-      <div className="relative">
-        <label {...getLabelProps()}>{label}</label>
-
-        <div className="flex items-center mt-2" {...getComboboxProps()}>
-          <input
-            type="text"
-            className="p-2 flex-1"
-            {...getInputProps({
-              onFocus: () => {
-                triggerFilesRefresh()
-                openMenu()
-              },
-            })}
-          />
-
-          <button
-            type="button"
-            {...getToggleButtonProps()}
-            aria-label="toggle menu"
-            style={{
-              height: '2.3em',
-            }}
-          >
-            &#8595;
-          </button>
-
-          {isClearable && !!value && (
-            <button
-              className="absolute right-10 bg-transparent"
+    <div>
+      <Combobox
+        openOnFocus
+        aria-label="Pick a file"
+        onSelect={value => {
+          setLocalValue(value)
+          onChange(value)
+        }}
+      >
+        <ComboboxInput
+          value={localValue}
+          onFocus={handleFocus}
+          disabled={files.length === 0}
+          onInput={e => {
+            setLocalValue(e.target.value)
+          }}
+          className="w-full"
+          as={VSCodeTextField}
+          placeholder={files.length === 0 ? 'Loading files...' : 'Pick a file'}
+        >
+          {title}
+          <span slot="end" class="codicon codicon-chevron-down"></span>
+        </ComboboxInput>
+        <ComboboxPopover className="!bg-[color:var(--dropdown-background)]">
+          {!files && <div className="p-2">Loading...</div>}
+          {filteredFiles.length > 0 && (
+            <ComboboxList className="bg-[color:var(--dropdown-background)]">
+              {filteredFiles.map(file => {
+                return (
+                  <ComboboxOption
+                    as={VSCodeOption}
+                    className="text-white w-full"
+                    key={file}
+                    value={file}
+                  />
+                )
+              })}
+            </ComboboxList>
+          )}
+          {!filteredFiles.length && (
+            <div className="p-2">
+              No files found
+              {accept && ` with the extensions ${accept}`}
+              {localValue && ` that include "${localValue}"`}
+            </div>
+          )}
+        </ComboboxPopover>
+      </Combobox>
+      <div className="mt-2">
+        <p className="text-[12px] mt-1 mb-0 text-[color:var(--vscode-descriptionForeground)]">
+          {label}
+        </p>
+      </div>
+      {files.includes(localValue) && (
+        <div>
+          <FilePreview file={localValue || ''} />
+          <div className="mt-2">
+            <VSCodeButton
+              appearance="secondary"
               onClick={() => {
-                setInputValue('')
-                onChange('')
+                handlePreview(localValue)
               }}
             >
-              <div className="codicon codicon-x pr-1 text-sm pt-px" />
-            </button>
-          )}
-        </div>
-        <ul
-          className={cc([
-            'absolute top-[100%] left-0 right-0 bg-white shadow-md text-gray-800 z-10',
-            {
-              'sr-only': !isOpen,
-            },
-          ])}
-          {...getMenuProps()}
-        >
-          {isOpen && (
-            <>
-              {filteredFiles.map((item, index) => (
-                <li
-                  className={cc([
-                    'p-2',
-                    {
-                      'bg-indigo-100': highlightedIndex === index,
-                    },
-                  ])}
-                  key={`${item}${index}`}
-                  {...getItemProps({ item, index })}
-                >
-                  {item}
-                </li>
-              ))}
-              {!files && <div className="p-2">Loading...</div>}
-              {!filteredFiles.length && (
-                <div className="p-2">
-                  No files found
-                  {accept && ` with the extensions ${accept}`}
-                  {inputValue && ` that include "${inputValue}"`}
-                </div>
-              )}
-            </>
-          )}
-        </ul>
-      </div>
-
-      <FilePreview file={value || ''} />
-
-      {value && (
-        <div className="mt-1">
-          <Clickable
-            as="div"
-            className="flex items-center space-x-1  appearance-none cursor-pointer"
-            onClick={() => {
-              handlePreview(value)
-            }}
-          >
-            <div className="codicon codicon-eye pr-1 text-sm pt-px" />
-            <div className="underline">View file</div>
-          </Clickable>
+              <span slot="start" className="codicon codicon-eye" />
+              View file
+            </VSCodeButton>
+          </div>
         </div>
       )}
-    </FieldWithDescription>
+    </div>
   )
 }

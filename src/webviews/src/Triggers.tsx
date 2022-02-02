@@ -1,11 +1,9 @@
-import React, { FunctionComponent } from 'react'
-import Header from './Header'
+import React from 'react'
 import CronChooser from './settings/CronChooser'
-import { Input } from './settings/Input'
 import useFlatConfigStore from './store'
 
 type TriggersProps = {}
-const Triggers: FunctionComponent<TriggersProps> = props => {
+export function Triggers(props: TriggersProps) {
   const { state, update } = useFlatConfigStore()
 
   const cron = state.on?.schedule?.[0]?.cron || ''
@@ -24,8 +22,12 @@ const Triggers: FunctionComponent<TriggersProps> = props => {
   }
 
   return (
-    <div className="text-vscode-foreground pb-4">
-      <Header title="When to update the data" description="" />
+    <div>
+      <div className="mb-2">
+        <h2 className="my-0 text-[20px] leading-[30px] font-normal">
+          When to update the data
+        </h2>
+      </div>
       <CronChooser value={cron} onChange={handleScheduleChange} />
     </div>
   )

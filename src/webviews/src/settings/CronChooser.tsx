@@ -1,6 +1,14 @@
-import * as cronstrue from 'cronstrue'
 import React, { FunctionComponent, useEffect } from 'react'
-import FieldWithDescription from './FieldWithDescription'
+import { ErrorBoundary } from 'react-error-boundary'
+import {
+  VSCodeRadioGroup,
+  VSCodeRadio,
+  VSCodeTextField,
+  VSCodeLink,
+} from '@vscode/webview-ui-toolkit/react'
+import { RadioGroupOrientation } from '@vscode/webview-ui-toolkit'
+import * as cronstrue from 'cronstrue'
+import { useState } from 'react'
 
 type CronChooserProps = {
   value: string
@@ -13,43 +21,80 @@ const defaultSchedules = {
   day: '0 0 * * *',
 }
 
+const CronFallback = ({ error }: { error: any }) => {
+  return (
+    <div className="flex items-center mt-2 text-[color:var(--vscode-errorForeground)]">
+      <i className="codicon codicon-error text-sm pt-px" />
+      <span className="text-[12px] ml-1">{error}</span>
+    </div>
+  )
+}
+
+const ValidateCron = ({ value }: { value: string }) => {
+  const feedback = cronstrue.toString(value)
+  return (
+    <div className="flex items-center mt-2 text-[color:var(--vscode-descriptionForeground)]">
+      <i className="codicon codicon-pass text-sm pt-px" />
+      <span className="text-[12px] ml-1">
+        Will run:{' '}
+        {feedback === 'Every minute' ? 'Every five minutes' : feedback}
+      </span>
+    </div>
+  )
+}
+
 const determineInitialCustomValue = (schedule?: string) => {
   if (!schedule) return false
   return !Object.values(defaultSchedules).includes(schedule)
 }
 
-const CronChooser: FunctionComponent<CronChooserProps> = props => {
-  const isInitiallyCustom = determineInitialCustomValue(props.value)
+const CustomCronTextField = ({
+  value,
+  onChange,
+}: {
+  value: string
+  onChange: (val: string) => void
+}) => {
+  const [localValue, setValue] = useState(value)
 
-  const [customCron, setCustomCron] = React.useState(
-    isInitiallyCustom ? props.value : defaultSchedules.day
+  return (
+    <div>
+      <VSCodeTextField
+        value={localValue}
+        onInput={
+          // @ts-ignore
+          e => {
+            setValue(e.target.value)
+            onChange(e.target.value)
+          }
+        }
+        placeholder="Enter custom schedule"
+      >
+        Enter a custom CRON schedule
+      </VSCodeTextField>
+      <ErrorBoundary resetKeys={[localValue]} FallbackComponent={CronFallback}>
+        <ValidateCron value={localValue} />
+      </ErrorBoundary>
+      <div className="mt-1">
+        <VSCodeLink href="https://crontab.guru/">
+          Need help with CRON syntax?
+        </VSCodeLink>
+      </div>
+    </div>
   )
-  const [showCustom, setShowCustom] = React.useState(() => isInitiallyCustom)
-  const [cronFeedback, setCronFeedback] = React.useState<string | Error>('')
+}
 
-  const validateCron = (val: string) => {
-    try {
-      setCronFeedback(
-        cronstrue.toString(val, { throwExceptionOnParseError: true })
-      )
-      props.onChange(val)
-    } catch (error) {
-      setCronFeedback(new Error(error as string))
-    }
-  }
-  const handleCustomCronChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const val = e.target.value
-    setCustomCron(val)
-    validateCron(val)
-  }
+const CronChooser: FunctionComponent<CronChooserProps> = props => {
+  const [showCustom, setShowCustom] = React.useState(() => {
+    return determineInitialCustomValue(props.value)
+  })
 
-  const handleRadioChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const custom = e.target.value === 'custom'
-    if (custom) {
-      validateCron(customCron)
-    }
+  const handleRadioChange = (value: string) => {
+    const custom = value === 'custom'
     setShowCustom(custom)
-    props.onChange(custom ? customCron : e.target.value)
+    if (!custom) {
+      props.onChange(value)
+    }
   }
 
   useEffect(() => {
@@ -57,101 +102,61 @@ const CronChooser: FunctionComponent<CronChooserProps> = props => {
     const isCustom = determineInitialCustomValue(props.value)
     if (isCustom && !showCustom) {
       setShowCustom(true)
-      setCustomCron(props.value)
     }
   }, [props.value])
 
   return (
-    <FieldWithDescription title="On a schedule">
-      <div className="space-y-4 mt-2">
-        <div className="flex flex-wrap items-center" role="group">
-          <label className="flex items-center space-x-1 mr-4 my-1">
-            <input
-              type="radio"
-              name="cron"
-              checked={
-                !showCustom && props.value === defaultSchedules.fiveMinutes
-              }
-              onChange={handleRadioChange}
-              value={defaultSchedules.fiveMinutes}
-            />
-            <span>Every five minutes</span>
-          </label>
-          <label className="flex items-center space-x-1 mr-4 my-1">
-            <input
-              type="radio"
-              name="cron"
-              checked={!showCustom && props.value === defaultSchedules.hour}
-              onChange={handleRadioChange}
-              value={defaultSchedules.hour}
-            />
-            <span>Every hour</span>
-          </label>
-          <label className="flex items-center space-x-1 mr-4 my-1">
-            <input
-              type="radio"
-              name="cron"
-              checked={!showCustom && props.value === defaultSchedules.day}
-              onChange={handleRadioChange}
-              value={defaultSchedules.day}
-            />
-            <span>Every day</span>
-          </label>
-          <label className="flex items-center space-x-1 my-1">
-            <input
-              onChange={handleRadioChange}
-              type="radio"
-              name="cron"
-              value="custom"
-              checked={showCustom}
-            />
-            <span>On a custom schedule</span>
-          </label>
+    <div>
+      <VSCodeRadioGroup orientation={RadioGroupOrientation.vertical}>
+        <label slot="label">Schedule</label>
+        <VSCodeRadio
+          onChange={
+            // @ts-ignore
+            e => handleRadioChange(e.target.value)
+          }
+          checked={!showCustom && props.value === defaultSchedules.fiveMinutes}
+          value={defaultSchedules.fiveMinutes}
+        >
+          Every five minutes
+        </VSCodeRadio>
+        <VSCodeRadio
+          onChange={
+            // @ts-ignore
+            e => handleRadioChange(e.target.value)
+          }
+          checked={!showCustom && props.value === defaultSchedules.hour}
+          value={defaultSchedules.hour}
+        >
+          Every hour
+        </VSCodeRadio>
+        <VSCodeRadio
+          // @ts-ignore
+          onChange={
+            // @ts-ignore
+            e => handleRadioChange(e.target.value)
+          }
+          checked={!showCustom && props.value === defaultSchedules.day}
+          value={defaultSchedules.day}
+        >
+          Every day
+        </VSCodeRadio>
+        <VSCodeRadio
+          onChange={
+            // @ts-ignore
+            e => handleRadioChange(e.target.value)
+          }
+          checked={showCustom}
+          value="custom"
+        >
+          Custom
+        </VSCodeRadio>
+      </VSCodeRadioGroup>
+      {showCustom && (
+        <div className="mt-4">
+          <CustomCronTextField value={props.value} onChange={props.onChange} />
         </div>
-        {showCustom && (
-          <div className="space-y-2">
-            <p className="mt-1 text-xs opacity-50">
-              Enter a custom CRON schedule (
-              <a className="underline" href="https://crontab.guru/">
-                Need help?
-              </a>
-              )
-            </p>
-            <div className="flex">
-              <input
-                value={customCron}
-                onChange={handleCustomCronChange}
-                className="shadow-sm block w-64"
-                placeholder="Enter custom schedule"
-                type="text"
-              />
-            </div>
-            {cronFeedback && (
-              <div>
-                {cronFeedback instanceof Error ? (
-                  <div className="text-vscode-inputValidation-errorForeground flex flex-row items-start">
-                    <div className="codicon codicon-error pr-1 text-sm pt-px" />
-                    <div>{cronFeedback.message}</div>
-                  </div>
-                ) : (
-                  <div>
-                    <div className="text-vscode-inputValidation-infoForeground flex flex-row items-start">
-                      <div className="codicon codicon-pass pr-1 text-sm pt-px" />
-                      <div>
-                        Will run:{' '}
-                        {cronFeedback === 'Every minute'
-                          ? 'Every five minutes'
-                          : cronFeedback}
-                      </div>
-                    </div>{' '}
-                  </div>
-                )}
-              </div>
-            )}
-          </div>
-        )}
-      </div>
-    </FieldWithDescription>
+      )}
+    </div>
   )
 }
 

@@ -8,6 +8,11 @@ import { flatStateValidationSchema } from './validation'
 import { VSCodeAPI } from './VSCodeAPI'
 import { FlatStep, PullSqlConfig } from '../../types'
 import { ErrorState } from './error-state'
+import {
+  VSCodeButton,
+  VSCodeDivider,
+  VSCodeLink,
+} from '@vscode/webview-ui-toolkit/react'
 
 interface AppProps {}
 
@@ -77,53 +82,44 @@ function App({}: AppProps) {
   const actionsUrl = gitRepo && `https://github.com/${gitRepo}/actions`
 
   return (
-    <div className="p-4">
-      <div className="mb-2 p-4">
-        <h1 className="text-2xl font-bold text-vscode-settings-headerForeground py-2">
-          Flat Editor
-        </h1>
-        <p className="mb-2">
-          This is a gui for setting up a Flat Action, which will pull external
-          data and update it using GitHub Actions.
-        </p>
-        <button onClick={handleOpenRaw}>View the raw YAML</button>
-      </div>
+    <div className="p-8 space-y-6">
+      <header>
+        <div className="mb-2">
+          <h1 className="text-[26px] leading-[30px] font-medium my-0">
+            Flat Editor
+          </h1>
+        </div>
+        <div className="mb-4">
+          <p className="text-[13px] my-0">
+            This is a gui for setting up a Flat Action, which will pull external
+            data and update it using GitHub Actions.
+          </p>
+        </div>
+        <VSCodeButton onClick={handleOpenRaw}>View the raw YAML</VSCodeButton>
+      </header>
+      <VSCodeDivider />
       <Triggers />
       <Jobs />
-
-      {showErrorState ? (
-        <div className="border-2 border-vscode-editorOverviewRuler-warningForeground bg-vscode-settings-dropdownBackground text-sm p-4 flex items-center">
-          <span className="codicon codicon-warning mr-1 text-vscode-editorOverviewRuler-warningForeground" />
-          <p>
-            Make sure all of your steps have a{' '}
-            <strong>downloaded_filename</strong> specified!
-          </p>
-        </div>
-      ) : (
-        <div className="pt-4 pl-4 pb-6">
-          <p className="text-lg font-bold pb-1">
-            You're all set!{' '}
-            <span
-              className="codicon codicon-rocket pl-1"
-              style={{ fontSize: '0.875rem' }}
-            />
-          </p>
-          <p>
-            Commit, push, and check out your new Action{' '}
-            {actionsUrl ? (
-              <span>
-                <a className="underline" href={actionsUrl}>
-                  on GitHub
-                </a>
-                .
-              </span>
-            ) : (
-              'on GitHub.  '
-            )}{' '}
+      <VSCodeDivider />
+      <div>
+        {showErrorState ? (
+          <div className="text-[color:var(--vscode-errorForeground)] flex items-center">
+            <span className="codicon codicon-warning" />
+            <p className="ml-1 my-0">
+              Make sure all of your steps have a{' '}
+              <span className="font-bold">downloaded_filename</span> specified!
+            </p>
+          </div>
+        ) : (
+          <p className="my-0">
+            Commit, push, and check out your new Action on{' '}
+            <VSCodeLink className="align-super" href={actionsUrl}>
+              on GitHub
+            </VSCodeLink>{' '}
             It should run automatically, once pushed.
           </p>
-        </div>
-      )}
+        )}
+      </div>
     </div>
   )
 }
