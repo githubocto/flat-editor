@@ -65,7 +65,7 @@ const SecretInput: FunctionComponent<SecretInputProps> = props => {
           handleSave()
         }}
       >
-        <div className="flex items-center">
+        <div className="flex items-end">
           <div className="flex-1">
             <VSCodeTextField
               className="w-full"
@@ -82,9 +82,6 @@ const SecretInput: FunctionComponent<SecretInputProps> = props => {
             >
               {title}
             </VSCodeTextField>
-            <p className="text-[12px] mt-1 mb-0 text-[color:var(--vscode-descriptionForeground)]">
-              {label}
-            </p>
           </div>
           <div className="ml-4">
             <VSCodeButton
@@ -104,6 +101,9 @@ const SecretInput: FunctionComponent<SecretInputProps> = props => {
           </div>
         </div>
       </form>
+      <p className="text-[12px] mt-1 mb-0 text-[color:var(--vscode-descriptionForeground)]">
+        {label}
+      </p>
       {didError && (
         <p className="text-[color:var(--vscode-errorForeground)] mt-2">
           Something went wrong, please try again.
