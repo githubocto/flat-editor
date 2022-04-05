@@ -32,7 +32,7 @@ interface FilePickerProps {
 export function FilePicker(props: FilePickerProps) {
   const { label, value, onChange, accept = '', title } = props
   const [localValue, setLocalValue] = React.useState(value)
-  const { files = [] } = useFlatConfigStore()
+  const files = useFlatConfigStore(state => state.files || [])
 
   useEffect(() => {
     if (localValue === '' && Boolean(value)) {
