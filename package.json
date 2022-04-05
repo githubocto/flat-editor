@@ -2,7 +2,7 @@
   "name": "flat",
   "displayName": "Flat Editor",
   "description": "An editor for flat-data configurations",
-  "version": "0.23.0",
+  "version": "0.23.1",
   "publisher": "githubocto",
   "repository": {
     "type": "git",
