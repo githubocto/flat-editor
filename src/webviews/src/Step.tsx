@@ -12,19 +12,13 @@ type StepProps = {
 }
 
 export const Step: FunctionComponent<StepProps> = props => {
-  const { state, update, errors } = useFlatConfigStore()
+  const update = useFlatConfigStore(state => state.update)
 
-  const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const newName = e.target.value
-    update(store => {
-      store.state.jobs.scheduled.steps[props.index].name = newName
-    })
-  }
   const handlePostprocessChange = (newPath?: string) => {
     update(store => {
-      ;(store.state.jobs.scheduled.steps[
-        props.index
-      ] as FlatStep).with.postprocess = newPath
+      ;(
+        store.state.jobs.scheduled.steps[props.index] as FlatStep
+      ).with.postprocess = newPath
     })
   }
 
