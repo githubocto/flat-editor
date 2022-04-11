@@ -385,7 +385,7 @@ export class FlatConfigEditor implements vscode.CustomTextEditorProvider {
         workspaceRootUri.path + '/**/*',
         `!${workspaceRootUri.path}/.git`,
         `!${workspaceRootUri.path}/.vscode`,
-        `!${workspaceRootUri.path}/node_modules`,
+        `!${workspaceRootUri.path}/**/node_modules`,
       ],
       { dot: true }
     )
