@@ -422,12 +422,8 @@ export class FlatConfigEditor implements vscode.CustomTextEditorProvider {
     return new Promise(async (resolve, reject) => {
       try {
         const gitClient = new VSCodeGit()
-        await gitClient.activateExtension()
-        await gitClient.waitForRepo(3)
-
-        // Next, let's grab the repo name.
+        await gitClient.waitForRepo()
         const { name, owner } = gitClient.repoDetails
-
         resolve({ name, owner })
       } catch (e) {
         reject('Couldnt activate git')
